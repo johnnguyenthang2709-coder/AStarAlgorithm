@@ -2,6 +2,8 @@
 
 Explore shortest paths on a directed road graph near HCMUT Campus 1 and on an editable robot grid. **A* and Dijkstra run in C++17**. Python, pybind11, and FastAPI adapt and serve the results; React, TypeScript, and Leaflet visualize them. The original algorithm reference remains in `reference/2550216/` and is exercised by regression tests.
 
+For a source-guided explanation of the algorithm, see [How A* works in this project](docs/astar-implementation.md).
+
 ```text
 React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem
 ```
