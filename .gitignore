@@ -1,0 +1,14 @@
+.venv/
+*.exe
+*.pyd
+*.dll
+build/
+build-cpython/
+__pycache__/
+.pytest_cache/
+cache/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+/2550216 (1).rar

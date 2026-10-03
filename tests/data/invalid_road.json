@@ -1,0 +1,1 @@
+{"schema_version":1,"nodes":[{"id":0,"osm_id":1,"lat":10,"lon":106}],"edges":[{"from":0,"to":9,"length_m":1,"osm_key":0,"osmid":2,"name":null,"geometry":[[106,10],[106,10]]}]}

@@ -1,0 +1,66 @@
+cmake_minimum_required(VERSION 3.20)
+project(AStarAlgorithm LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_library(astar_core_lib STATIC src/road_problem.cpp src/edge_snapped_road_problem.cpp)
+target_include_directories(astar_core_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)
+set_target_properties(astar_core_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+if(MSVC)
+  target_compile_options(astar_core_lib PRIVATE /W4)
+else()
+  target_compile_options(astar_core_lib PRIVATE -Wall -Wextra -pedantic)
+endif()
+
+add_executable(core_tests tests/core_tests.cpp)
+target_link_libraries(core_tests PRIVATE astar_core_lib)
+add_executable(road_tests tests/road_tests.cpp)
+target_link_libraries(road_tests PRIVATE astar_core_lib)
+add_executable(edge_snap_tests tests/edge_snap_tests.cpp)
+target_link_libraries(edge_snap_tests PRIVATE astar_core_lib)
+add_executable(reference_tests tests/reference_tests.cpp
+  reference/2550216/Algo.cpp reference/2550216/PathNode.cpp)
+
+if(MSVC)
+  foreach(test_target core_tests road_tests reference_tests edge_snap_tests)
+    target_compile_options(${test_target} PRIVATE /W4)
+  endforeach()
+else()
+  foreach(test_target core_tests road_tests reference_tests edge_snap_tests)
+    target_compile_options(${test_target} PRIVATE -Wall -Wextra -pedantic)
+  endforeach()
+endif()
+
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
+if(MINGW AND Python_LIBRARY MATCHES "libpython[0-9.]+\\.dll\\.a")
+  message(FATAL_ERROR "This MinGW build selected MSYS Python. Pass the active Windows CPython pythonXY.lib as -DPython_LIBRARY=...")
+endif()
+find_package(pybind11 CONFIG REQUIRED)
+pybind11_add_module(astar_core backend/bindings.cpp)
+target_link_libraries(astar_core PRIVATE astar_core_lib)
+set_target_properties(astar_core PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/backend
+  RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/backend)
+if(MSVC)
+  target_compile_options(astar_core PRIVATE /W4)
+else()
+  target_compile_options(astar_core PRIVATE -Wall -Wextra -pedantic)
+endif()
+if(MINGW)
+  get_filename_component(MINGW_BIN_DIR ${CMAKE_CXX_COMPILER} DIRECTORY)
+  foreach(runtime_dll libgcc_s_seh-1.dll libwinpthread-1.dll libstdc++-6.dll)
+    add_custom_command(TARGET astar_core POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${MINGW_BIN_DIR}/${runtime_dll} ${PROJECT_SOURCE_DIR}/backend/${runtime_dll})
+  endforeach()
+endif()
+
+enable_testing()
+add_test(NAME core COMMAND core_tests)
+add_test(NAME road COMMAND road_tests ${PROJECT_SOURCE_DIR}/data/road/graph.json)
+set_tests_properties(road PROPERTIES WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+add_test(NAME reference COMMAND reference_tests)
+add_test(NAME edge_snap COMMAND edge_snap_tests ${PROJECT_SOURCE_DIR}/data/road/graph.json)

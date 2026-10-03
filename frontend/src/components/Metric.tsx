@@ -1,0 +1,3 @@
+import type { SearchMetrics } from '../types/common'
+import { number } from '../utils/format'
+export function SearchMetricsView({ metrics }: { metrics: SearchMetrics }) { return <div className="metrics"><div><small>Expansions</small><strong>{number(metrics.expanded_nodes)}</strong></div><div><small>Unique expanded</small><strong>{number(metrics.unique_expanded_states)}</strong></div><div><small>Discovered states</small><strong>{number(metrics.unique_discovered_states)}</strong></div><div><small>Queue pushes</small><strong>{number(metrics.generated_nodes)}</strong></div><div><small>Edges examined</small><strong>{number(metrics.examined_edges)}</strong></div><div><small>Edges relaxed</small><strong>{number(metrics.relaxed_edges)}</strong></div></div> }

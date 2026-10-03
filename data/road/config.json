@@ -1,0 +1,10 @@
+{
+  "center_lat": 10.772973055555555,
+  "center_lon": 106.65918888888889,
+  "center_source": "https://www.wikidata.org/wiki/Q3101701",
+  "center_note": "Wikidata coordinate for HCMUT, whose Campus 1 address is 268 Ly Thuong Kiet; source reports 10°46'22.703\"N, 106°39'33.080\"E",
+  "radius_m": 2000,
+  "network_type": "drive",
+  "simplify": true,
+  "retain_all": false
+}
