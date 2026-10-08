@@ -26,6 +26,7 @@ It uses certified 360° observations, arbitrary-angle segments, and the same
 C++ A* core through a Euclidean visibility graph adapter. The previous fixed
 polygon scenarios and original grid benchmarks remain selectable. See
 [irregular labyrinth design and results](docs/bar-labyrinth.md),
+[parent-aware backtracking audit](docs/bar-parent-backtracking-audit.md),
 [original Maze 3 baseline](docs/bar-maze-3.md), and
 [continuous method and assumptions](docs/bar-continuous.md).
 

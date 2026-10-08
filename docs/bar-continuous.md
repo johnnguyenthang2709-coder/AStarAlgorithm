@@ -43,15 +43,20 @@ continuous point.
 
 Exploration picks a waypoint on a certified ray near the known-free boundary
 that could reveal unknown area. It maintains a stack of visited sensing
-positions. When a position has no useful candidate, it returns to the nearest
-ancestor with one. The A* return path is accepted only if every segment is
+positions. When a position has no currently reachable useful candidate, it
+returns to the nearest ancestor with one. A graph-blocked target is deferred
+until certified free area or the verified waypoint graph grows; it is labeled
+separately from an exhausted branch. Observations made during the locked
+return are assigned to the surviving ancestor. The A* return path is accepted
+only if every segment is
 certified and its Euclidean length does not exceed the *actual recorded entry*
 length. Otherwise the controller reverses that executed entry trajectory.
 The selected return is executed without changing target midway; its measured
 length and final anchor are checked after execution. Under static obstacles,
 reversible holonomic motion, exact segment execution, and a point robot, the
 reverse path is feasible and equal in length to entry, so this local branch
-retreat bound holds. This is an exhausted-branch trigger, **not a general
+retreat bound holds. These are local branch/graph-blocked return triggers,
+**not a general
 geometric blind-alley detector or the paper's BAR theorem**. Limited sensing
 and a fixed 250-decision exploration limit mean goal success is not guaranteed
 even when a continuous path exists.

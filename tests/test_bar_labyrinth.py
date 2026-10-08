@@ -13,6 +13,8 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 from app.main import create_app
 from app.services.bar_continuous import ContinuousPolicy, simulate_continuous
+from app.services.bar_continuous import path_length
+import astar_core
 from app.services.bar_labyrinth import (
     BLIND_ALLEY, COMPLEX, EXPLORATION, LabyrinthConfig, generate_labyrinth,
 )
@@ -112,3 +114,36 @@ def test_api_exposes_observations_without_ground_truth_polygons():
     assert body["maze_config"]["irregularity"] == .72
     assert body["frames"][0]["event"] == "sense"
     assert "polygons" not in response.text and "centerlines" not in response.text
+
+
+def test_real_recovery_trace_uses_graph_shortest_route_and_revisits_siblings():
+    world = generate_labyrinth(BLIND_ALLEY).world
+    episode = simulate_continuous(world, 5, prefer_novelty=True,
+                                  include_graph=True, complete_frontier_route=True)
+    frames = episode["frames"]
+    returns = [(index, frame) for index, frame in enumerate(frames)
+               if frame["event"] == "recover_start"]
+    assert episode["status"] == "goal_reached" and returns
+    assert any(frame["entry_length"] - path_length(
+        [(point["x"], point["y"]) for point in frame["path"]]) > 1e-5
+               for _, frame in returns)
+    for _, frame in returns:
+        points = [(point["x"], point["y"]) for point in frame["graph_points"]]
+        source = (frame["position"]["x"], frame["position"]["y"])
+        anchor = (frame["anchor"]["x"], frame["anchor"]["y"])
+        route = [(point["x"], point["y"]) for point in frame["path"]]
+        baseline = astar_core.visibility_search(points, frame["graph_links"],
+                                                points.index(source), points.index(anchor),
+                                                "dijkstra")
+        assert baseline["found"] and not frame["fallback"]
+        assert path_length(route) == pytest.approx(baseline["cost"], abs=1e-6)
+        assert all(world.collision_free(a, b) for a, b in zip(route, route[1:]))
+        assert route[0] == source and route[-1] == anchor
+    targets = [(frame["target"]["x"], frame["target"]["y"])
+               for frame in frames if frame["event"] == "plan" and frame.get("phase") == "explore"]
+    assert len(targets) == len(set(targets))
+    assert any(end["event"] == "recover_end" and any(
+        later["event"] == "plan" and later.get("phase") == "explore" and
+        later["position"] == end["anchor"]
+        for later in frames[index + 1:])
+        for index, end in enumerate(frames))

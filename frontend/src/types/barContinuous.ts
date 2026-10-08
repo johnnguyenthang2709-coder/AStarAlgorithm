@@ -15,6 +15,7 @@ export type ContinuousFrame = {
   entry_path?: WorldPoint[]
   anchor?: WorldPoint
   fallback?: boolean
+  trigger?: 'exhausted_branch' | 'graph_blocked_target'
   entry_length?: number
   retreat_length?: number
   retreat_ratio?: number
@@ -60,6 +61,7 @@ export type ContinuousBarResponse = {
     retreat_length: number
     retreat_ratio: number | null
     fallback: boolean
+    trigger?: 'exhausted_branch' | 'graph_blocked_target'
     invariant_verified: boolean
   }[]
   metrics: {

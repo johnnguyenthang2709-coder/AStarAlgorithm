@@ -45,6 +45,9 @@ class ContinuousPolicy:
         self.verified_links: set[tuple[Point, Point]] = set()
         self.stack = [ExploreNode(start, 0)]
         self.tried: set[Point] = set()
+        self.deferred: dict[Point, tuple[float, int]] = {}
+        self.goal_deferred_at: tuple[float, int] | None = None
+        self.active_recovery_trigger = "exhausted_branch"
         self.frames: list[dict] = []
         self.recoveries: list[dict] = []
         self.executed = 0.0
@@ -55,16 +58,24 @@ class ContinuousPolicy:
         self.max_nodes = 0
         self.max_edges = 0
 
-    def observe(self, observation: SensorObservation) -> float:
+    @staticmethod
+    def candidate_key(point: Point) -> Point:
+        return round(point[0], 3), round(point[1], 3)
+
+    def graph_changed_since(self, marker: tuple[float, int] | None) -> bool:
+        return (marker is None or self.known_free.area > marker[0] + 1e-6 or
+                len(self.scan_positions) > marker[1])
+
+    def observe(self, observation: SensorObservation, owner: ExploreNode | None = None) -> float:
         before = self.known_free.area
         self.known_free = self.known_free.union(observation.region)
         gained = max(0.0, self.known_free.area - before)
         if not any(distance(self.current, old) < 1e-7 for old in self.scan_positions):
             self.scan_positions.append(self.current)
-        node = self.stack[-1]
+        node = owner if owner is not None else self.stack[-1]
         if gained >= 0.05:
             for candidate in observation.candidates:
-                key = (round(candidate[0], 3), round(candidate[1], 3))
+                key = self.candidate_key(candidate)
                 if key not in self.tried and all(distance(candidate, existing) >= 0.1 for existing in node.candidates):
                     node.candidates.append(candidate)
         self.frames.append({"event": "sense", "position": as_point(self.current),
@@ -87,10 +98,11 @@ class ContinuousPolicy:
 
     def available(self, node: ExploreNode) -> list[Point]:
         node.candidates = [candidate for candidate in node.candidates if self._candidate_valid(candidate)]
-        return node.candidates
+        return [candidate for candidate in node.candidates
+                if self.graph_changed_since(self.deferred.get(self.candidate_key(candidate)))]
 
     def select(self) -> tuple[str, Point | ExploreNode] | None:
-        if self.known_free.covers(ShapePoint(self.goal)):
+        if self.known_free.covers(ShapePoint(self.goal)) and self.graph_changed_since(self.goal_deferred_at):
             return "goal", self.goal
         current = self.stack[-1]
         choices = self.available(current)
@@ -102,12 +114,48 @@ class ContinuousPolicy:
             target = min(choices, key=priority) if self.prefer_novelty else min(
                 choices, key=lambda p: (distance(p, self.goal), distance(p, self.current), p[0], p[1]))
             current.candidates.remove(target)
-            self.tried.add((round(target[0], 3), round(target[1], 3)))
+            self.tried.add(self.candidate_key(target))
             return "explore", target
         for ancestor in reversed(self.stack[:-1]):
             if self.available(ancestor):
                 return "recover", ancestor
         return None
+
+    def failed_plan(self, action: str, target: Point, result: dict) -> None:
+        """Defer a graph-unreachable target until new free space is observed."""
+        self.plan_frame(target, result, action)
+        self.frames[-1]["status"] = "unreachable_target"
+        if action == "goal":
+            self.goal_deferred_at = (self.known_free.area, len(self.scan_positions))
+            return
+        key = self.candidate_key(target)
+        self.tried.discard(key)
+        self.deferred[key] = (self.known_free.area, len(self.scan_positions))
+        node = self.stack[-1]
+        if all(distance(target, existing) >= 0.1 for existing in node.candidates):
+            node.candidates.append(target)
+
+    def complete_recovery(self, ancestor: ExploreNode) -> None:
+        """Keep deferred targets from discarded children for later map growth."""
+        index = self.stack.index(ancestor)
+        for child in self.stack[index + 1:]:
+            for candidate in child.candidates:
+                if (self.candidate_key(candidate) in self.deferred and
+                        all(distance(candidate, existing) >= 0.1 for existing in ancestor.candidates)):
+                    ancestor.candidates.append(candidate)
+        self.stack = self.stack[:index + 1]
+        ancestor.history_index = len(self.history) - 1
+
+    def recovery_trigger(self, ancestor: ExploreNode) -> str:
+        """A failed graph route is distinct from a branch with no useful frontier."""
+        index = self.stack.index(ancestor)
+        blocked = any(
+            not self.graph_changed_since(self.deferred[self.candidate_key(candidate)])
+            for node in self.stack[index + 1:]
+            for candidate in node.candidates
+            if self.candidate_key(candidate) in self.deferred
+        )
+        return "graph_blocked_target" if blocked else "exhausted_branch"
 
     def plan(self, target: Point) -> dict:
         points = list(dict.fromkeys(self.scan_positions + [self.current, target]))
@@ -163,6 +211,7 @@ class ContinuousPolicy:
         self.frames.append(frame)
 
     def recovery_route(self, ancestor: ExploreNode) -> tuple[list[Point], bool, float]:
+        self.active_recovery_trigger = self.recovery_trigger(ancestor)
         entry = self.history[ancestor.history_index:]
         entry_length = path_length(entry)
         result = self.plan(ancestor.position)
@@ -177,7 +226,8 @@ class ContinuousPolicy:
                             "heading": self.heading, "anchor": as_point(ancestor.position),
                             "entry_path": [as_point(point) for point in entry],
                             "path": [as_point(point) for point in route],
-                            "fallback": not valid, "entry_length": entry_length}
+                            "fallback": not valid, "entry_length": entry_length,
+                            "trigger": self.active_recovery_trigger}
         if self.include_graph:
             frame["graph_points"] = [as_point(point) for point in result["graph_points"]]
             frame["graph_links"] = result["graph_links"]
@@ -192,7 +242,8 @@ class ContinuousPolicy:
         record = {"anchor": as_point(ancestor.position), "entry_length": entry_length,
                   "retreat_length": retreat_length,
                   "retreat_ratio": retreat_length / entry_length if entry_length else None,
-                  "fallback": fallback, "invariant_verified": verified}
+                  "fallback": fallback, "invariant_verified": verified,
+                  "trigger": self.active_recovery_trigger}
         self.recoveries.append(record)
         self.frames.append({"event": "recover_end", "position": as_point(self.current),
                             "heading": self.heading, **record})
@@ -239,14 +290,14 @@ def simulate_continuous(world: ContinuousWorld, radius: float, limit: int = 250,
             before = policy.executed
             for waypoint in route[1:]:
                 checked_move(waypoint, "retreat")
-                policy.observe(world.sense(policy.current, radius))  # locked route
+                policy.observe(world.sense(policy.current, radius), owner=ancestor)  # locked route
             policy.finish_recovery(ancestor, fallback, entry_length, before)
-            policy.stack = policy.stack[:policy.stack.index(ancestor) + 1]
-            ancestor.history_index = len(policy.history) - 1
+            policy.complete_recovery(ancestor)
             continue
         target = value
         result = policy.plan(target)
         if not result["found"] or len(result["route"]) < 2:
+            policy.failed_plan(action, target, result)
             continue
         policy.plan_frame(target, result, action)
         if action == "goal":

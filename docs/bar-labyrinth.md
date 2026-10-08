@@ -67,8 +67,12 @@ visibility edges are restricted to the discovered free region; the simulator
 checks each executed segment against actual walls. Movement cost is executed
 Euclidean length. The point robot has zero radius.
 
-The existing exhausted-branch recovery tries C++ A* through discovered free
-space. It accepts a route only if it is verified and no longer than the
+The parent-aware return mechanism tries C++ A* through discovered free space
+when no currently reachable useful candidate remains. Failed graph targets
+are deferred and labeled separately from exhausted branches; sensing during
+retreat preserves newly found candidates at the surviving ancestor. See the
+[backtracking audit and execution trace](bar-parent-backtracking-audit.md).
+The controller accepts an A* route only if it is verified and no longer than the
 recorded entry trajectory; otherwise it reverses that trajectory. The return
 is fully executed before exploration resumes. The invariant concerns this
 local branch and the *executed* path, not every geometric blind-alley region.
@@ -140,7 +144,8 @@ npm run build
 npm run lint
 ```
 
-Results: 4/4 C++ tests, 109/109 Python tests, 31/31 frontend tests,
+Results after the [backtracking correction](bar-parent-backtracking-audit.md):
+4/4 C++ tests, 113/113 Python tests, 32/32 frontend tests,
 successful frontend build and lint. Python reported one existing
 Starlette/httpx deprecation warning. Road Navigation, Grid BAR, original
 polygon scenarios, the CSV importer, and the generic A* source were not

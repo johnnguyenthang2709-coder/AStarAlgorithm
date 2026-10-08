@@ -89,4 +89,15 @@ describe('continuous playback', () => {
     await user.click(screen.getByRole('button', { name: 'Restart' }))
     expect(scrubber).toHaveValue('0')
   })
+
+  it('labels a graph-blocked target separately from branch exhaustion', async () => {
+    const user = userEvent.setup()
+    vi.mocked(simulateContinuousBar).mockResolvedValue({ ...result, frames: result.frames.map(frame =>
+      frame.event === 'plan' ? { ...frame, path: [], status: 'unreachable_target' } : frame) })
+    render(<BarPage />)
+    await user.click(screen.getByRole('button', { name: 'Run simulation' }))
+    await screen.findByRole('img', { name: 'Discovered continuous robot map' })
+    await user.click(screen.getByRole('button', { name: 'Step' }))
+    expect(screen.getByText('Target unreachable on known graph')).toBeInTheDocument()
+  })
 })

@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 import astar_core
 from app.services.bar_continuous import ContinuousPolicy, ExploreNode, path_length, simulate_continuous
-from app.services.bar_continuous_geometry import ContinuousWorld, distance, segment_in_region
+from app.services.bar_continuous_geometry import ContinuousWorld, SensorObservation, distance, segment_in_region
 from app.main import create_app
 
 
@@ -101,6 +101,69 @@ def test_a_star_return_shortens_executed_entry_and_fallback_reverses_it(monkeypa
     reverse, used_fallback, recorded = other.recovery_route(ExploreNode((1., 1.), 0))
     assert used_fallback and reverse == [(2., 2.), (1., 1.)]
     assert path_length(reverse) == pytest.approx(recorded)
+
+    monkeypatch.setattr(other, "plan", lambda _target: {
+        "found": True, "route": [(2., 2.), (9., 9.), (1., 1.)],
+        "graph_points": [], "graph_links": [],
+    })
+    reverse, used_fallback, recorded = other.recovery_route(ExploreNode((1., 1.), 0))
+    assert used_fallback and reverse == [(2., 2.), (1., 1.)]
+    assert path_length(reverse) == pytest.approx(recorded)
+
+
+def test_failed_target_is_deferred_while_parent_sibling_survives():
+    policy = ContinuousPolicy((1., 1.), (9., 9.), (0., 0., 10., 10.), 2)
+    policy.known_free = box(0, 0, 5, 3)
+    root = policy.stack[0]
+    child = ExploreNode((3., 1.), 1, [(4.3, 1.5)])
+    root.candidates = [(1., 2.7)]
+    policy.stack.append(child)
+    policy.current = child.position
+    policy.scan_positions.append(child.position)
+    action, target = policy.select()
+    assert (action, target) == ("explore", (4.3, 1.5))
+    policy.failed_plan(action, target, {"route": [], "nodes": 2, "edges": 0})
+    assert policy.frames[-1]["status"] == "unreachable_target"
+    assert policy.candidate_key(target) not in policy.tried
+    assert policy.select() == ("recover", root)
+    assert policy.recovery_trigger(root) == "graph_blocked_target"
+    policy.complete_recovery(root)
+    assert root.candidates == [(1., 2.7), (4.3, 1.5)]
+    assert policy.select() == ("explore", (1., 2.7))
+    policy.scan_positions.append((2., 2.))  # a verified waypoint can change the graph without adding area
+    assert policy.available(root) == [(4.3, 1.5)]
+
+
+def test_retreat_observations_belong_to_surviving_ancestor_and_goal_failure_waits():
+    policy = ContinuousPolicy((1., 1.), (4., 1.), (0., 0., 10., 10.), 2)
+    root = policy.stack[0]
+    child = ExploreNode((3., 1.), 1)
+    policy.stack.append(child)
+    policy.current = child.position
+    policy.known_free = box(0, 0, 2, 2)
+    policy.observe(SensorObservation(box(0, 0, 5, 3), ((4.3, 1.5),), ()), owner=root)
+    assert root.candidates == [(4.3, 1.5)] and not child.candidates
+    assert policy.select() == ("goal", (4., 1.))
+    policy.failed_plan("goal", (4., 1.), {"route": [], "nodes": 2, "edges": 0})
+    assert policy.select() == ("recover", root)
+    policy.known_free = policy.known_free.union(box(5, 0, 6, 3))
+    assert policy.select() == ("goal", (4., 1.))
+
+
+def test_nearest_viable_ancestor_is_chosen_and_empty_parent_can_be_skipped():
+    policy = ContinuousPolicy((1., 1.), (9., 9.), (0., 0., 10., 10.), 2)
+    policy.known_free = box(0, 0, 5, 3)
+    root = policy.stack[0]
+    root.candidates = [(1., 2.7)]
+    parent = ExploreNode((2., 1.), 1, [(4.3, 1.5)])
+    leaf = ExploreNode((3., 1.), 2)
+    policy.stack.extend((parent, leaf))
+    policy.current = leaf.position
+    policy.scan_positions.extend((parent.position, leaf.position))
+    assert policy.select() == ("recover", parent)
+    assert policy.recovery_trigger(parent) == "exhausted_branch"
+    parent.candidates.clear()
+    assert policy.select() == ("recover", root)
 
 
 @pytest.mark.parametrize("radius", [4., 6.])
