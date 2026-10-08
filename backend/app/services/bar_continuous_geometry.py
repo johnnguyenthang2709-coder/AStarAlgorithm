@@ -49,7 +49,7 @@ class ContinuousWorld:
     """Simulator-only ground truth. The policy sees SensorObservation values."""
 
     def __init__(self, bounds: tuple[float, float, float, float],
-                 polygons: tuple[tuple[Point, ...], ...], start: Point,
+                 polygons: tuple[tuple[Point, ...] | Polygon, ...], start: Point,
                  goal: Point, y_axis: str = "up"):
         if y_axis not in ("up", "down") or len(bounds) != 4 or not all(map(math.isfinite, bounds)):
             raise ValueError("invalid continuous-world bounds or axis")
@@ -61,9 +61,9 @@ class ContinuousWorld:
         self.border = box(*bounds)
         shapes = []
         for vertices in polygons:
-            shape = Polygon(vertices)
+            shape = vertices if isinstance(vertices, Polygon) else Polygon(vertices)
             if not shape.is_valid or shape.area <= EPS or not self.border.covers(shape):
-                raise ValueError("continuous obstacles must be simple polygons inside bounds")
+                raise ValueError("continuous obstacles must be valid polygons inside bounds")
             shapes.append(shape)
         self.polygons = polygons
         self.obstacles = unary_union(shapes)
@@ -71,10 +71,14 @@ class ContinuousWorld:
         for label, point in (("start", start), ("goal", goal)):
             if not all(map(math.isfinite, point)) or not self.border.contains(ShapePoint(point)) or self.obstacles.intersects(ShapePoint(point)):
                 raise ValueError(f"continuous {label} must be strictly free and inside bounds")
-        self.edges: list[tuple[Point, Point, tuple[int, int] | None]] = []
-        for polygon_index, vertices in enumerate(polygons):
-            for edge_index, (a, b) in enumerate(zip(vertices, vertices[1:] + vertices[:1])):
-                self.edges.append((a, b, (polygon_index, edge_index)))
+        self.edges: list[tuple[Point, Point, tuple[int, ...] | None]] = []
+        for polygon_index, shape in enumerate(shapes):
+            # A corridor network can enclose wall islands. Interior rings are
+            # physical boundaries too and must occlude sensor rays.
+            for ring_index, ring in enumerate((shape.exterior, *shape.interiors)):
+                vertices = list(ring.coords)[:-1]
+                for edge_index, (a, b) in enumerate(zip(vertices, vertices[1:] + vertices[:1])):
+                    self.edges.append((a, b, (polygon_index, ring_index, edge_index)))
         corners = ((x0, y0), (x1, y0), (x1, y1), (x0, y1))
         for a, b in zip(corners, corners[1:] + corners[:1]):
             self.edges.append((a, b, None))
@@ -98,7 +102,7 @@ class ContinuousWorld:
         return self.border.covers(path) and not self.obstacles.intersects(path)
 
     def _cast(self, origin: Point, angle: float, radius: float,
-              edges=None) -> tuple[float, tuple[int, int] | None]:
+              edges=None) -> tuple[float, tuple[int, ...] | None]:
         dx, dy = math.cos(angle), math.sin(angle)
         best, hit = radius, None
         for a, b, identity in self.edges if edges is None else edges:

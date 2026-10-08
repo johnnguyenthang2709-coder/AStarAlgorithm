@@ -7,9 +7,11 @@
 .bar-mode-switch button.active { background: #fff; color: #173d55; box-shadow: 0 1px 4px #29485b22; }
 .continuous-map-stage { min-height: 570px; height: min(74vh, 820px); overflow: auto; border: 1px solid #c7d6dc; border-radius: 7px; background: #dce5e7; }
 .continuous-map { display: block; max-width: none; background: #d7e0e3; }
-.continuous-unknown { fill: #d4dfe2; }
-.continuous-free { fill: #f7faf5; stroke: none; }
-.continuous-obstacle { fill: none; stroke: #485767; stroke-width: .18; stroke-linecap: round; }
+.continuous-unknown { fill: #bdc9cf; }
+.continuous-free { fill: #f8f8f2; stroke: none; }
+.continuous-obstacle { fill: none; stroke: #344b58; stroke-width: .22; stroke-linecap: round; stroke-linejoin: round; }
+.labyrinth-map-stage { background: #bdc9cf; }
+.labyrinth-map-stage .continuous-obstacle { stroke: #243b47; stroke-width: .34; }
 .continuous-trail { fill: none; stroke: #6d929f; stroke-width: .10; opacity: .42; }
 .continuous-recent-trail { fill: none; stroke: #34748a; stroke-width: .16; opacity: .82; }
 .continuous-graph-link { fill: none; stroke: #ad53a2; stroke-width: .06; opacity: .48; }

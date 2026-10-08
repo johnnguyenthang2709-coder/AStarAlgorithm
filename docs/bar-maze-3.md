@@ -1,6 +1,8 @@
 # Maze 3: seeded continuous Blind-Alley environments
 
-Maze 3 is the default Blind Alley **continuous 2D** demonstration. It adds
+This document records the **original room-based Maze 3 baseline**. The default
+continuous view now uses the [irregular labyrinth redesign](bar-labyrinth.md).
+The original Maze 3 remains selectable for regression and comparison. It adds
 geometric corridor maps without changing `include/astar/search.hpp`, the C++
 visibility-graph binding, Road Navigation, the four-direction grid mode, the
 original polygon importer, or the two fixed continuous polygon baselines.

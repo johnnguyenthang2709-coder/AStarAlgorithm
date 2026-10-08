@@ -27,7 +27,7 @@ export type ContinuousFrame = {
   graph_points?: WorldPoint[]
   graph_links?: [number, number][]
 }
-export type ContinuousScenario = 'irregular_u' | 'irregular_bugtrap' | 'maze_showcase' | 'maze_hard' | 'maze_seeded'
+export type ContinuousScenario = 'irregular_u' | 'irregular_bugtrap' | 'maze_showcase' | 'maze_hard' | 'maze_seeded' | 'lab_exploration' | 'lab_alley' | 'lab_complex' | 'lab_seeded'
 export type MazeOptions = {
   seed: number
   size: number
@@ -36,6 +36,7 @@ export type MazeOptions = {
   dead_end_rate: number
   trap_count: number
   difficulty: 'easy' | 'normal' | 'hard'
+  irregularity?: number
   start_cell?: [number, number] | null
   goal_cell?: [number, number] | null
 }

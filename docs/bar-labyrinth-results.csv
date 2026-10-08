@@ -1,0 +1,9 @@
+case,seed,size,radius,polygons,vertices,loops,dead_ends,status,goal_reached,executed_distance,recoveries,certified_recoveries,astar_returns,fallback_returns,astar_calls,expanded_nodes,turns,planning_ms,wall_s,frames,json_bytes,max_graph_nodes,max_graph_edges
+old-room-showcase,17,5,5,65,260,1,4,goal_reached,True,213.231,11,11,11,0,56,112,50,1.763,1.320,192,333552,46,185
+old-room-showcase,17,5,7,65,260,1,4,goal_reached,True,354.685,25,25,25,0,78,159,75,3.396,3.055,288,594910,54,291
+exploration,17,5,5,2,294,1,4,goal_reached,True,120.191,4,4,4,0,35,70,31,1.275,1.385,115,285043,32,71
+exploration,17,5,7,2,294,1,4,goal_reached,True,274.334,19,19,19,0,60,128,57,2.445,3.518,224,680684,42,150
+blind-alley,23,5,5,2,298,1,5,goal_reached,True,139.321,11,11,11,0,45,90,39,1.642,2.031,159,414670,35,124
+blind-alley,23,5,7,2,298,1,5,goal_reached,True,283.755,24,24,24,0,76,156,74,3.286,4.815,280,807919,53,171
+complex,2026,6,5,4,438,3,5,goal_reached,True,370.767,42,42,42,0,124,260,125,7.796,10.270,466,1207946,83,381
+complex,2026,6,7,4,438,3,5,goal_reached,True,97.044,3,3,3,0,22,44,20,0.448,0.626,74,209056,20,37

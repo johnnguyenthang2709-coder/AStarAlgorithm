@@ -72,7 +72,7 @@ class BarResponse(BaseModel):
 
 
 class ContinuousBarRequest(BaseModel):
-    scenario: Literal["irregular_u", "irregular_bugtrap", "maze_showcase", "maze_hard", "maze_seeded"]
+    scenario: Literal["irregular_u", "irregular_bugtrap", "maze_showcase", "maze_hard", "maze_seeded", "lab_exploration", "lab_alley", "lab_complex", "lab_seeded"]
     radius: float = Field(default=6.0, ge=1.0, le=10.0)
     seed: int = Field(default=17, ge=0, le=2**31-1)
     size: int = Field(default=5, ge=4, le=8)
@@ -81,6 +81,7 @@ class ContinuousBarRequest(BaseModel):
     dead_end_rate: float = Field(default=0.45, ge=0, le=1)
     trap_count: int = Field(default=2, ge=1, le=8)
     difficulty: Literal["easy", "normal", "hard"] = "normal"
+    irregularity: float = Field(default=0.65, ge=0, le=1)
     start_cell: tuple[int, int] | None = None
     goal_cell: tuple[int, int] | None = None
     debug_graph: bool = False
