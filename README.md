@@ -4,6 +4,17 @@ Explore shortest paths on a directed road graph near HCMUT Campus 1 and on an ed
 
 For a source-guided explanation of the algorithm, see [How A* works in this project](docs/astar-implementation.md).
 
+Application 1, **Blind-Alley Robot Navigation**, is a separate limited-sensing
+mode under **Blind Alley**. It uses the existing C++ four-direction A* with a
+discovered occupancy map, frontier exploration, and autonomous exhausted-branch
+recovery. The benchmark gate labels events only after navigation. See
+[BAR methods and experiments](docs/bar-application.md) and the
+[exact recovery trigger](docs/bar-recovery-trigger.md). The
+[independent paper/source review](docs/bar-independent-review.md) distinguishes
+this grid adaptation from the authors' continuous-space method. Run the fixed experiment
+matrix with `.venv\Scripts\python.exe scripts\benchmark_bar.py`; see the
+[frozen results table](docs/bar-results.md).
+
 ```text
 React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem
 ```
@@ -80,7 +91,7 @@ Run from the repository root after building the binding:
 .venv\Scripts\ctest.exe --test-dir build-cpython --output-on-failure
 .venv\Scripts\python.exe -m unittest discover -s tests -p preprocess_tests.py -v
 $env:PYTHONPATH = (Join-Path $PWD 'backend')
-.venv\Scripts\python.exe -m pytest -q tests\test_binding.py tests\test_api.py tests\test_robot_qa.py tests\test_edge_snapping.py
+.venv\Scripts\python.exe -m pytest -q tests
 cd frontend
 npm run test
 npm run typecheck

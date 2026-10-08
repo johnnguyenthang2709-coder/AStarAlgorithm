@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import grid, road
+from app.routers import bar, grid, road
 from app.schemas.road import HealthResponse
 from app.services.road_bundle import load_bundle
 
@@ -44,6 +44,7 @@ def create_app(graph_path: Path | None = None) -> FastAPI:
                        allow_headers=["Content-Type"])
     app.include_router(road.router)
     app.include_router(grid.router)
+    app.include_router(bar.router)
 
     @app.get("/api/health", response_model=HealthResponse, tags=["health"])
     def health(response: Response):
