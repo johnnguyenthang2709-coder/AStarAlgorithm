@@ -29,6 +29,9 @@ polygon scenarios and original grid benchmarks remain selectable. See
 [parent-aware backtracking audit](docs/bar-parent-backtracking-audit.md),
 [original Maze 3 baseline](docs/bar-maze-3.md), and
 [continuous method and assumptions](docs/bar-continuous.md).
+The **Indoor Exploration** presets add rooms, doors, furniture, and observed
+parent-branch playback using the same continuous sensor and C++ A* planner;
+see the [indoor design, assumptions, and results](docs/bar-indoor.md).
 
 ```text
 React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem / visibility graph

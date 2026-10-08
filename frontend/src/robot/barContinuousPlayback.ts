@@ -12,6 +12,8 @@ export type ContinuousPlaybackState = {
   recoveries: number
   graphPoints: WorldPoint[]
   graphLinks: [number, number][]
+  branchId?: number
+  branchStatus?: string
 }
 
 export function buildContinuousPlayback(result: ContinuousBarResponse): ContinuousPlaybackState[] {
@@ -26,7 +28,15 @@ export function buildContinuousPlayback(result: ContinuousBarResponse): Continuo
   let recoveries = 0
   let graphPoints: WorldPoint[] = []
   let graphLinks: [number, number][] = []
+  let branchId: number | undefined
+  let branchStatus: string | undefined
   return result.frames.map(frame => {
+    if (frame.event === 'branch') {
+      branchStatus = frame.status
+      if (frame.status === 'active') branchId = frame.branch_id
+      else branchId = frame.parent_id ?? 0
+    }
+    if (frame.event === 'recover_start') branchStatus = 'returning to parent'
     if (frame.event === 'sense') {
       if (frame.region) regions.push(frame.region)
       edges.push(...(frame.obstacle_edges ?? []))
@@ -62,6 +72,7 @@ export function buildContinuousPlayback(result: ContinuousBarResponse): Continuo
       regions: [...regions], edges: [...edges], trail: [...trail],
       path: [...path], entry: [...entry], retreat: [...retreat], target,
       distance, recoveries, graphPoints, graphLinks,
+      branchId, branchStatus,
     }
   })
 }

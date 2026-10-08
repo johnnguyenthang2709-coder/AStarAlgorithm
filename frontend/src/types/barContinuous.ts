@@ -4,7 +4,7 @@ export type SensedRegion = {
   coordinates: number[][][] | number[][][][]
 }
 export type ContinuousFrame = {
-  event: 'sense' | 'plan' | 'move' | 'recover_start' | 'recover_end' | 'finish'
+  event: 'sense' | 'plan' | 'move' | 'recover_start' | 'recover_end' | 'branch' | 'finish'
   position: WorldPoint
   heading: number
   region?: SensedRegion
@@ -27,8 +27,11 @@ export type ContinuousFrame = {
   graph_edges?: number
   graph_points?: WorldPoint[]
   graph_links?: [number, number][]
+  branch_id?: number
+  parent_id?: number | null
 }
-export type ContinuousScenario = 'irregular_u' | 'irregular_bugtrap' | 'maze_showcase' | 'maze_hard' | 'maze_seeded' | 'lab_exploration' | 'lab_alley' | 'lab_complex' | 'lab_seeded'
+export type ContinuousScenario = 'irregular_u' | 'irregular_bugtrap' | 'maze_showcase' | 'maze_hard' | 'maze_seeded' | 'lab_exploration' | 'lab_alley' | 'lab_complex' | 'lab_seeded' | 'indoor_apartment' | 'indoor_office' | 'indoor_challenge' | 'indoor_seeded'
+export type IndoorOptions = { seed: number; indoor_layout: 'apartment' | 'office' | 'challenge' }
 export type MazeOptions = {
   seed: number
   size: number
@@ -55,6 +58,7 @@ export type ContinuousBarResponse = {
   success: boolean
   frames: ContinuousFrame[]
   maze_config?: MazeOptions | null
+  indoor_config?: IndoorOptions | null
   recoveries: {
     anchor: WorldPoint
     entry_length: number
@@ -72,5 +76,7 @@ export type ContinuousBarResponse = {
     planning_time_ms: number
     max_graph_nodes: number
     max_graph_edges: number
+    observed_free_area?: number
+    observed_branches?: number
   }
 }

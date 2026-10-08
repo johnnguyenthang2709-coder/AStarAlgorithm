@@ -22,6 +22,8 @@ class ExploreNode:
     position: Point
     history_index: int
     candidates: list[Point] = field(default_factory=list)
+    branch_id: int = 0
+    parent_id: int | None = None
 
 
 class ContinuousPolicy:
@@ -29,7 +31,7 @@ class ContinuousPolicy:
 
     def __init__(self, start: Point, goal: Point, bounds: tuple[float, float, float, float],
                  sensing_radius: float, prefer_novelty: bool = False,
-                 include_graph: bool = False):
+                 include_graph: bool = False, trace_hierarchy: bool = False):
         if sensing_radius <= 0:
             raise ValueError("sensing radius must be positive")
         self.current, self.goal, self.bounds = start, goal, bounds
@@ -37,6 +39,8 @@ class ContinuousPolicy:
         self.radius = sensing_radius
         self.prefer_novelty = prefer_novelty
         self.include_graph = include_graph
+        self.trace_hierarchy = trace_hierarchy
+        self.next_branch_id = 1
         self.heading = 0.0
         self.last_heading: float | None = None
         self.known_free = GeometryCollection()
@@ -81,7 +85,8 @@ class ContinuousPolicy:
         self.frames.append({"event": "sense", "position": as_point(self.current),
                             "heading": self.heading, "region": observation.geojson(),
                             "obstacle_edges": [[as_point(a), as_point(b)] for a, b in observation.edges],
-                            "new_area": round(gained, 6)})
+                            "new_area": round(gained, 6),
+                            **({"branch_id": node.branch_id} if self.trace_hierarchy else {})})
         return gained
 
     def _candidate_valid(self, candidate: Point) -> bool:
@@ -145,6 +150,29 @@ class ContinuousPolicy:
                     ancestor.candidates.append(candidate)
         self.stack = self.stack[:index + 1]
         ancestor.history_index = len(self.history) - 1
+
+    def enter_branch(self) -> None:
+        parent = self.stack[-1]
+        node = ExploreNode(self.current, len(self.history) - 1,
+                           branch_id=self.next_branch_id, parent_id=parent.branch_id)
+        self.next_branch_id += 1
+        self.stack.append(node)
+        if self.trace_hierarchy:
+            self.frames.append({"event": "branch", "position": as_point(self.current),
+                                "heading": self.heading, "status": "active",
+                                "branch_id": node.branch_id, "parent_id": parent.branch_id,
+                                "anchor": as_point(parent.position)})
+
+    def leave_branches(self, ancestor: ExploreNode) -> None:
+        if self.trace_hierarchy:
+            for node in reversed(self.stack[self.stack.index(ancestor) + 1:]):
+                blocked = any(self.candidate_key(candidate) in self.deferred
+                              for candidate in node.candidates)
+                self.frames.append({"event": "branch", "position": as_point(self.current),
+                                    "heading": self.heading, "branch_id": node.branch_id,
+                                    "parent_id": node.parent_id,
+                                    "status": "temporarily_unavailable" if blocked else "exhausted",
+                                    "anchor": as_point(ancestor.position)})
 
     def recovery_trigger(self, ancestor: ExploreNode) -> str:
         """A failed graph route is distinct from a branch with no useful frontier."""
@@ -227,7 +255,9 @@ class ContinuousPolicy:
                             "entry_path": [as_point(point) for point in entry],
                             "path": [as_point(point) for point in route],
                             "fallback": not valid, "entry_length": entry_length,
-                            "trigger": self.active_recovery_trigger}
+                            "trigger": self.active_recovery_trigger,
+                            **({"branch_id": self.stack[-1].branch_id,
+                                "parent_id": ancestor.branch_id} if self.trace_hierarchy else {})}
         if self.include_graph:
             frame["graph_points"] = [as_point(point) for point in result["graph_points"]]
             frame["graph_links"] = result["graph_links"]
@@ -261,15 +291,19 @@ class ContinuousPolicy:
                             "replanning_count": self.planning_calls,
                             "planning_time_ms": round(self.planning_ms, 3),
                             "max_graph_nodes": self.max_nodes,
-                            "max_graph_edges": self.max_edges}}
+                            "max_graph_edges": self.max_edges,
+                            **({"observed_free_area": round(self.known_free.area, 3),
+                                "observed_branches": self.next_branch_id - 1}
+                               if self.trace_hierarchy else {})}}
 
 
 def simulate_continuous(world: ContinuousWorld, radius: float, limit: int = 250,
                         prefer_novelty: bool = False, include_graph: bool = False,
-                        complete_frontier_route: bool = False) -> dict:
+                        complete_frontier_route: bool = False,
+                        trace_hierarchy: bool = False) -> dict:
     """Simulator orchestrates sensing and physical checks outside the policy."""
     policy = ContinuousPolicy(world.start, world.goal, world.bounds, radius,
-                              prefer_novelty, include_graph)
+                              prefer_novelty, include_graph, trace_hierarchy)
 
     def checked_move(point: Point, phase: str) -> None:
         if not world.collision_free(policy.current, point):
@@ -292,6 +326,7 @@ def simulate_continuous(world: ContinuousWorld, radius: float, limit: int = 250,
                 checked_move(waypoint, "retreat")
                 policy.observe(world.sense(policy.current, radius), owner=ancestor)  # locked route
             policy.finish_recovery(ancestor, fallback, entry_length, before)
+            policy.leave_branches(ancestor)
             policy.complete_recovery(ancestor)
             continue
         target = value
@@ -311,5 +346,5 @@ def simulate_continuous(world: ContinuousWorld, radius: float, limit: int = 250,
         waypoints = result["route"][1:] if complete_frontier_route else result["route"][1:2]
         for waypoint in waypoints:
             checked_move(waypoint, "explore")
-        policy.stack.append(ExploreNode(policy.current, len(policy.history) - 1))
+        policy.enter_branch()
     return policy.finish("step_limit")

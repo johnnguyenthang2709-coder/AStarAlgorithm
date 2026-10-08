@@ -72,7 +72,7 @@ class BarResponse(BaseModel):
 
 
 class ContinuousBarRequest(BaseModel):
-    scenario: Literal["irregular_u", "irregular_bugtrap", "maze_showcase", "maze_hard", "maze_seeded", "lab_exploration", "lab_alley", "lab_complex", "lab_seeded"]
+    scenario: Literal["irregular_u", "irregular_bugtrap", "maze_showcase", "maze_hard", "maze_seeded", "lab_exploration", "lab_alley", "lab_complex", "lab_seeded", "indoor_apartment", "indoor_office", "indoor_challenge", "indoor_seeded"]
     radius: float = Field(default=6.0, ge=1.0, le=10.0)
     seed: int = Field(default=17, ge=0, le=2**31-1)
     size: int = Field(default=5, ge=4, le=8)
@@ -85,6 +85,7 @@ class ContinuousBarRequest(BaseModel):
     start_cell: tuple[int, int] | None = None
     goal_cell: tuple[int, int] | None = None
     debug_graph: bool = False
+    indoor_layout: Literal["apartment", "office", "challenge"] = "apartment"
 
 
 class ContinuousBarResponse(BaseModel):
@@ -103,3 +104,4 @@ class ContinuousBarResponse(BaseModel):
     recoveries: list[dict]
     metrics: dict
     maze_config: dict | None = None
+    indoor_config: dict | None = None

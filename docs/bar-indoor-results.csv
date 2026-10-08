@@ -1,0 +1,7 @@
+layout,seed,radius,rooms,doors,furniture,status,success,executed_distance,known_free_area,observed_branches,parent_returns,astar_returns,fallback_returns,verified_local_bounds,astar_calls,formal_bar_certifications,expanded_nodes,turns,planning_ms,wall_s,frames,json_bytes
+apartment,41,5,8,10,15,goal_reached,True,189.246,400.1,38,11,11,0,11,50,0,102,44,1.555,0.539,228,261692
+apartment,41,7,8,10,15,goal_reached,True,248.374,556.733,36,13,13,0,13,50,0,101,47,1.392,0.593,239,293669
+office,73,5,8,12,20,goal_reached,True,181.356,499.201,39,11,11,0,11,51,0,102,39,1.412,0.597,227,258932
+office,73,7,8,12,20,goal_reached,True,625.729,865.165,80,36,36,0,36,117,0,234,102,6.422,1.833,555,661276
+challenge,211,5,8,12,22,goal_reached,True,129.957,446.308,28,6,6,0,6,35,0,70,23,0.629,0.329,153,175665
+challenge,211,7,8,12,22,goal_reached,True,137.893,499.343,23,3,3,0,3,27,0,54,16,0.488,0.236,115,137567

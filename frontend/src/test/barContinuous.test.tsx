@@ -100,4 +100,25 @@ describe('continuous playback', () => {
     await user.click(screen.getByRole('button', { name: 'Step' }))
     expect(screen.getByText('Target unreachable on known graph')).toBeInTheDocument()
   })
+
+  it('selects a seeded indoor layout and replays observed parent branches', async () => {
+    const user = userEvent.setup()
+    const indoorResult: ContinuousBarResponse = { ...result, scenario: 'indoor_seeded',
+      indoor_config: { indoor_layout: 'challenge', seed: 211 },
+      metrics: { ...result.metrics, observed_branches: 2, observed_free_area: 30 },
+      frames: [result.frames[0],
+        { event: 'branch', position: start, heading: 0, branch_id: 1, parent_id: 0, status: 'active', anchor: start },
+        ...result.frames.slice(1)] }
+    vi.mocked(simulateContinuousBar).mockResolvedValue(indoorResult)
+    render(<BarPage />)
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Map' }), 'indoor_seeded')
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Floor plan' }), 'challenge')
+    await user.click(screen.getByRole('button', { name: 'Run simulation' }))
+    await waitFor(() => expect(simulateContinuousBar).toHaveBeenCalledWith('indoor_seeded', 5,
+      expect.objectContaining({ indoor_layout: 'challenge', seed: 41, debug_graph: false })))
+    await user.click(screen.getByRole('button', { name: 'Step' }))
+    expect(screen.getByText('Entered observed branch 1')).toBeInTheDocument()
+    expect(screen.getByText('Observed branch')).toBeInTheDocument()
+    expect(buildContinuousPlayback(indoorResult)[1].branchId).toBe(1)
+  })
 })
