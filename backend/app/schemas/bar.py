@@ -85,6 +85,7 @@ class ContinuousBarRequest(BaseModel):
     start_cell: tuple[int, int] | None = None
     goal_cell: tuple[int, int] | None = None
     debug_graph: bool = False
+    debug_exploration: bool = False
     indoor_layout: Literal["apartment", "office", "challenge"] = "apartment"
 
 

@@ -10,12 +10,22 @@ export type ContinuousFrame = {
   region?: SensedRegion
   obstacle_edges?: [WorldPoint, WorldPoint][]
   new_area?: number
+  new_wall_fragments?: number
+  observed_wall_fragments?: number
   target?: WorldPoint
   path?: WorldPoint[]
   entry_path?: WorldPoint[]
   anchor?: WorldPoint
   fallback?: boolean
-  trigger?: 'exhausted_branch' | 'graph_blocked_target'
+  trigger?: 'exhausted_branch' | 'graph_blocked_target' | 'occluded_frontier_deferred'
+  decision?: {
+    reason: string
+    eligible: number
+    estimated_gain?: number | null
+    estimated_travel?: number
+    active_branch?: number
+    parent_branch?: number | null
+  }
   entry_length?: number
   retreat_length?: number
   retreat_ratio?: number
@@ -65,7 +75,7 @@ export type ContinuousBarResponse = {
     retreat_length: number
     retreat_ratio: number | null
     fallback: boolean
-    trigger?: 'exhausted_branch' | 'graph_blocked_target'
+    trigger?: 'exhausted_branch' | 'graph_blocked_target' | 'occluded_frontier_deferred'
     invariant_verified: boolean
   }[]
   metrics: {
@@ -78,5 +88,7 @@ export type ContinuousBarResponse = {
     max_graph_edges: number
     observed_free_area?: number
     observed_branches?: number
+    ranking_time_ms?: number
+    observed_wall_fragments?: number
   }
 }

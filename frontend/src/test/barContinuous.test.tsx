@@ -101,6 +101,20 @@ describe('continuous playback', () => {
     expect(screen.getByText('Target unreachable on known graph')).toBeInTheDocument()
   })
 
+  it('requests and displays optional frontier decision diagnostics', async () => {
+    const user = userEvent.setup()
+    vi.mocked(simulateContinuousBar).mockResolvedValue({ ...result, frames: result.frames.map(frame =>
+      frame.event === 'plan' ? { ...frame, decision: { reason: 'observed_frontier_utility',
+        eligible: 3, estimated_gain: 6.25, estimated_travel: 4.1, active_branch: 2, parent_branch: 1 } } : frame) })
+    render(<BarPage />)
+    await user.click(screen.getByRole('checkbox', { name: /Exploration decision details/ }))
+    await user.click(screen.getByRole('button', { name: 'Run simulation' }))
+    await waitFor(() => expect(simulateContinuousBar).toHaveBeenCalledWith('lab_exploration', 5,
+      { debug_graph: false, debug_exploration: true }))
+    await user.click(screen.getByRole('button', { name: 'Step' }))
+    expect(screen.getByText(/estimated visible frontier gain 6.25/)).toBeInTheDocument()
+  })
+
   it('selects a seeded indoor layout and replays observed parent branches', async () => {
     const user = userEvent.setup()
     const indoorResult: ContinuousBarResponse = { ...result, scenario: 'indoor_seeded',

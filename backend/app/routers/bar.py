@@ -68,7 +68,9 @@ def simulate_polygon(body: ContinuousBarRequest):
         episode = simulate_continuous(world, body.radius, prefer_novelty=maze is not None,
                                       include_graph=body.debug_graph,
                                       complete_frontier_route=maze is not None or indoor is not None,
-                                      trace_hierarchy=indoor is not None)
+                                      trace_hierarchy=indoor is not None,
+                                      radar_informed=indoor is not None or body.scenario.startswith("lab_"),
+                                      trace_decisions=body.debug_exploration)
         return {"scenario": body.scenario, "radius": body.radius,
                 "bounds": world.bounds, "y_axis": world.y_axis,
                 "start": as_point(world.start), "goal": as_point(world.goal),

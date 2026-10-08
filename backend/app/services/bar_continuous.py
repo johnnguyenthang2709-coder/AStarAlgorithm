@@ -9,8 +9,9 @@ from shapely.geometry import GeometryCollection, LineString, Point as ShapePoint
 from shapely.prepared import prep
 
 from app.services.bar_continuous_geometry import (
-    ContinuousWorld, Point, SensorObservation, as_point, distance, segment_in_region,
+    ContinuousWorld, Point, RAY_MARGIN, SensorObservation, as_point, distance, segment_in_region,
 )
+from app.services.bar_information import wall_key, possible_frontier, visible_frontier_gain
 
 
 def path_length(points: list[Point]) -> float:
@@ -31,7 +32,8 @@ class ContinuousPolicy:
 
     def __init__(self, start: Point, goal: Point, bounds: tuple[float, float, float, float],
                  sensing_radius: float, prefer_novelty: bool = False,
-                 include_graph: bool = False, trace_hierarchy: bool = False):
+                 include_graph: bool = False, trace_hierarchy: bool = False,
+                 radar_informed: bool = False, trace_decisions: bool = False):
         if sensing_radius <= 0:
             raise ValueError("sensing radius must be positive")
         self.current, self.goal, self.bounds = start, goal, bounds
@@ -40,6 +42,8 @@ class ContinuousPolicy:
         self.prefer_novelty = prefer_novelty
         self.include_graph = include_graph
         self.trace_hierarchy = trace_hierarchy
+        self.radar_informed = radar_informed
+        self.trace_decisions = trace_decisions
         self.next_branch_id = 1
         self.heading = 0.0
         self.last_heading: float | None = None
@@ -50,6 +54,14 @@ class ContinuousPolicy:
         self.stack = [ExploreNode(start, 0)]
         self.tried: set[Point] = set()
         self.deferred: dict[Point, tuple[float, int]] = {}
+        self.radar_pending: set[Point] = set()
+        self.observed_walls: dict[tuple[Point, Point], tuple[Point, Point]] = {}
+        self._frontier = None
+        self._prepared_free = None
+        self._frontier_scores: dict[Point, float] = {}
+        self.ranking_ms = 0.0
+        self.last_decision: dict = {}
+        self.decision_index = 0
         self.goal_deferred_at: tuple[float, int] | None = None
         self.active_recovery_trigger = "exhausted_branch"
         self.frames: list[dict] = []
@@ -74,6 +86,17 @@ class ContinuousPolicy:
         before = self.known_free.area
         self.known_free = self.known_free.union(observation.region)
         gained = max(0.0, self.known_free.area - before)
+        new_wall_fragments = 0
+        if self.radar_informed:
+            for a, b in observation.edges:
+                key = wall_key(a, b)
+                if key not in self.observed_walls:
+                    self.observed_walls[key] = (a, b)
+                    new_wall_fragments += 1
+            if gained > 1e-9 or new_wall_fragments:
+                self._frontier = None
+                self._prepared_free = None
+                self._frontier_scores.clear()
         if not any(distance(self.current, old) < 1e-7 for old in self.scan_positions):
             self.scan_positions.append(self.current)
         node = owner if owner is not None else self.stack[-1]
@@ -86,7 +109,11 @@ class ContinuousPolicy:
                             "heading": self.heading, "region": observation.geojson(),
                             "obstacle_edges": [[as_point(a), as_point(b)] for a, b in observation.edges],
                             "new_area": round(gained, 6),
-                            **({"branch_id": node.branch_id} if self.trace_hierarchy else {})})
+                            **({"branch_id": node.branch_id} if self.trace_hierarchy else {}),
+                            **({"new_wall_fragments": new_wall_fragments,
+                                "observed_wall_fragments": len(self.observed_walls),
+                                "decision_index": self.decision_index}
+                               if self.trace_decisions else {})})
         return gained
 
     def _candidate_valid(self, candidate: Point) -> bool:
@@ -101,29 +128,92 @@ class ContinuousPolicy:
             return False
         return True
 
-    def available(self, node: ExploreNode) -> list[Point]:
+    def _frontier_gain(self, candidate: Point) -> float:
+        key = self.candidate_key(candidate)
+        if key not in self._frontier_scores:
+            if self._frontier is None:
+                self._frontier = possible_frontier(
+                    self.known_free, self.border, list(self.observed_walls.values()))
+            if self._prepared_free is None:
+                self._prepared_free = prep(self.known_free.buffer(2 * RAY_MARGIN))
+            self._frontier_scores[key] = visible_frontier_gain(
+                candidate, self.radius, self._prepared_free, self._frontier)
+        return self._frontier_scores[key]
+
+    def available(self, node: ExploreNode, include_uncertain: bool = False) -> list[Point]:
         node.candidates = [candidate for candidate in node.candidates if self._candidate_valid(candidate)]
-        return [candidate for candidate in node.candidates
-                if self.graph_changed_since(self.deferred.get(self.candidate_key(candidate)))]
+        choices = []
+        for candidate in node.candidates:
+            key = self.candidate_key(candidate)
+            if not self.graph_changed_since(self.deferred.get(key)):
+                continue
+            if self.radar_informed and self._frontier_gain(candidate) <= 1e-9:
+                self.radar_pending.add(key)
+                if not include_uncertain:
+                    continue
+            else:
+                self.radar_pending.discard(key)
+            choices.append(candidate)
+        return choices
 
     def select(self) -> tuple[str, Point | ExploreNode] | None:
+        begun = perf_counter()
+        self.decision_index += 1
         if self.known_free.covers(ShapePoint(self.goal)) and self.graph_changed_since(self.goal_deferred_at):
+            self.last_decision = {"reason": "known_goal", "eligible": 1}
             return "goal", self.goal
         current = self.stack[-1]
         choices = self.available(current)
+        uncertain_fallback = False
+        if not choices:
+            for ancestor in reversed(self.stack[:-1]):
+                if self.available(ancestor):
+                    self.last_decision = {"reason": "nearest_viable_ancestor", "eligible": 0,
+                                          "active_branch": current.branch_id,
+                                          "parent_branch": ancestor.branch_id}
+                    self.ranking_ms += (perf_counter() - begun) * 1000
+                    return "recover", ancestor
+            if self.radar_informed:
+                for ancestor in reversed(self.stack):
+                    pending = self.available(ancestor, include_uncertain=True)
+                    if pending:
+                        if ancestor is not current:
+                            self.last_decision = {"reason": "deferred_frontier_fallback",
+                                                  "eligible": 0, "active_branch": current.branch_id,
+                                                  "parent_branch": ancestor.branch_id}
+                            self.ranking_ms += (perf_counter() - begun) * 1000
+                            return "recover", ancestor
+                        choices = pending
+                        uncertain_fallback = True
+                        break
         if choices:
             def priority(point: Point) -> tuple[float, float, float, float]:
                 reachable_disk = ShapePoint(point).buffer(self.radius, quad_segs=12).intersection(self.border)
                 novelty = reachable_disk.difference(self.known_free).area
                 return (-novelty, distance(point, self.goal), point[0], point[1])
-            target = min(choices, key=priority) if self.prefer_novelty else min(
-                choices, key=lambda p: (distance(p, self.goal), distance(p, self.current), p[0], p[1]))
+            if self.radar_informed and self.prefer_novelty and not uncertain_fallback:
+                # A sublinear travel penalty prevents tiny nearby views from
+                # dominating larger visible frontiers in long corridors.
+                target = max(choices, key=lambda p: (
+                    self._frontier_gain(p) / (distance(self.current, p) ** .25),
+                    self._frontier_gain(p), -distance(p, self.goal), -p[0], -p[1]))
+            else:
+                target = min(choices, key=priority) if self.prefer_novelty else min(
+                    choices, key=lambda p: (distance(p, self.goal), distance(p, self.current), p[0], p[1]))
+            self.last_decision = {"reason": "uncertain_frontier_fallback" if uncertain_fallback
+                                  else "observed_frontier_utility" if self.radar_informed
+                                  else "legacy_ranking", "eligible": len(choices),
+                                  "estimated_gain": self._frontier_gain(target) if self.radar_informed else None,
+                                  "estimated_travel": distance(self.current, target),
+                                  "active_branch": current.branch_id,
+                                  "parent_branch": current.parent_id}
             current.candidates.remove(target)
             self.tried.add(self.candidate_key(target))
+            self.radar_pending.discard(self.candidate_key(target))
+            self.ranking_ms += (perf_counter() - begun) * 1000
             return "explore", target
-        for ancestor in reversed(self.stack[:-1]):
-            if self.available(ancestor):
-                return "recover", ancestor
+        self.last_decision = {"reason": "no_known_frontier", "eligible": 0}
+        self.ranking_ms += (perf_counter() - begun) * 1000
         return None
 
     def failed_plan(self, action: str, target: Point, result: dict) -> None:
@@ -145,7 +235,8 @@ class ContinuousPolicy:
         index = self.stack.index(ancestor)
         for child in self.stack[index + 1:]:
             for candidate in child.candidates:
-                if (self.candidate_key(candidate) in self.deferred and
+                if (self.candidate_key(candidate) in self.deferred or
+                        self.candidate_key(candidate) in self.radar_pending) and (
                         all(distance(candidate, existing) >= 0.1 for existing in ancestor.candidates)):
                     ancestor.candidates.append(candidate)
         self.stack = self.stack[:index + 1]
@@ -166,7 +257,8 @@ class ContinuousPolicy:
     def leave_branches(self, ancestor: ExploreNode) -> None:
         if self.trace_hierarchy:
             for node in reversed(self.stack[self.stack.index(ancestor) + 1:]):
-                blocked = any(self.candidate_key(candidate) in self.deferred
+                blocked = any(self.candidate_key(candidate) in self.deferred or
+                              self.candidate_key(candidate) in self.radar_pending
                               for candidate in node.candidates)
                 self.frames.append({"event": "branch", "position": as_point(self.current),
                                     "heading": self.heading, "branch_id": node.branch_id,
@@ -183,7 +275,11 @@ class ContinuousPolicy:
             for candidate in node.candidates
             if self.candidate_key(candidate) in self.deferred
         )
-        return "graph_blocked_target" if blocked else "exhausted_branch"
+        if blocked:
+            return "graph_blocked_target"
+        pending = any(self.candidate_key(candidate) in self.radar_pending
+                      for node in self.stack[index + 1:] for candidate in node.candidates)
+        return "occluded_frontier_deferred" if pending else "exhausted_branch"
 
     def plan(self, target: Point) -> dict:
         points = list(dict.fromkeys(self.scan_positions + [self.current, target]))
@@ -225,7 +321,8 @@ class ContinuousPolicy:
         self.history.append(destination)
         self.frames.append({"event": "move", "from": as_point(origin),
                             "position": as_point(destination), "heading": heading,
-                            "distance": length, "phase": phase})
+                            "distance": length, "phase": phase,
+                            **({"decision_index": self.decision_index} if self.trace_decisions else {})})
 
     def plan_frame(self, target: Point, result: dict, phase: str) -> None:
         frame = {"event": "plan", "position": as_point(self.current),
@@ -236,6 +333,8 @@ class ContinuousPolicy:
         if self.include_graph:
             frame["graph_points"] = [as_point(point) for point in result["graph_points"]]
             frame["graph_links"] = result["graph_links"]
+        if self.trace_decisions:
+            frame["decision"] = {"index": self.decision_index, **self.last_decision}
         self.frames.append(frame)
 
     def recovery_route(self, ancestor: ExploreNode) -> tuple[list[Point], bool, float]:
@@ -255,12 +354,16 @@ class ContinuousPolicy:
                             "entry_path": [as_point(point) for point in entry],
                             "path": [as_point(point) for point in route],
                             "fallback": not valid, "entry_length": entry_length,
+                            **({"astar_return_length": result["cost"] if result["found"] else None}
+                               if self.trace_decisions else {}),
                             "trigger": self.active_recovery_trigger,
                             **({"branch_id": self.stack[-1].branch_id,
                                 "parent_id": ancestor.branch_id} if self.trace_hierarchy else {})}
         if self.include_graph:
             frame["graph_points"] = [as_point(point) for point in result["graph_points"]]
             frame["graph_links"] = result["graph_links"]
+        if self.trace_decisions:
+            frame["decision"] = {"index": self.decision_index, **self.last_decision}
         self.frames.append(frame)
         return route, not valid, entry_length
 
@@ -292,6 +395,9 @@ class ContinuousPolicy:
                             "planning_time_ms": round(self.planning_ms, 3),
                             "max_graph_nodes": self.max_nodes,
                             "max_graph_edges": self.max_edges,
+                            **({"ranking_time_ms": round(self.ranking_ms, 3),
+                                "observed_wall_fragments": len(self.observed_walls)}
+                               if self.radar_informed else {}),
                             **({"observed_free_area": round(self.known_free.area, 3),
                                 "observed_branches": self.next_branch_id - 1}
                                if self.trace_hierarchy else {})}}
@@ -300,10 +406,12 @@ class ContinuousPolicy:
 def simulate_continuous(world: ContinuousWorld, radius: float, limit: int = 250,
                         prefer_novelty: bool = False, include_graph: bool = False,
                         complete_frontier_route: bool = False,
-                        trace_hierarchy: bool = False) -> dict:
+                        trace_hierarchy: bool = False, radar_informed: bool = False,
+                        trace_decisions: bool = False) -> dict:
     """Simulator orchestrates sensing and physical checks outside the policy."""
     policy = ContinuousPolicy(world.start, world.goal, world.bounds, radius,
-                              prefer_novelty, include_graph, trace_hierarchy)
+                              prefer_novelty, include_graph, trace_hierarchy,
+                              radar_informed, trace_decisions)
 
     def checked_move(point: Point, phase: str) -> None:
         if not world.collision_free(policy.current, point):
