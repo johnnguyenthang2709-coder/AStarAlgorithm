@@ -1,6 +1,6 @@
 import type { GridCell } from './common'
 
-export type BarScenario = 'alley_reachable' | 'alley_turn' | 'alley_shortcut' | 'wide_mouth_alley' | 'open_route' | 'unreachable'
+export type BarScenario = 'alley_reachable' | 'alley_turn' | 'alley_shortcut' | 'wide_mouth_alley' | 'open_route' | 'unreachable' | 'expedition_narrow' | 'expedition_wide'
 export type BarFrame = {
   event: 'sense' | 'plan' | 'move' | 'recover_start' | 'recover_end' | 'finish'
   position: GridCell

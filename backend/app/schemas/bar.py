@@ -6,7 +6,7 @@ from app.schemas.common import GridCell
 
 
 class BarRequest(BaseModel):
-    scenario: Literal["alley_reachable", "alley_turn", "alley_shortcut", "wide_mouth_alley", "open_route", "unreachable"]
+    scenario: Literal["alley_reachable", "alley_turn", "alley_shortcut", "wide_mouth_alley", "open_route", "unreachable", "expedition_narrow", "expedition_wide"]
     radius: int = Field(default=2, ge=1, le=10)
 
 

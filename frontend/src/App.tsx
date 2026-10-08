@@ -6,6 +6,7 @@ import { RoadPage } from './road/RoadPage'
 import { RobotPage } from './robot/RobotPage'
 import { BarPage } from './robot/BarPage'
 import './App.css'
+import './robot/BarPage.css'
 
 function App() {
   const [mode, setMode] = useState<'road' | 'robot' | 'bar'>('road')

@@ -14,6 +14,8 @@ recovery. The benchmark gate labels events only after navigation. See
 this grid adaptation from the authors' continuous-space method. Run the fixed experiment
 matrix with `.venv\Scripts\python.exe scripts\benchmark_bar.py`; see the
 [frozen results table](docs/bar-results.md).
+For a larger visual demonstration, the Blind Alley screen also includes
+32 × 32 and 40 × 40 maps; see [large simulation measurements](docs/bar-large-simulation.md).
 
 ```text
 React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem

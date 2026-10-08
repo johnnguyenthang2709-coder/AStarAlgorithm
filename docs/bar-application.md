@@ -89,3 +89,5 @@ maps are grid benchmarks, not geometric reproductions of the paper's maps;
 their numerical results must not be compared directly with the paper's table.
 See [the independent research review](bar-independent-review.md) for the
 paper/source comparison, authors-map adaptation protocol, and report claims.
+The [larger simulation maps](bar-large-simulation.md) are separate UI demos;
+the six original fixtures and frozen benchmark matrix remain intact.
