@@ -9,6 +9,45 @@
 namespace py = pybind11;
 
 namespace {
+class VisibilityGraphProblem {
+public:
+    VisibilityGraphProblem(const std::vector<std::pair<double, double>>& points,
+                           const std::vector<std::pair<int, int>>& links)
+        : points_(points), adjacency_(points.size()) {
+        if (points_.empty()) throw std::invalid_argument("visibility graph must have nodes");
+        for (const auto& point : points_)
+            if (!std::isfinite(point.first) || !std::isfinite(point.second))
+                throw std::invalid_argument("visibility graph coordinates must be finite");
+        for (const auto& link : links) {
+            validate(link.first);
+            validate(link.second);
+            if (link.first == link.second) continue;
+            const double cost = distance(link.first, link.second);
+            if (!(cost > 0) || !std::isfinite(cost))
+                throw std::invalid_argument("visibility graph links need distinct finite positions");
+            adjacency_[link.first].push_back({link.second, cost});
+            adjacency_[link.second].push_back({link.first, cost});
+        }
+    }
+    void validate(int node) const {
+        if (node < 0 || static_cast<std::size_t>(node) >= points_.size())
+            throw std::invalid_argument("visibility graph node outside range");
+    }
+    std::vector<astar::Edge<int>> neighbors(int node) const {
+        validate(node);
+        return adjacency_[node];
+    }
+    double heuristic(int node, int goal) const { return distance(node, goal); }
+    bool is_goal(int node, int goal) const { return node == goal; }
+private:
+    double distance(int a, int b) const {
+        return std::hypot(points_[a].first - points_[b].first,
+                          points_[a].second - points_[b].second);
+    }
+    std::vector<std::pair<double, double>> points_;
+    std::vector<std::vector<astar::Edge<int>>> adjacency_;
+};
+
 class RoadEngine {
 public:
     explicit RoadEngine(const std::string& path) : graph_(astar::RoadGraph::load_json(path)) {}
@@ -119,6 +158,14 @@ py::dict grid_result(const astar::SearchResult<astar::Cell>& result) {
         for (const auto& cell : result.path) path.append(state_value(cell));
         output["path"] = path;
     }
+    return output;
+}
+py::dict visibility_result(const astar::SearchResult<int>& result) {
+    py::dict output;
+    output["found"] = result.found;
+    output["path"] = result.path;
+    output["cost"] = result.found ? py::cast(result.cost) : py::none();
+    output["metrics"] = metrics_dict(result);
     return output;
 }
 bool use_astar(const std::string& algorithm) {
@@ -253,4 +300,13 @@ PYBIND11_MODULE(astar_core, module) {
     }, py::arg("engine"), py::arg("start_node"), py::arg("goal_node"), py::arg("trace") = false);
     module.def("grid_search", &run_grid, py::arg("grid"), py::arg("start"), py::arg("goal"),
                py::arg("movement") = 8, py::arg("algorithm") = "astar", py::arg("trace") = false);
+    module.def("visibility_search", [](const std::vector<std::pair<double, double>>& points,
+                                        const std::vector<std::pair<int, int>>& links,
+                                        int start, int goal, const std::string& algorithm) {
+        const VisibilityGraphProblem problem(points, links);
+        problem.validate(start);
+        problem.validate(goal);
+        return visibility_result(astar::search<int>(problem, start, goal, use_astar(algorithm), false));
+    }, py::arg("points"), py::arg("links"), py::arg("start"), py::arg("goal"),
+       py::arg("algorithm") = "astar");
 }

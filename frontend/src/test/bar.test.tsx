@@ -29,6 +29,7 @@ describe('BAR playback', () => {
   it('shows only observations available at the selected frame', async () => {
     const user = userEvent.setup()
     render(<BarPage />)
+    await user.click(screen.getByRole('button', { name: 'Grid baseline' }))
     await user.click(screen.getByRole('button', { name: 'Run simulation' }))
     await waitFor(() => expect(simulateBar).toHaveBeenCalledWith('irregular_u', 2))
     expect(screen.getByRole('gridcell', { name: /Row 1, column 3: unknown/ })).toBeInTheDocument()
@@ -49,6 +50,7 @@ describe('BAR playback', () => {
   it('sends selected scenario and radius', async () => {
     const user = userEvent.setup()
     render(<BarPage />)
+    await user.click(screen.getByRole('button', { name: 'Grid baseline' }))
     await user.selectOptions(screen.getByRole('combobox', { name: 'Map' }), 'unreachable')
     await user.clear(screen.getByRole('spinbutton', { name: 'Sensor radius (cells)' }))
     await user.type(screen.getByRole('spinbutton', { name: 'Sensor radius (cells)' }), '3')
@@ -60,6 +62,7 @@ describe('BAR playback', () => {
     const user = userEvent.setup()
     vi.mocked(simulateBar).mockResolvedValueOnce({ ...result, scenario: 'irregular_u', map_kind: 'polygon_grid' })
     render(<BarPage />)
+    await user.click(screen.getByRole('button', { name: 'Grid baseline' }))
     await user.click(screen.getByRole('button', { name: 'Run simulation' }))
     await waitFor(() => expect(screen.getByRole('grid', { name: 'Discovered BAR grid' })).toHaveClass('seamless-cells'))
     expect(screen.getByRole('gridcell', { name: /Row 1, column 3: unknown/ })).toBeInTheDocument()
@@ -79,6 +82,7 @@ describe('BAR playback', () => {
     }
     vi.mocked(simulateBar).mockResolvedValueOnce(recovery)
     render(<BarPage />)
+    await user.click(screen.getByRole('button', { name: 'Grid baseline' }))
     await user.click(screen.getByRole('button', { name: 'Run simulation' }))
     await waitFor(() => expect(screen.getAllByRole('gridcell')).toHaveLength(32 * 32))
     expect(screen.getByRole('gridcell', { name: /Row 1, column 3: unknown/ })).toBeInTheDocument()

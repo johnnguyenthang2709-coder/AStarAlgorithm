@@ -19,9 +19,14 @@ For a larger visual demonstration, the Blind Alley screen also includes
 It also accepts polygon CSV maps from the original research generator format
 through an offline, conservative grid converter. Two independently authored
 irregular maps are included; see [polygon-map adaptation and results](docs/bar-polygon-maps.md).
+The default Blind Alley view now offers a separate **continuous 2D** point-robot
+demonstration on those polygon coordinates. It uses certified 360° observations,
+arbitrary-angle segments, and the same C++ A* core through a Euclidean visibility
+graph adapter. The original grid benchmarks remain under **Grid baseline**.
+See [continuous method, assumptions, and reproducibility](docs/bar-continuous.md).
 
 ```text
-React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem
+React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem / visibility graph
 ```
 
 ## Search behavior

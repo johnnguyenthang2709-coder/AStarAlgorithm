@@ -106,6 +106,11 @@ def import_scenario(source: Path, transform: GridTransform, start: Point, goal: 
             raise ValueError(f"{label} is blocked or lacks the specified clearance")
     return {
         "rows": rows, "start": start_cell, "goal": goal_cell,
+        "continuous_world": {
+            "bounds": [transform.x_min, transform.y_min, transform.x_max, transform.y_max],
+            "y_axis": transform.y_axis, "start": start, "goal": goal,
+            "polygons": polygons,
+        },
         "map_source": {
             "format": "authors_polygon_csv", "file": source.name,
             "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),

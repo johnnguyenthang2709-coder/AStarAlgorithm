@@ -2,6 +2,26 @@
   width: min(1880px, 100%);
 }
 
+.bar-mode-switch { display: flex; gap: 5px; width: fit-content; margin: 13px 0 0; padding: 4px; border-radius: 8px; background: #e7eef0; }
+.bar-mode-switch button { padding: 8px 15px; border: 0; border-radius: 6px; background: transparent; color: #415f70; font-weight: 700; cursor: pointer; }
+.bar-mode-switch button.active { background: #fff; color: #173d55; box-shadow: 0 1px 4px #29485b22; }
+.continuous-map-stage { display: grid; place-items: center; min-height: 570px; height: min(74vh, 820px); overflow: auto; border: 1px solid #c7d6dc; border-radius: 7px; background: #dce5e7; }
+.continuous-map { flex: none; max-width: none; background: #d7e0e3; }
+.continuous-unknown { fill: #d4dfe2; }
+.continuous-free { fill: #f7faf5; stroke: none; }
+.continuous-obstacle { fill: none; stroke: #485767; stroke-width: .18; stroke-linecap: round; }
+.continuous-trail { fill: none; stroke: #6d929f; stroke-width: .10; opacity: .42; }
+.continuous-entry { fill: none; stroke: #d8994f; stroke-width: .23; opacity: .9; }
+.continuous-retreat { fill: none; stroke: #37936f; stroke-width: .24; opacity: .95; }
+.continuous-plan { fill: none; stroke: #2877ad; stroke-width: .19; stroke-dasharray: .48 .26; }
+.continuous-target { fill: #e0a34e; stroke: #fff; stroke-width: .14; }
+.continuous-start { fill: #fff; stroke: #408496; stroke-width: .14; }
+.continuous-goal { fill: #d65e49; stroke: #fff; stroke-width: .16; }
+.continuous-sensor { fill: #55a8b0; fill-opacity: .06; stroke: #4e9ba4; stroke-width: .10; stroke-dasharray: .35 .25; pointer-events: none; }
+.continuous-robot circle { fill: #245c76; stroke: #fff; stroke-width: .15; }
+.continuous-robot path { fill: #fff; }
+@media (max-width: 760px) { .continuous-map-stage { min-height: 380px; height: 60vh; } }
+
 .bar-page .bar-layout {
   grid-template-columns: 270px minmax(0, 1fr);
   min-height: 0;

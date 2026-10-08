@@ -6,6 +6,7 @@ import type { BarFrame, BarResponse, BarScenario } from '../types/bar'
 import type { GridCell } from '../types/common'
 import { sameCell } from './scenario'
 import { buildBarPlayback, observedFrontiers } from './barPlayback'
+import { ContinuousBarPage } from './ContinuousBarPage'
 
 const options: { value: BarScenario; label: string; description: string }[] = [
   { value: 'irregular_u', label: '40 × 40 · Irregular U', description: 'Polygon CSV adaptation with angled walls, a narrow entrance, and an A* return from an exhausted branch.' },
@@ -43,7 +44,7 @@ function describeFrame(frame: BarFrame): { title: string; detail: string } {
   }
 }
 
-export function BarPage() {
+function LegacyBarPage() {
   const [scenario, setScenario] = useState<BarScenario>('irregular_u')
   const [radius, setRadius] = useState('2')
   const [result, setResult] = useState<BarResponse | null>(null)
@@ -182,4 +183,15 @@ export function BarPage() {
       <p className="muted">A turn changes the heading between consecutive cardinal moves. Gate metrics are evaluation labels, not robot knowledge.</p>
     </section>}
   </main>
+}
+
+export function BarPage() {
+  const [mode, setMode] = useState<'continuous' | 'grid'>('continuous')
+  return <>
+    <div className="bar-mode-switch" role="group" aria-label="Navigation model">
+      <button type="button" className={mode === 'continuous' ? 'active' : ''} onClick={() => setMode('continuous')}>Continuous 2D</button>
+      <button type="button" className={mode === 'grid' ? 'active' : ''} onClick={() => setMode('grid')}>Grid baseline</button>
+    </div>
+    {mode === 'continuous' ? <ContinuousBarPage /> : <LegacyBarPage />}
+  </>
 }

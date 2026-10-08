@@ -48,6 +48,8 @@ def test_cartesian_y_up_to_grid_row_down_and_clearance(tmp_path):
     scenario = import_scenario(path, transform, (0.5, 5.5), (5.5, 0.5), 0.0)
     assert scenario["rows"][3][2] == "#"
     assert scenario["map_source"]["polygon_count"] == 1
+    assert scenario["continuous_world"]["polygons"] == [[(1., 1.), (3., 1.), (3., 3.), (1., 3.)]]
+    assert scenario["continuous_world"]["start"] == (0.5, 5.5)
     with pytest.raises(ValueError, match="exact cell centers"):
         transform.cell((1, 1))
     with pytest.raises(ValueError, match="outside"):

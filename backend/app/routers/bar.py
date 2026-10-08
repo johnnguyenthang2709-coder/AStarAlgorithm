@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.bar import BarRequest, BarResponse
+from app.schemas.bar import BarRequest, BarResponse, ContinuousBarRequest, ContinuousBarResponse
 from app.services.bar_evaluation import evaluate
+from app.services.bar_continuous import simulate_continuous
+from app.services.bar_continuous_geometry import ContinuousWorld, as_point
 from app.services.bar_scenarios import load_scenario
 from app.services.bar_service import BarController, as_cell
 
@@ -22,5 +24,18 @@ def simulate(body: BarRequest):
                 "rows": len(scenario.rows), "cols": len(scenario.rows[0]),
                 "start": as_cell(scenario.start), "goal": as_cell(scenario.goal),
                 **episode, "metrics": {**episode["metrics"], **gate_metrics}}
+    except (ValueError, IndexError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.post("/continuous", response_model=ContinuousBarResponse)
+def simulate_polygon(body: ContinuousBarRequest):
+    try:
+        world = ContinuousWorld.load(body.scenario)
+        episode = simulate_continuous(world, body.radius)
+        return {"scenario": body.scenario, "radius": body.radius,
+                "bounds": world.bounds, "y_axis": world.y_axis,
+                "start": as_point(world.start), "goal": as_point(world.goal),
+                **episode}
     except (ValueError, IndexError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

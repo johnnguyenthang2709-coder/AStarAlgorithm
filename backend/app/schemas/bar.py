@@ -69,3 +69,25 @@ class BarResponse(BaseModel):
     frames: list[BarFrame]
     recoveries: list[BarRecovery]
     metrics: BarMetrics
+
+
+class ContinuousBarRequest(BaseModel):
+    scenario: Literal["irregular_u", "irregular_bugtrap"]
+    radius: float = Field(default=6.0, ge=1.0, le=10.0)
+
+
+class ContinuousBarResponse(BaseModel):
+    scenario: str
+    mode: Literal["continuous"] = "continuous"
+    radius: float
+    sensor_fov_degrees: int = 360
+    robot_radius: float = 0.0
+    bounds: tuple[float, float, float, float]
+    y_axis: Literal["up", "down"]
+    start: dict[str, float]
+    goal: dict[str, float]
+    status: str
+    success: bool
+    frames: list[dict]
+    recoveries: list[dict]
+    metrics: dict
