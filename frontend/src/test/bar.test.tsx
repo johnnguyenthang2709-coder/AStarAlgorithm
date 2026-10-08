@@ -13,7 +13,7 @@ const frame = (event: BarFrame['event'], col: number, changes: BarFrame['changes
   retreat_ratio: null, invariant_verified: null,
 })
 const result: BarResponse = {
-  scenario: 'open_route', radius: 1, rows: 1, cols: 3, start: cell(0), goal: cell(2),
+  scenario: 'open_route', map_kind: 'grid', radius: 1, rows: 1, cols: 3, start: cell(0), goal: cell(2),
   status: 'goal_reached', success: true, recoveries: [],
   frames: [frame('sense', 0, [{ cell: cell(0), state: 0 }, { cell: cell(1), state: 0 }]),
     { ...frame('plan', 0), target: cell(1), path: [cell(0), cell(1)] },
@@ -30,7 +30,7 @@ describe('BAR playback', () => {
     const user = userEvent.setup()
     render(<BarPage />)
     await user.click(screen.getByRole('button', { name: 'Run simulation' }))
-    await waitFor(() => expect(simulateBar).toHaveBeenCalledWith('expedition_narrow', 2))
+    await waitFor(() => expect(simulateBar).toHaveBeenCalledWith('irregular_u', 2))
     expect(screen.getByRole('gridcell', { name: /Row 1, column 3: unknown/ })).toBeInTheDocument()
     expect(screen.getByRole('gridcell', { name: /Row 1, column 2: free, frontier/ })).toHaveClass('frontier-cell')
     await user.click(screen.getByRole('checkbox', { name: 'Show frontiers' }))
@@ -54,6 +54,18 @@ describe('BAR playback', () => {
     await user.type(screen.getByRole('spinbutton', { name: 'Sensor radius (cells)' }), '3')
     await user.click(screen.getByRole('button', { name: 'Run simulation' }))
     expect(simulateBar).toHaveBeenCalledWith('unreachable', 3)
+  })
+
+  it('renders polygon-derived occupancy only after sensing and toggles inspection grid', async () => {
+    const user = userEvent.setup()
+    vi.mocked(simulateBar).mockResolvedValueOnce({ ...result, scenario: 'irregular_u', map_kind: 'polygon_grid' })
+    render(<BarPage />)
+    await user.click(screen.getByRole('button', { name: 'Run simulation' }))
+    await waitFor(() => expect(screen.getByRole('grid', { name: 'Discovered BAR grid' })).toHaveClass('seamless-cells'))
+    expect(screen.getByRole('gridcell', { name: /Row 1, column 3: unknown/ })).toBeInTheDocument()
+    expect(screen.getByText(/polygon-to-grid adaptation/)).toBeInTheDocument()
+    await user.click(screen.getByRole('checkbox', { name: 'Grid lines' }))
+    expect(screen.getByRole('grid', { name: 'Discovered BAR grid' })).toHaveClass('grid-lines')
   })
 
   it('jumps to a recovery without revealing the final outcome early', async () => {

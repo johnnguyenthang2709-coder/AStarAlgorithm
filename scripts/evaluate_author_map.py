@@ -22,18 +22,39 @@ Point = tuple[float, float]
 def read_polygons(path: Path) -> list[list[Point]]:
     polygons: list[list[Point]] = []
     vertices: list[Point] = []
+    seen_header = False
     with path.open(newline="", encoding="utf-8") as source:
-        for row in csv.reader(source):
-            if row and row[0].strip().lower() == "x":
-                if vertices:
+        for line_number, row in enumerate(csv.reader(source), 1):
+            if not row or all(not field.strip() for field in row):
+                continue
+            if len(row) != 2:
+                raise ValueError(f"line {line_number}: expected two CSV columns")
+            if [field.strip().lower() for field in row] == ["x", "y"]:
+                if seen_header:
                     polygons.append(vertices)
                 vertices = []
-            elif row:
-                vertices.append((float(row[0]), float(row[1])))
-    if vertices:
+                seen_header = True
+            else:
+                if not seen_header:
+                    raise ValueError(f"line {line_number}: expected x,y polygon header")
+                try:
+                    point = (float(row[0]), float(row[1]))
+                except ValueError as exc:
+                    raise ValueError(f"line {line_number}: invalid polygon coordinate") from exc
+                if not all(math.isfinite(value) for value in point):
+                    raise ValueError(f"line {line_number}: coordinates must be finite")
+                vertices.append(point)
+    if seen_header:
         polygons.append(vertices)
-    if not polygons or any(len(polygon) < 3 for polygon in polygons):
-        raise ValueError("map must contain polygon vertex groups with at least three points")
+    if not polygons:
+        raise ValueError("map must contain x,y polygon groups")
+    for index, polygon in enumerate(polygons, 1):
+        if len(polygon) > 1 and polygon[-1] == polygon[0]:
+            polygon.pop()  # both explicitly closed and implicitly closed CSVs are accepted
+        area = sum(a[0] * b[1] - b[0] * a[1]
+                   for a, b in zip(polygon, polygon[1:] + polygon[:1])) / 2
+        if len(set(polygon)) < 3 or abs(area) <= 1e-9:
+            raise ValueError(f"polygon {index} must have nonzero area and three distinct vertices")
     return polygons
 
 

@@ -1,6 +1,6 @@
 import type { GridCell } from './common'
 
-export type BarScenario = 'alley_reachable' | 'alley_turn' | 'alley_shortcut' | 'wide_mouth_alley' | 'open_route' | 'unreachable' | 'expedition_narrow' | 'expedition_wide'
+export type BarScenario = 'alley_reachable' | 'alley_turn' | 'alley_shortcut' | 'wide_mouth_alley' | 'open_route' | 'unreachable' | 'expedition_narrow' | 'expedition_wide' | 'irregular_u' | 'irregular_bugtrap'
 export type BarFrame = {
   event: 'sense' | 'plan' | 'move' | 'recover_start' | 'recover_end' | 'finish'
   position: GridCell
@@ -19,6 +19,7 @@ export type BarFrame = {
 }
 export type BarResponse = {
   scenario: BarScenario
+  map_kind: 'grid' | 'polygon_grid'
   radius: number
   rows: number
   cols: number

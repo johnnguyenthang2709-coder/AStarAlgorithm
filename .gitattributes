@@ -1,3 +1,4 @@
 # The road bundle uses byte hashes at startup; preserve exported bytes on every OS.
 data/road/** -text
+data/bar/polygon_sources/*.csv -text
 *.png binary

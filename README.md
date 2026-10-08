@@ -16,6 +16,9 @@ matrix with `.venv\Scripts\python.exe scripts\benchmark_bar.py`; see the
 [frozen results table](docs/bar-results.md).
 For a larger visual demonstration, the Blind Alley screen also includes
 32 × 32 and 40 × 40 maps; see [large simulation measurements](docs/bar-large-simulation.md).
+It also accepts polygon CSV maps from the original research generator format
+through an offline, conservative grid converter. Two independently authored
+irregular maps are included; see [polygon-map adaptation and results](docs/bar-polygon-maps.md).
 
 ```text
 React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem

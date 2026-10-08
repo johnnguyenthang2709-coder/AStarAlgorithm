@@ -15,6 +15,7 @@ class Scenario:
     start: tuple[int, int]
     goal: tuple[int, int]
     evaluation_gates: tuple[tuple[tuple[int, int], tuple[int, int]], ...]
+    map_source: dict | None = None
 
 
 def load_scenario(name: str) -> Scenario:
@@ -43,4 +44,4 @@ def load_scenario(name: str) -> Scenario:
         for gate in gates
     ):
         raise ValueError("evaluation gate edges must be distinct adjacent free-cell pairs")
-    return Scenario(name, rows, start, goal, gates)
+    return Scenario(name, rows, start, goal, gates, data.get("map_source"))

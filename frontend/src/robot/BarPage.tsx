@@ -8,6 +8,8 @@ import { sameCell } from './scenario'
 import { buildBarPlayback, observedFrontiers } from './barPlayback'
 
 const options: { value: BarScenario; label: string; description: string }[] = [
+  { value: 'irregular_u', label: '40 × 40 · Irregular U', description: 'Polygon CSV adaptation with angled walls, a narrow entrance, and an A* return from an exhausted branch.' },
+  { value: 'irregular_bugtrap', label: '48 × 48 · Polygon bugtrap', description: 'A larger concave obstacle field with islands, a narrow opening, and repeated planning under limited sensing.' },
   { value: 'expedition_narrow', label: '32 × 32 · Branching chamber', description: 'A single entrance leads into a chamber with loops, obstacle islands, and nested dead ends. The known bridge can certify a return.' },
   { value: 'expedition_wide', label: '40 × 40 · Wide entrance', description: 'A three-cell mouth leads into a larger obstacle field. Interior branches may recover, while the overall alley exit remains uncertified.' },
   { value: 'alley_reachable', label: '7 × 15 · Straight alley', description: 'Original short certified recovery benchmark.' },
@@ -42,7 +44,7 @@ function describeFrame(frame: BarFrame): { title: string; detail: string } {
 }
 
 export function BarPage() {
-  const [scenario, setScenario] = useState<BarScenario>('expedition_narrow')
+  const [scenario, setScenario] = useState<BarScenario>('irregular_u')
   const [radius, setRadius] = useState('2')
   const [result, setResult] = useState<BarResponse | null>(null)
   const [index, setIndex] = useState(0)
@@ -50,6 +52,7 @@ export function BarPage() {
   const [speed, setSpeed] = useState(2)
   const [zoom, setZoom] = useState(1)
   const [showFrontiers, setShowFrontiers] = useState(true)
+  const [showGrid, setShowGrid] = useState(false)
   const [followRobot, setFollowRobot] = useState(true)
   const [viewport, setViewport] = useState({ width: 900, height: 690 })
   const [busy, setBusy] = useState(false)
@@ -111,6 +114,7 @@ export function BarPage() {
     try {
       const episode = await simulateBar(scenario, Math.max(1, Math.min(10, Number(radius) || 1)))
       setResult(episode)
+      setShowGrid(episode.map_kind === 'grid')
       setZoom(episode.rows >= 30 ? 1.25 : 1)
     } catch (cause) {
       setError(errorText(cause))
@@ -139,16 +143,16 @@ export function BarPage() {
         {error && <p role="alert" className="error">{error}</p>}
         <div className="panel-divider" />
         <p className="aside-explain">Only sensed cells enter the planner. The benchmark gate labels crossings after the episode; it never guides exploration or retreat.</p>
-        <div className="bar-control-note"><strong>How to read the map</strong><span>Outlined free cells are frontiers beside unknown space. Amber records a recognized branch entry; green shows the executed return.</span></div>
+        <div className="bar-control-note"><strong>How to read the map</strong><span>Amber dots mark observed frontiers beside unknown space. The pale amber route records branch entry; green shows the executed return.</span></div>
       </aside>
       <section className="robot-workspace bar-workspace" aria-label="Robot simulation">
-        <div className="workspace-bar"><strong>Discovered map</strong><span>{result ? `${result.rows} × ${result.cols} cells · ${scenarioInfo.label.split(' · ')[1]}` : 'World initially unknown'}</span></div>
+        <div className="workspace-bar"><strong>Discovered map</strong><span>{result ? `${result.rows} × ${result.cols} cells · ${result.map_kind === 'polygon_grid' ? 'polygon-to-grid adaptation' : scenarioInfo.label.split(' · ')[1]}` : 'World initially unknown'}</span></div>
         {result && state && frame && description && <div className="bar-live-status">
           <div className="bar-event" data-event={frame.event}><small>{frame.event.replace('_', ' ')}</small><strong>{description.title}</strong><span>{description.detail}</span></div>
           <div className="bar-live-counts"><div><small>Observed</small><strong>{state.observed} / {result.rows * result.cols}</strong></div><div><small>Frontiers</small><strong>{frontiers.size}</strong></div><div><small>Moves</small><strong>{state.moves}</strong></div><div><small>Position</small><strong>{state.position.row + 1}, {state.position.col + 1}</strong></div></div>
         </div>}
         <div className="bar-map-stage" ref={viewportRef}>
-          {result && state ? <div className="bar-grid" role="grid" aria-label="Discovered BAR grid" style={gridStyle}>
+          {result && state ? <div className={`bar-grid${showGrid ? ' grid-lines' : ' seamless-cells'}${result.map_kind === 'polygon_grid' ? ' polygon-grid' : ''}`} role="grid" aria-label="Discovered BAR grid" style={gridStyle}>
             {Array.from({ length: result.rows * result.cols }, (_, cellIndex) => {
               const row = Math.floor(cellIndex / result.cols)
               const col = cellIndex % result.cols
@@ -165,7 +169,7 @@ export function BarPage() {
             })}
           </div> : <div className="bar-empty"><strong>Ready to explore</strong><span>Choose a map and run the simulation. The robot will reveal only what it can sense.</span></div>}
         </div>
-        <div className="bar-map-tools"><div className="bar-zoom"><span>View</span><button type="button" aria-label="Zoom out" disabled={!result || zoom <= 1} onClick={() => setZoom(value => Math.max(1, value - 0.25))}>−</button><button type="button" disabled={!result} onClick={() => setZoom(1)}>Fit</button><button type="button" aria-label="Zoom in" disabled={!result || zoom >= 2} onClick={() => setZoom(value => Math.min(2, value + 0.25))}>+</button><small>{Math.round(zoom * 100)}%</small></div><label className="bar-frontier-toggle"><input type="checkbox" checked={showFrontiers} onChange={event => setShowFrontiers(event.target.checked)} /> Show frontiers</label><label className="bar-frontier-toggle"><input type="checkbox" checked={followRobot} onChange={event => setFollowRobot(event.target.checked)} /> Follow robot</label><span className="bar-pan-hint">Turn off follow to pan freely</span></div>
+        <div className="bar-map-tools"><div className="bar-zoom"><span>View</span><button type="button" aria-label="Zoom out" disabled={!result || zoom <= 1} onClick={() => setZoom(value => Math.max(1, value - 0.25))}>−</button><button type="button" disabled={!result} onClick={() => setZoom(1)}>Fit</button><button type="button" aria-label="Zoom in" disabled={!result || zoom >= 2} onClick={() => setZoom(value => Math.min(2, value + 0.25))}>+</button><small>{Math.round(zoom * 100)}%</small></div><label className="bar-frontier-toggle"><input type="checkbox" checked={showGrid} onChange={event => setShowGrid(event.target.checked)} /> Grid lines</label><label className="bar-frontier-toggle"><input type="checkbox" checked={showFrontiers} onChange={event => setShowFrontiers(event.target.checked)} /> Show frontiers</label><label className="bar-frontier-toggle"><input type="checkbox" checked={followRobot} onChange={event => setFollowRobot(event.target.checked)} /> Follow robot</label><span className="bar-pan-hint">Turn off follow to pan freely</span></div>
         {result && <div className="bar-playback"><div className="bar-playback-buttons"><button type="button" onClick={() => { if (index >= result.frames.length - 1) setIndex(0); setPlaying(value => !value) }}>{playing ? 'Pause' : 'Play'}</button><button type="button" onClick={() => { setPlaying(false); setIndex(value => Math.min(value + 1, result.frames.length - 1)) }}>Step</button><button type="button" onClick={() => { setPlaying(false); setIndex(0) }}>Restart</button><button type="button" disabled={nextRecovery < 0} onClick={() => { setPlaying(false); setIndex(nextRecovery) }}>Next recovery</button></div><label className="bar-speed">Speed<select aria-label="Playback speed" value={speed} onChange={event => setSpeed(Number(event.target.value))}><option value={1}>Careful</option><option value={2}>Normal</option><option value={4}>Fast</option></select></label><label className="bar-scrubber">Frame {index + 1} / {result.frames.length}<input aria-label="Playback frame" type="range" min="0" max={result.frames.length - 1} value={index} onChange={event => { setPlaying(false); setIndex(Number(event.target.value)) }} /></label></div>}
         <div className="grid-legend bar-legend"><span><i className="dot bar-unknown" />Unknown</span><span><i className="dot bar-free" />Observed free</span><span><i className="dot obstacle" />Observed obstacle</span><span><i className="dot bar-frontier" />Frontier</span><span><i className="dot path" />Selected path</span><span><i className="dot bar-entry" />Entry</span><span><i className="dot bar-retreat" />Retreat</span><span><i className="dot robot" />Robot / goal</span></div>
       </section>

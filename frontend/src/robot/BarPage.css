@@ -101,6 +101,8 @@
   box-shadow: 0 8px 28px #243c4c25;
 }
 
+.bar-page .bar-grid.seamless-cells { gap: 0; padding: 0; background: transparent; }
+
 .bar-page .bar-cell {
   position: relative;
   width: var(--bar-cell-size);

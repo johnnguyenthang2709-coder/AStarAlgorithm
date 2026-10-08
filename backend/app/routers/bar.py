@@ -16,7 +16,9 @@ def simulate(body: BarRequest):
         # is read by the evaluator after the complete episode has finished.
         episode = BarController(scenario.rows, scenario.start, scenario.goal, body.radius).run()
         gate_metrics = evaluate(scenario, episode)
-        return {"scenario": scenario.name, "radius": body.radius,
+        return {"scenario": scenario.name,
+                "map_kind": "polygon_grid" if scenario.map_source else "grid",
+                "radius": body.radius,
                 "rows": len(scenario.rows), "cols": len(scenario.rows[0]),
                 "start": as_cell(scenario.start), "goal": as_cell(scenario.goal),
                 **episode, "metrics": {**episode["metrics"], **gate_metrics}}
