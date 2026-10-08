@@ -72,8 +72,18 @@ class BarResponse(BaseModel):
 
 
 class ContinuousBarRequest(BaseModel):
-    scenario: Literal["irregular_u", "irregular_bugtrap"]
+    scenario: Literal["irregular_u", "irregular_bugtrap", "maze_showcase", "maze_hard", "maze_seeded"]
     radius: float = Field(default=6.0, ge=1.0, le=10.0)
+    seed: int = Field(default=17, ge=0, le=2**31-1)
+    size: int = Field(default=5, ge=4, le=8)
+    corridor_width: float = Field(default=2.8, ge=1.2, le=4.2)
+    loop_rate: float = Field(default=0.08, ge=0, le=0.35)
+    dead_end_rate: float = Field(default=0.45, ge=0, le=1)
+    trap_count: int = Field(default=2, ge=1, le=8)
+    difficulty: Literal["easy", "normal", "hard"] = "normal"
+    start_cell: tuple[int, int] | None = None
+    goal_cell: tuple[int, int] | None = None
+    debug_graph: bool = False
 
 
 class ContinuousBarResponse(BaseModel):
@@ -91,3 +101,4 @@ class ContinuousBarResponse(BaseModel):
     frames: list[dict]
     recoveries: list[dict]
     metrics: dict
+    maze_config: dict | None = None

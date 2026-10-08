@@ -97,10 +97,11 @@ class ContinuousWorld:
         path = LineString((a, b))
         return self.border.covers(path) and not self.obstacles.intersects(path)
 
-    def _cast(self, origin: Point, angle: float, radius: float) -> tuple[float, tuple[int, int] | None]:
+    def _cast(self, origin: Point, angle: float, radius: float,
+              edges=None) -> tuple[float, tuple[int, int] | None]:
         dx, dy = math.cos(angle), math.sin(angle)
         best, hit = radius, None
-        for a, b, identity in self.edges:
+        for a, b, identity in self.edges if edges is None else edges:
             ex, ey = b[0] - a[0], b[1] - a[1]
             denominator = dx * ey - dy * ex
             if abs(denominator) < 1e-12:
@@ -115,22 +116,29 @@ class ContinuousWorld:
     def sense(self, origin: Point, radius: float) -> SensorObservation:
         if radius <= 0 or not self.collision_free(origin, origin):
             raise ValueError("sensor pose must be free and radius positive")
+        # Only nearby segments can intersect a radius-limited ray. This changes
+        # neither the observed geometry nor the conservative wedge test.
+        active_edges = [(a, b, identity) for a, b, identity in self.edges
+                        if min(a[0], b[0]) <= origin[0] + radius
+                        and max(a[0], b[0]) >= origin[0] - radius
+                        and min(a[1], b[1]) <= origin[1] + radius
+                        and max(a[1], b[1]) >= origin[1] - radius]
         # Vertex rays resolve concave corners. Uniform rays bound arc error.
         angles = {2 * math.pi * index / 72 for index in range(72)}
-        for polygon in self.polygons:
-            for vertex in polygon:
+        for a, b, _ in active_edges:
+            for vertex in (a, b):
                 vertex_distance = distance(origin, vertex)
                 if vertex_distance > radius + EPS:
                     continue
                 theta = math.atan2(vertex[1] - origin[1], vertex[0] - origin[0])
-                first_hit, _ = self._cast(origin, theta, radius)
+                first_hit, _ = self._cast(origin, theta, radius, active_edges)
                 if first_hit < vertex_distance - 1e-5:
                     continue  # hidden vertices must not affect the observation
                 for delta in (-1e-5, 0, 1e-5):
                     angles.add((theta + delta) % (2 * math.pi))
         samples = []
         for angle in sorted(angles):
-            hit_distance, identity = self._cast(origin, angle, radius)
+            hit_distance, identity = self._cast(origin, angle, radius, active_edges)
             end_distance = hit_distance - RAY_MARGIN if identity is not None or hit_distance < radius - EPS else radius
             end_distance = max(0, end_distance)
             point = (origin[0] + end_distance * math.cos(angle),
@@ -150,7 +158,7 @@ class ContinuousWorld:
         candidates = []
         for index in range(0, 72, 6):
             angle = 2 * math.pi * index / 72
-            hit_distance, identity = self._cast(origin, angle, radius)
+            hit_distance, identity = self._cast(origin, angle, radius, active_edges)
             travel = min(radius * 0.82, hit_distance - 0.12)
             if travel < radius * 0.24:
                 continue

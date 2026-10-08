@@ -1,0 +1,9 @@
+case,seed,size,radius,loops,dead_ends,status,goal_reached,executed_distance,recoveries,verified_recoveries,astar_calls,expanded_nodes,turns,planning_ms,wall_s,frames,json_bytes,max_graph_nodes,max_graph_edges
+showcase,17,5,5,1,4,goal_reached,True,213.231,11,11,56,112,50,1.374,0.946,192,333552,46,185
+showcase,17,5,7,1,4,goal_reached,True,354.685,25,25,78,159,75,2.585,2.123,288,594910,54,291
+hard,431,7,5,2,8,goal_reached,True,695.261,61,61,202,407,194,10.473,17.668,734,1240331,142,553
+hard,431,7,7,2,8,goal_reached,True,540.275,28,28,126,257,123,4.527,6.816,442,785792,99,266
+seed-17,17,5,5,4,2,goal_reached,True,96.519,3,3,27,54,20,0.550,0.308,89,142028,25,85
+seed-17,17,5,7,4,2,goal_reached,True,136.189,5,5,31,62,30,0.592,0.483,105,187584,27,84
+seed-23,23,5,5,1,5,goal_reached,True,435.749,46,46,129,258,125,5.269,4.094,481,845358,84,547
+seed-23,23,5,7,1,5,goal_reached,True,321.697,23,23,77,154,71,1.848,1.796,279,506656,55,179

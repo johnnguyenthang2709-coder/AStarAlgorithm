@@ -19,11 +19,13 @@ For a larger visual demonstration, the Blind Alley screen also includes
 It also accepts polygon CSV maps from the original research generator format
 through an offline, conservative grid converter. Two independently authored
 irregular maps are included; see [polygon-map adaptation and results](docs/bar-polygon-maps.md).
-The default Blind Alley view now offers a separate **continuous 2D** point-robot
-demonstration on those polygon coordinates. It uses certified 360° observations,
-arbitrary-angle segments, and the same C++ A* core through a Euclidean visibility
-graph adapter. The original grid benchmarks remain under **Grid baseline**.
-See [continuous method, assumptions, and reproducibility](docs/bar-continuous.md).
+The default Blind Alley view now offers **Maze 3**, a seeded continuous 2D
+point-robot demonstration with geometric corridor walls, dead ends, and loops.
+It uses certified 360° observations, arbitrary-angle segments, and the same
+C++ A* core through a Euclidean visibility graph adapter. The previous fixed
+polygon scenarios and original grid benchmarks remain selectable. See
+[Maze 3 design, parameters, and results](docs/bar-maze-3.md) and
+[continuous method and assumptions](docs/bar-continuous.md).
 
 ```text
 React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem / visibility graph

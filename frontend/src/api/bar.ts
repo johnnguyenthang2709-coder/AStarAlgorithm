@@ -1,9 +1,10 @@
 import { request } from './client'
 import type { BarResponse, BarScenario } from '../types/bar'
-import type { ContinuousBarResponse } from '../types/barContinuous'
+import type { ContinuousBarResponse, ContinuousScenario, MazeOptions } from '../types/barContinuous'
 
 export const simulateBar = (scenario: BarScenario, radius: number) =>
   request<BarResponse>('/api/bar/simulate', { scenario, radius })
 
-export const simulateContinuousBar = (scenario: ContinuousBarResponse['scenario'], radius: number) =>
-  request<ContinuousBarResponse>('/api/bar/continuous', { scenario, radius })
+export const simulateContinuousBar = (scenario: ContinuousScenario, radius: number,
+  options?: Partial<MazeOptions> & { debug_graph?: boolean }) =>
+  request<ContinuousBarResponse>('/api/bar/continuous', { scenario, radius, ...options })

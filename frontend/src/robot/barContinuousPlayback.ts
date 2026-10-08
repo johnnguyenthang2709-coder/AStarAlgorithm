@@ -10,6 +10,8 @@ export type ContinuousPlaybackState = {
   target?: WorldPoint
   distance: number
   recoveries: number
+  graphPoints: WorldPoint[]
+  graphLinks: [number, number][]
 }
 
 export function buildContinuousPlayback(result: ContinuousBarResponse): ContinuousPlaybackState[] {
@@ -22,6 +24,8 @@ export function buildContinuousPlayback(result: ContinuousBarResponse): Continuo
   let target: WorldPoint | undefined
   let distance = 0
   let recoveries = 0
+  let graphPoints: WorldPoint[] = []
+  let graphLinks: [number, number][] = []
   return result.frames.map(frame => {
     if (frame.event === 'sense') {
       if (frame.region) regions.push(frame.region)
@@ -32,6 +36,8 @@ export function buildContinuousPlayback(result: ContinuousBarResponse): Continuo
       target = frame.target
       entry = []
       retreat = []
+      graphPoints = frame.graph_points ?? []
+      graphLinks = frame.graph_links ?? []
     }
     if (frame.event === 'recover_start') {
       path = frame.path ?? []
@@ -39,17 +45,23 @@ export function buildContinuousPlayback(result: ContinuousBarResponse): Continuo
       retreat = []
       target = frame.anchor
       recoveries++
+      graphPoints = frame.graph_points ?? []
+      graphLinks = frame.graph_links ?? []
     }
     if (frame.event === 'move') {
       trail.push(frame.position)
       distance += frame.distance ?? 0
       if (frame.phase === 'retreat') retreat.push(frame.position)
     }
-    if (frame.event === 'recover_end') path = []
+    if (frame.event === 'recover_end' || frame.event === 'finish') {
+      path = []
+      graphPoints = []
+      graphLinks = []
+    }
     return {
       regions: [...regions], edges: [...edges], trail: [...trail],
       path: [...path], entry: [...entry], retreat: [...retreat], target,
-      distance, recoveries,
+      distance, recoveries, graphPoints, graphLinks,
     }
   })
 }

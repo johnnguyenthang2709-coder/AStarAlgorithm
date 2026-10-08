@@ -4,6 +4,7 @@ from app.schemas.bar import BarRequest, BarResponse, ContinuousBarRequest, Conti
 from app.services.bar_evaluation import evaluate
 from app.services.bar_continuous import simulate_continuous
 from app.services.bar_continuous_geometry import ContinuousWorld, as_point
+from app.services.bar_maze import MazeConfig, SHOWCASE, HARD, generate_maze
 from app.services.bar_scenarios import load_scenario
 from app.services.bar_service import BarController, as_cell
 
@@ -31,11 +32,24 @@ def simulate(body: BarRequest):
 @router.post("/continuous", response_model=ContinuousBarResponse)
 def simulate_polygon(body: ContinuousBarRequest):
     try:
-        world = ContinuousWorld.load(body.scenario)
-        episode = simulate_continuous(world, body.radius)
+        maze = None
+        if body.scenario.startswith("maze_"):
+            config = SHOWCASE if body.scenario == "maze_showcase" else HARD if body.scenario == "maze_hard" else MazeConfig(
+                seed=body.seed, size=body.size, corridor_width=body.corridor_width,
+                loop_rate=body.loop_rate, dead_end_rate=body.dead_end_rate,
+                trap_count=body.trap_count, difficulty=body.difficulty,
+                start_cell=body.start_cell, goal_cell=body.goal_cell)
+            maze = generate_maze(config)
+            world = maze.world
+        else:
+            world = ContinuousWorld.load(body.scenario)
+        episode = simulate_continuous(world, body.radius, prefer_novelty=maze is not None,
+                                      include_graph=body.debug_graph,
+                                      complete_frontier_route=maze is not None)
         return {"scenario": body.scenario, "radius": body.radius,
                 "bounds": world.bounds, "y_axis": world.y_axis,
                 "start": as_point(world.start), "goal": as_point(world.goal),
+                "maze_config": vars(maze.config) if maze else None,
                 **episode}
     except (ValueError, IndexError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

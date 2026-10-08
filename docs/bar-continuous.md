@@ -1,5 +1,9 @@
 # Continuous 2D Blind Alley demonstration
 
+The default continuous screen now starts with [Maze 3](bar-maze-3.md).
+This document records the original fixed-polygon continuous baselines and
+the shared geometric assumptions; both fixed scenarios remain selectable.
+
 This is a new, separate navigation model on the *polygon coordinates* of the
 two independently authored `irregular_u` and `irregular_bugtrap` scenarios.
 The older four-direction occupancy-grid mode and its frozen results are still

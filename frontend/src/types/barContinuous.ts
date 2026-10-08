@@ -24,9 +24,23 @@ export type ContinuousFrame = {
   status?: string
   graph_nodes?: number
   graph_edges?: number
+  graph_points?: WorldPoint[]
+  graph_links?: [number, number][]
+}
+export type ContinuousScenario = 'irregular_u' | 'irregular_bugtrap' | 'maze_showcase' | 'maze_hard' | 'maze_seeded'
+export type MazeOptions = {
+  seed: number
+  size: number
+  corridor_width: number
+  loop_rate: number
+  dead_end_rate: number
+  trap_count: number
+  difficulty: 'easy' | 'normal' | 'hard'
+  start_cell?: [number, number] | null
+  goal_cell?: [number, number] | null
 }
 export type ContinuousBarResponse = {
-  scenario: 'irregular_u' | 'irregular_bugtrap'
+  scenario: ContinuousScenario
   mode: 'continuous'
   radius: number
   sensor_fov_degrees: 360
@@ -38,6 +52,7 @@ export type ContinuousBarResponse = {
   status: string
   success: boolean
   frames: ContinuousFrame[]
+  maze_config?: MazeOptions | null
   recoveries: {
     anchor: WorldPoint
     entry_length: number
