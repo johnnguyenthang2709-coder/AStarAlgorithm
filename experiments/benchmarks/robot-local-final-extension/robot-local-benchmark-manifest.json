@@ -1,0 +1,170 @@
+{
+  "protocol_version": 1,
+  "purpose": "One frozen prospective extension; original-source local path states",
+  "source_baseline_commit": "954fcb680134ec031065c7b524c53e3327ff28bc",
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "selection_files": [
+    "../robot-local-final-extension-selection.json"
+  ],
+  "selection_sha256": "40a438a445817015fe3b26709557ea0b23b273d253e36dbd37330da08c01d5bb",
+  "snapshot_file": "robot-local-snapshots.json",
+  "snapshot_sha256": "59d5fca9c28464d29c5252d5d6e4053af05dc729263b062605955a329aa9b339",
+  "captured_decisions": 233,
+  "eligible_decisions": 14,
+  "eligible_ids": [
+    "P01-_map_deadend-07",
+    "P01-_map_deadend-12",
+    "P01-_map_deadend-19",
+    "P01-_map_deadend-30",
+    "P02-_map_deadend-01",
+    "P03-_map_bugtrap-10",
+    "P03-_map_bugtrap-24",
+    "P03-_map_bugtrap-34",
+    "P03-_map_bugtrap-42",
+    "P04-_map_bugtrap-03",
+    "P04-_map_bugtrap-08",
+    "P04-_map_bugtrap-13",
+    "P06-_map_blocks_1-04",
+    "P10-_map-07"
+  ],
+  "excluded_decisions": 219,
+  "episode_outcomes": [
+    {
+      "episode_id": "P01",
+      "map": "_map_deadend.csv",
+      "decisions_source": 42,
+      "decisions_retained": 42,
+      "eligible_retained": 4,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P02",
+      "map": "_map_deadend.csv",
+      "decisions_source": 11,
+      "decisions_retained": 11,
+      "eligible_retained": 1,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P03",
+      "map": "_map_bugtrap.csv",
+      "decisions_source": 60,
+      "decisions_retained": 60,
+      "eligible_retained": 4,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": false,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P04",
+      "map": "_map_bugtrap.csv",
+      "decisions_source": 24,
+      "decisions_retained": 24,
+      "eligible_retained": 3,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P05",
+      "map": "_map_block.csv",
+      "decisions_source": 18,
+      "decisions_retained": 18,
+      "eligible_retained": 0,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P06",
+      "map": "_map_blocks_1.csv",
+      "decisions_source": 22,
+      "decisions_retained": 22,
+      "eligible_retained": 1,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P07",
+      "map": "_map_blocks.csv",
+      "decisions_source": 15,
+      "decisions_retained": 15,
+      "eligible_retained": 0,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P08",
+      "map": "_map_forest.csv",
+      "decisions_source": 17,
+      "decisions_retained": 17,
+      "eligible_retained": 0,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P09",
+      "map": "_map_forest_1.csv",
+      "decisions_source": 13,
+      "decisions_retained": 13,
+      "eligible_retained": 0,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    },
+    {
+      "episode_id": "P10",
+      "map": "_map.csv",
+      "decisions_source": 11,
+      "decisions_retained": 11,
+      "eligible_retained": 1,
+      "truncated": false,
+      "source_error": null,
+      "reach_goal": true,
+      "no_way_to_goal": false
+    }
+  ],
+  "map_hashes": {
+    "_map_deadend.csv": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+    "_map_bugtrap.csv": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+    "_map_block.csv": "95e5c8cdd23f12d302200395d809d65dcf21988a057efc2449cece5376e3da0b",
+    "_map_blocks_1.csv": "6cc5ba1aa48d8788c21a7de9412361f8a1d99037e3e3f7496a182b40d7bdb0db",
+    "_map_blocks.csv": "ea1bd4c2f3502e13d529be823397ce4c68da451c51ef9aa588c5c1120e22244e",
+    "_map_forest.csv": "bff83d4ae1ab370f4d1455970194f0a58d5a3a7139837c9a766d44e35f28dec9",
+    "_map_forest_1.csv": "3bb07660aafc34e48dc855fd3deef594d69aef14f27f2780e7fd6f6cb8b4fe87",
+    "_map.csv": "d436e7133c40cab0b3d8cf6fb4cdb5f819508078c88e34a896af53dd81d502e9"
+  },
+  "eligibility_rule": "Every captured original skeleton with more than two vertices",
+  "collision_convention": {
+    "primary": "Point-robot obstacle-interior excluding; obstacle-boundary contact permitted",
+    "strict_secondary": "Obstacle boundary contact invalid",
+    "radius_0_5": "Clearance diagnostic only, not a comparable finite-radius experiment",
+    "world_boundary": "No global planner bound; links must be covered by the union of recorded local sights",
+    "event_tolerance": 1e-09,
+    "endpoint_tolerance": 1e-07
+  },
+  "our_graph_rule": "Scan-center vertices plus same start/target, sight-certified undirected Euclidean links",
+  "timing": {
+    "warmup_calls": 3,
+    "measured_calls": 31,
+    "statistic": "median"
+  },
+  "selection_policy": "Compare every eligible snapshot; retain failures and invalid paths",
+  "no_ground_truth_in_planning": true
+}
