@@ -66,6 +66,19 @@ def check_pdf_text():
         assert term in independent.split("\f")[0], ("Poppler title page", term)
     assert "Author name to be supplied" not in extracted
     assert "Affiliation to be supplied" not in extracted
+    assert "Author and affiliation remain unverified configurable metadata." not in extracted
+    reading_order = " ".join(extracted.replace("T able", "Table").split())
+    table_contexts = [
+        ("Source Audit and Shared-State Robot Requests", "Table 1.",
+         "Validity, Metrics, and Timing Boundaries"),
+        ("Road Cost Agreement and Search Effort", "Table 2.",
+         "Robot Local Geometry and Path Length"),
+        ("Robot Local Geometry and Path Length", "Table 3.",
+         "Robot Computation Components"),
+    ]
+    for opening, table, closing in table_contexts:
+        assert reading_order.index(opening) < reading_order.index(table) < reading_order.index(closing), table
+    assert reading_order.rindex("Fig. 8.") < reading_order.rindex("References")
     # Standard runningheads places the author on even-numbered pages.
     for index in range(1, len(texts), 2):
         assert "Nguyen Hoang Thang" in texts[index].splitlines()[0], index + 1
@@ -80,7 +93,11 @@ def check_pdf_text():
             relative = path.relative_to(ROOT).as_posix()
             original = subprocess.check_output(
                 ["git", "show", f"{ORIGINAL}:{relative}"], cwd=ROOT)
-            assert path.read_bytes() == original, relative
+            current = path.read_bytes()
+            if folder == "tables":
+                # Only float placement may differ; scientific table bytes stay frozen.
+                current = current.replace(b"\\begin{table}[H]", b"\\begin{table}[t]")
+            assert current == original, relative
     result = {
         "status": "PASS", "original_report_commit": ORIGINAL,
         "pages_checked_with_both_extractors": len(texts),
@@ -88,9 +105,10 @@ def check_pdf_text():
         "revised_invalid_character_codes": [],
         "font_resources_with_Unicode_maps": len(fonts),
         "type3_font_resources": 0, "checked_search_terms": checked_terms,
-        "unchanged_assets": "bibliography, official class/style, all figures/tables",
+        "unchanged_assets": "bibliography, official class/style, all figures and table contents (float placement only changed)",
         "verified_metadata": "Nguyen Hoang Thang; supplied three-line affiliation",
         "title_page_and_even_page_author_headers": "PASS",
+        "table_order_and_subsection_placement": "PASS; Tables 1/2/3 in Sections 6.2/7.1/7.2",
         "extraction_limit": "Reading-order whitespace and line-wrap hyphens remain extractor-dependent; math is not a structured equation export.",
     }
     (REPORT / "pdf-text-validation.json").write_text(

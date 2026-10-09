@@ -27,8 +27,9 @@
     "\u2208",
     "\u2217"
   ],
-  "unchanged_assets": "bibliography, official class/style, all figures/tables",
+  "unchanged_assets": "bibliography, official class/style, all figures and table contents (float placement only changed)",
   "verified_metadata": "Nguyen Hoang Thang; supplied three-line affiliation",
   "title_page_and_even_page_author_headers": "PASS",
+  "table_order_and_subsection_placement": "PASS; Tables 1/2/3 in Sections 6.2/7.1/7.2",
   "extraction_limit": "Reading-order whitespace and line-wrap hyphens remain extractor-dependent; math is not a structured equation export."
 }

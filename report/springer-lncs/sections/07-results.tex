@@ -14,13 +14,13 @@ Table~\ref{tab:road} and Fig.~\ref{fig:road-effort} show fewer expansions in eve
 \subsection{Robot Local Geometry and Path Length}
 Both local planners find paths for all 21 eligible requests, with correct endpoints and primary interior-only validity in all 21. These are local planning successes, not 21 successful autonomous missions. Of the ten prospective source episodes, nine reach the goal and one reaches its iteration cap; its eligible states remain. Figure~\ref{fig:observed} shows an observed-space request and the two returned paths. No hidden polygons are supplied to either local planner.
 
+\input{tables/robot}
 \begin{figure}[t]
 \centering\includegraphics[width=\textwidth]{robot-observed.pdf}
 \caption{Representative frozen dead-end request. Visible blocker fragments and approximate display sight footprints show recorded knowledge; ASP and scan-center A* use the same position and target. Sight footprints are display approximations; benchmark link admission uses analytic whole-segment certification. Hidden obstacles are omitted.}
 \label{fig:observed}
 \end{figure}
 
-\input{tables/robot}
 Define paired difference as A* length minus ASP length; positive values favor ASP. ASP is shorter in nine requests, A* in ten, and two are equal. The median is zero, mean $+2.981$, and range $[-10.707,+44.266]$ world units. Different representations admit different paths, and neither planner consistently dominates. Cohort composition matters: five of six initial cases favor ASP, nine of fourteen prospective cases favor A*. Figure~\ref{fig:robot-length} retains all pairs; one held-out request cannot establish generalization.
 
 \begin{figure}[t]
