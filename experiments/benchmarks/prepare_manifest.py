@@ -113,7 +113,8 @@ def road_pairs() -> dict:
             "edge_cases": {"start_equals_goal": [0, 0],
                            "one_way_directed_edge": [one_way["from"], one_way["to"]] if one_way else None,
                            "unreachable_pair": list(unreachable) if unreachable else None,
-                           "nearest_edge_midpoint_lat_lon": midpoint}}
+                           "nearest_edge_midpoint_lat_lon": midpoint,
+                           "nearest_edge_goal_node": 597}}
 
 
 def main():
@@ -138,7 +139,17 @@ def main():
                                       "turn_collinearity": "author inside_line_segment on each consecutive position triple",
                                       "turn_heading": "absolute wrapped heading change greater than 15 degrees",
                                       "collision": "each executed segment must avoid polygon interior and respect 0.5 clearance",
-                                      "failure_policy": "retain every prespecified failed or timed-out episode"}}
+                                      "failure_policy": "retain every prespecified failed or timed-out episode"},
+               "supporting": {"sensor_cases": [
+                   {"kind": "labyrinth", "seed": 17},
+                   {"kind": "labyrinth", "seed": 23},
+                   {"kind": "labyrinth", "seed": 41},
+                   {"kind": "indoor", "layout": "apartment", "seed": 0},
+                   {"kind": "indoor", "layout": "office", "seed": 1},
+                   {"kind": "indoor", "layout": "challenge", "seed": 211}],
+                   "radii": [5, 7], "decision_limit": 250,
+                   "exploration_ablation_source": "audit_bar_radar_benchmark.ALL_CASES at pinned project commit",
+                   "frontier_cache_source": "benchmark_bar_frontier_cache.ALL_CASES at pinned project commit"}}
     output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(output)
 

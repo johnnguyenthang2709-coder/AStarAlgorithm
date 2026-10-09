@@ -5,6 +5,7 @@ Held-out seeds 41, 73, 911 use default LabyrinthConfig at radii 5 and 7.
 Every generated case is reported, including unsuccessful terminations.
 """
 
+import argparse
 import csv
 import json
 import sys
@@ -88,7 +89,10 @@ def run(case, radius, radar):
 
 
 def main():
-    output = ROOT / "docs" / "bar-radar-paired-audit.csv"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=ROOT / "docs" / "bar-radar-paired-audit.csv")
+    args = parser.parse_args()
+    output = args.output
     with output.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=FIELDS)
         writer.writeheader()
