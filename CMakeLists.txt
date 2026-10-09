@@ -23,6 +23,8 @@ add_executable(edge_snap_tests tests/edge_snap_tests.cpp)
 target_link_libraries(edge_snap_tests PRIVATE astar_core_lib)
 add_executable(reference_tests tests/reference_tests.cpp
   reference/2550216/Algo.cpp reference/2550216/PathNode.cpp)
+add_executable(academic_road_benchmark experiments/benchmarks/road_benchmark.cpp)
+target_link_libraries(academic_road_benchmark PRIVATE astar_core_lib)
 
 if(MSVC)
   foreach(test_target core_tests road_tests reference_tests edge_snap_tests)

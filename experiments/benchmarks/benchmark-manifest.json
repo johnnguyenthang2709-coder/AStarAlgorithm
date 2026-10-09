@@ -1,0 +1,1093 @@
+{
+  "protocol_version": 1,
+  "project_base_commit": "cb69fc65fb81f6cffdd3e0556f4dccd5892bdcdf",
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "authors_source_url": "https://github.com/ThanhBinhTran/autonomousRobot",
+  "paper_doi": "10.1016/j.robot.2025.105185",
+  "road": {
+    "graph_sha256": "d3f4b7091e25c791c2ebcfbc4c3863622cc45baa745dae8359b5298e11d874bc",
+    "graph_nodes": 2986,
+    "graph_directed_edges": 7152,
+    "sampling_seed": 20261009,
+    "candidate_pairs": 6000,
+    "reachable_candidates": 5965,
+    "quantile_definition": "rank floor(n/3), floor(2n/3) of 6000 sampled reachable directed-pair Dijkstra distances",
+    "quantile_cutoffs_m": [
+      2086.977444713727,
+      3273.4354307338517
+    ],
+    "selected_pairs": {
+      "short": [
+        {
+          "start": 2657,
+          "goal": 2195,
+          "offline_distance_m": 1075.3307910943922
+        },
+        {
+          "start": 1056,
+          "goal": 1067,
+          "offline_distance_m": 181.5894719157876
+        },
+        {
+          "start": 2201,
+          "goal": 1586,
+          "offline_distance_m": 1719.1100262121993
+        },
+        {
+          "start": 2153,
+          "goal": 1111,
+          "offline_distance_m": 1726.2060261868276
+        },
+        {
+          "start": 2683,
+          "goal": 1389,
+          "offline_distance_m": 2036.417040480894
+        },
+        {
+          "start": 2279,
+          "goal": 1895,
+          "offline_distance_m": 1167.7852940022383
+        },
+        {
+          "start": 1480,
+          "goal": 1402,
+          "offline_distance_m": 853.292603514594
+        },
+        {
+          "start": 775,
+          "goal": 1999,
+          "offline_distance_m": 1287.9338204417186
+        },
+        {
+          "start": 1687,
+          "goal": 374,
+          "offline_distance_m": 1822.0288604354164
+        },
+        {
+          "start": 2228,
+          "goal": 2391,
+          "offline_distance_m": 1640.262439858329
+        },
+        {
+          "start": 2708,
+          "goal": 1453,
+          "offline_distance_m": 1689.3276111100427
+        },
+        {
+          "start": 384,
+          "goal": 1703,
+          "offline_distance_m": 1420.72900392965
+        },
+        {
+          "start": 1676,
+          "goal": 2522,
+          "offline_distance_m": 1802.502269058932
+        },
+        {
+          "start": 816,
+          "goal": 121,
+          "offline_distance_m": 1437.5411841350583
+        },
+        {
+          "start": 2666,
+          "goal": 2205,
+          "offline_distance_m": 2054.2399094863626
+        },
+        {
+          "start": 2219,
+          "goal": 73,
+          "offline_distance_m": 729.8502927126126
+        },
+        {
+          "start": 1364,
+          "goal": 2171,
+          "offline_distance_m": 1406.6448552812299
+        },
+        {
+          "start": 157,
+          "goal": 308,
+          "offline_distance_m": 446.695908687714
+        },
+        {
+          "start": 1459,
+          "goal": 840,
+          "offline_distance_m": 1991.731196142954
+        },
+        {
+          "start": 1593,
+          "goal": 2742,
+          "offline_distance_m": 715.3855089167242
+        },
+        {
+          "start": 2198,
+          "goal": 2279,
+          "offline_distance_m": 1491.0874775487548
+        },
+        {
+          "start": 1659,
+          "goal": 2863,
+          "offline_distance_m": 1724.2889835416258
+        },
+        {
+          "start": 252,
+          "goal": 622,
+          "offline_distance_m": 1782.1039761731129
+        },
+        {
+          "start": 2652,
+          "goal": 2381,
+          "offline_distance_m": 1644.3924561832378
+        },
+        {
+          "start": 623,
+          "goal": 1501,
+          "offline_distance_m": 1101.695809781516
+        },
+        {
+          "start": 2368,
+          "goal": 1818,
+          "offline_distance_m": 792.3854577720655
+        },
+        {
+          "start": 1823,
+          "goal": 2510,
+          "offline_distance_m": 1643.4077968758377
+        },
+        {
+          "start": 1999,
+          "goal": 100,
+          "offline_distance_m": 2009.7188493572226
+        },
+        {
+          "start": 1859,
+          "goal": 962,
+          "offline_distance_m": 143.1497079521526
+        },
+        {
+          "start": 2120,
+          "goal": 1871,
+          "offline_distance_m": 1799.0941145348802
+        },
+        {
+          "start": 2759,
+          "goal": 2078,
+          "offline_distance_m": 1528.2470648692283
+        },
+        {
+          "start": 1615,
+          "goal": 677,
+          "offline_distance_m": 1313.1847020729342
+        },
+        {
+          "start": 2949,
+          "goal": 1719,
+          "offline_distance_m": 1420.012506937036
+        },
+        {
+          "start": 1022,
+          "goal": 8,
+          "offline_distance_m": 867.5189429850446
+        },
+        {
+          "start": 920,
+          "goal": 23,
+          "offline_distance_m": 623.9082408361714
+        },
+        {
+          "start": 1429,
+          "goal": 634,
+          "offline_distance_m": 746.5870376698441
+        },
+        {
+          "start": 1588,
+          "goal": 429,
+          "offline_distance_m": 1090.8614732272615
+        },
+        {
+          "start": 430,
+          "goal": 2525,
+          "offline_distance_m": 1624.4227160742164
+        },
+        {
+          "start": 877,
+          "goal": 934,
+          "offline_distance_m": 1981.779587835346
+        },
+        {
+          "start": 864,
+          "goal": 2454,
+          "offline_distance_m": 909.7276355324095
+        },
+        {
+          "start": 117,
+          "goal": 538,
+          "offline_distance_m": 1148.1974187033638
+        },
+        {
+          "start": 676,
+          "goal": 1889,
+          "offline_distance_m": 897.9625974858756
+        },
+        {
+          "start": 1987,
+          "goal": 247,
+          "offline_distance_m": 1837.9267957885493
+        },
+        {
+          "start": 1428,
+          "goal": 1727,
+          "offline_distance_m": 1326.1817239272705
+        },
+        {
+          "start": 2400,
+          "goal": 2317,
+          "offline_distance_m": 1429.2843049681387
+        },
+        {
+          "start": 2367,
+          "goal": 1988,
+          "offline_distance_m": 2063.7044951417447
+        },
+        {
+          "start": 2454,
+          "goal": 2448,
+          "offline_distance_m": 740.9951094311456
+        },
+        {
+          "start": 2554,
+          "goal": 41,
+          "offline_distance_m": 941.8931946288543
+        },
+        {
+          "start": 2170,
+          "goal": 1386,
+          "offline_distance_m": 243.88228044633686
+        },
+        {
+          "start": 1148,
+          "goal": 2023,
+          "offline_distance_m": 1948.7465461318607
+        },
+        {
+          "start": 264,
+          "goal": 997,
+          "offline_distance_m": 1180.3330032133722
+        },
+        {
+          "start": 1658,
+          "goal": 2094,
+          "offline_distance_m": 1680.5276999128564
+        },
+        {
+          "start": 1264,
+          "goal": 986,
+          "offline_distance_m": 1285.1645235027643
+        },
+        {
+          "start": 2564,
+          "goal": 23,
+          "offline_distance_m": 2041.5071464993043
+        },
+        {
+          "start": 1905,
+          "goal": 2170,
+          "offline_distance_m": 1747.0760676460502
+        },
+        {
+          "start": 2431,
+          "goal": 1873,
+          "offline_distance_m": 1391.237663171743
+        },
+        {
+          "start": 2419,
+          "goal": 2052,
+          "offline_distance_m": 1111.4955929555376
+        },
+        {
+          "start": 2895,
+          "goal": 985,
+          "offline_distance_m": 1433.6476403935824
+        },
+        {
+          "start": 1371,
+          "goal": 2129,
+          "offline_distance_m": 1803.385605705622
+        },
+        {
+          "start": 21,
+          "goal": 217,
+          "offline_distance_m": 419.7916186694879
+        }
+      ],
+      "medium": [
+        {
+          "start": 1889,
+          "goal": 569,
+          "offline_distance_m": 2807.4233970282717
+        },
+        {
+          "start": 1888,
+          "goal": 946,
+          "offline_distance_m": 3216.0127136455862
+        },
+        {
+          "start": 2778,
+          "goal": 2731,
+          "offline_distance_m": 2840.689568073211
+        },
+        {
+          "start": 2165,
+          "goal": 1911,
+          "offline_distance_m": 2365.4846387639877
+        },
+        {
+          "start": 874,
+          "goal": 1959,
+          "offline_distance_m": 3080.4928459327425
+        },
+        {
+          "start": 1594,
+          "goal": 2570,
+          "offline_distance_m": 2126.3874960802987
+        },
+        {
+          "start": 60,
+          "goal": 1599,
+          "offline_distance_m": 2181.24279090362
+        },
+        {
+          "start": 1755,
+          "goal": 2087,
+          "offline_distance_m": 2624.7419314034933
+        },
+        {
+          "start": 2760,
+          "goal": 2056,
+          "offline_distance_m": 2644.9548789746786
+        },
+        {
+          "start": 2111,
+          "goal": 1411,
+          "offline_distance_m": 2819.106109448993
+        },
+        {
+          "start": 2328,
+          "goal": 1505,
+          "offline_distance_m": 2755.2005021380705
+        },
+        {
+          "start": 349,
+          "goal": 486,
+          "offline_distance_m": 3258.9736537013564
+        },
+        {
+          "start": 2603,
+          "goal": 574,
+          "offline_distance_m": 2191.566416689747
+        },
+        {
+          "start": 2365,
+          "goal": 1631,
+          "offline_distance_m": 2575.7353177125233
+        },
+        {
+          "start": 966,
+          "goal": 1520,
+          "offline_distance_m": 3138.4165572547145
+        },
+        {
+          "start": 1566,
+          "goal": 1235,
+          "offline_distance_m": 2176.803351568599
+        },
+        {
+          "start": 505,
+          "goal": 550,
+          "offline_distance_m": 2895.307676552248
+        },
+        {
+          "start": 2353,
+          "goal": 1990,
+          "offline_distance_m": 2782.384971034839
+        },
+        {
+          "start": 715,
+          "goal": 2979,
+          "offline_distance_m": 3164.1065960524343
+        },
+        {
+          "start": 2081,
+          "goal": 2848,
+          "offline_distance_m": 2700.9987956006753
+        },
+        {
+          "start": 2505,
+          "goal": 1815,
+          "offline_distance_m": 2892.508649556139
+        },
+        {
+          "start": 771,
+          "goal": 2072,
+          "offline_distance_m": 2184.3679644657914
+        },
+        {
+          "start": 1064,
+          "goal": 2143,
+          "offline_distance_m": 3116.728737011919
+        },
+        {
+          "start": 2099,
+          "goal": 2448,
+          "offline_distance_m": 3033.3950462730168
+        },
+        {
+          "start": 450,
+          "goal": 1240,
+          "offline_distance_m": 2740.4512199768915
+        },
+        {
+          "start": 2838,
+          "goal": 988,
+          "offline_distance_m": 2162.838296440606
+        },
+        {
+          "start": 1952,
+          "goal": 1563,
+          "offline_distance_m": 3233.477474343719
+        },
+        {
+          "start": 1629,
+          "goal": 244,
+          "offline_distance_m": 2276.352209390893
+        },
+        {
+          "start": 1887,
+          "goal": 2885,
+          "offline_distance_m": 2090.2409968787624
+        },
+        {
+          "start": 2639,
+          "goal": 1183,
+          "offline_distance_m": 2788.648035393425
+        },
+        {
+          "start": 2111,
+          "goal": 2445,
+          "offline_distance_m": 2262.083251121069
+        },
+        {
+          "start": 1097,
+          "goal": 1394,
+          "offline_distance_m": 2586.2791334804106
+        },
+        {
+          "start": 714,
+          "goal": 2436,
+          "offline_distance_m": 2820.4936652847205
+        },
+        {
+          "start": 1492,
+          "goal": 2465,
+          "offline_distance_m": 2344.566495334893
+        },
+        {
+          "start": 2559,
+          "goal": 1384,
+          "offline_distance_m": 2406.8989200473366
+        },
+        {
+          "start": 2301,
+          "goal": 1624,
+          "offline_distance_m": 2709.692849988041
+        },
+        {
+          "start": 1218,
+          "goal": 1064,
+          "offline_distance_m": 2981.294493992168
+        },
+        {
+          "start": 893,
+          "goal": 475,
+          "offline_distance_m": 3133.292915104235
+        },
+        {
+          "start": 1150,
+          "goal": 1881,
+          "offline_distance_m": 2473.31302618303
+        },
+        {
+          "start": 1194,
+          "goal": 2279,
+          "offline_distance_m": 2141.8799258707945
+        },
+        {
+          "start": 1382,
+          "goal": 507,
+          "offline_distance_m": 2236.9424090943494
+        },
+        {
+          "start": 855,
+          "goal": 1267,
+          "offline_distance_m": 2469.0410927177813
+        },
+        {
+          "start": 385,
+          "goal": 2091,
+          "offline_distance_m": 2750.0730877302963
+        },
+        {
+          "start": 1239,
+          "goal": 774,
+          "offline_distance_m": 2918.673880774592
+        },
+        {
+          "start": 1884,
+          "goal": 141,
+          "offline_distance_m": 3197.499774703471
+        },
+        {
+          "start": 2701,
+          "goal": 871,
+          "offline_distance_m": 2992.5440161705437
+        },
+        {
+          "start": 2123,
+          "goal": 108,
+          "offline_distance_m": 2862.669934212844
+        },
+        {
+          "start": 1507,
+          "goal": 2397,
+          "offline_distance_m": 2595.6144886559428
+        },
+        {
+          "start": 2907,
+          "goal": 1065,
+          "offline_distance_m": 2427.8408785471083
+        },
+        {
+          "start": 2636,
+          "goal": 1411,
+          "offline_distance_m": 2475.3349717360306
+        },
+        {
+          "start": 2179,
+          "goal": 1612,
+          "offline_distance_m": 2338.9756679818906
+        },
+        {
+          "start": 1495,
+          "goal": 2411,
+          "offline_distance_m": 2771.035869746561
+        },
+        {
+          "start": 2209,
+          "goal": 902,
+          "offline_distance_m": 3024.1712237095476
+        },
+        {
+          "start": 196,
+          "goal": 1784,
+          "offline_distance_m": 2725.9291864689403
+        },
+        {
+          "start": 1591,
+          "goal": 2430,
+          "offline_distance_m": 2675.282799646444
+        },
+        {
+          "start": 1649,
+          "goal": 1752,
+          "offline_distance_m": 2829.0082653391473
+        },
+        {
+          "start": 1403,
+          "goal": 209,
+          "offline_distance_m": 3113.3202735612904
+        },
+        {
+          "start": 2066,
+          "goal": 536,
+          "offline_distance_m": 3232.6635422121635
+        },
+        {
+          "start": 1175,
+          "goal": 175,
+          "offline_distance_m": 2681.6892681928716
+        },
+        {
+          "start": 1363,
+          "goal": 2752,
+          "offline_distance_m": 2745.5565525630595
+        }
+      ],
+      "long": [
+        {
+          "start": 2732,
+          "goal": 818,
+          "offline_distance_m": 3380.996783451057
+        },
+        {
+          "start": 1369,
+          "goal": 343,
+          "offline_distance_m": 6021.109087492731
+        },
+        {
+          "start": 789,
+          "goal": 2723,
+          "offline_distance_m": 4758.52784699376
+        },
+        {
+          "start": 388,
+          "goal": 1891,
+          "offline_distance_m": 3682.424044263992
+        },
+        {
+          "start": 1399,
+          "goal": 1232,
+          "offline_distance_m": 5021.0959940215225
+        },
+        {
+          "start": 1598,
+          "goal": 1935,
+          "offline_distance_m": 3501.5743854199804
+        },
+        {
+          "start": 2628,
+          "goal": 136,
+          "offline_distance_m": 3276.171458228749
+        },
+        {
+          "start": 1655,
+          "goal": 825,
+          "offline_distance_m": 3655.2984288981925
+        },
+        {
+          "start": 1845,
+          "goal": 1765,
+          "offline_distance_m": 3679.273810845867
+        },
+        {
+          "start": 781,
+          "goal": 2350,
+          "offline_distance_m": 5236.273708922999
+        },
+        {
+          "start": 1769,
+          "goal": 2191,
+          "offline_distance_m": 4902.8654315355625
+        },
+        {
+          "start": 499,
+          "goal": 402,
+          "offline_distance_m": 4525.101278119322
+        },
+        {
+          "start": 339,
+          "goal": 1155,
+          "offline_distance_m": 3791.993293384942
+        },
+        {
+          "start": 2949,
+          "goal": 2794,
+          "offline_distance_m": 6136.07590660547
+        },
+        {
+          "start": 716,
+          "goal": 1304,
+          "offline_distance_m": 3908.999243348323
+        },
+        {
+          "start": 23,
+          "goal": 1545,
+          "offline_distance_m": 4066.323394531494
+        },
+        {
+          "start": 2779,
+          "goal": 420,
+          "offline_distance_m": 4695.814125098423
+        },
+        {
+          "start": 822,
+          "goal": 1212,
+          "offline_distance_m": 3618.3278750717654
+        },
+        {
+          "start": 2540,
+          "goal": 2136,
+          "offline_distance_m": 3538.2897654250205
+        },
+        {
+          "start": 1228,
+          "goal": 954,
+          "offline_distance_m": 3708.456947304912
+        },
+        {
+          "start": 943,
+          "goal": 1299,
+          "offline_distance_m": 4610.794916610149
+        },
+        {
+          "start": 920,
+          "goal": 1994,
+          "offline_distance_m": 4896.395357219666
+        },
+        {
+          "start": 188,
+          "goal": 1475,
+          "offline_distance_m": 4615.680628697688
+        },
+        {
+          "start": 1329,
+          "goal": 2773,
+          "offline_distance_m": 5330.004943558618
+        },
+        {
+          "start": 2504,
+          "goal": 2154,
+          "offline_distance_m": 4295.806683295496
+        },
+        {
+          "start": 493,
+          "goal": 6,
+          "offline_distance_m": 3533.3675683478928
+        },
+        {
+          "start": 2737,
+          "goal": 520,
+          "offline_distance_m": 4118.992376488024
+        },
+        {
+          "start": 2219,
+          "goal": 137,
+          "offline_distance_m": 3459.357674674657
+        },
+        {
+          "start": 427,
+          "goal": 1960,
+          "offline_distance_m": 3529.6286429977126
+        },
+        {
+          "start": 2736,
+          "goal": 1980,
+          "offline_distance_m": 4517.336474031341
+        },
+        {
+          "start": 2517,
+          "goal": 2293,
+          "offline_distance_m": 5025.324717053467
+        },
+        {
+          "start": 317,
+          "goal": 1792,
+          "offline_distance_m": 3937.922604343619
+        },
+        {
+          "start": 794,
+          "goal": 1389,
+          "offline_distance_m": 4720.451641813105
+        },
+        {
+          "start": 689,
+          "goal": 2868,
+          "offline_distance_m": 5338.181685246131
+        },
+        {
+          "start": 567,
+          "goal": 937,
+          "offline_distance_m": 3739.0845906317545
+        },
+        {
+          "start": 2295,
+          "goal": 1538,
+          "offline_distance_m": 3444.9304294490244
+        },
+        {
+          "start": 361,
+          "goal": 27,
+          "offline_distance_m": 5537.534552385345
+        },
+        {
+          "start": 527,
+          "goal": 1530,
+          "offline_distance_m": 5141.774944122316
+        },
+        {
+          "start": 2574,
+          "goal": 2808,
+          "offline_distance_m": 3660.8142973354143
+        },
+        {
+          "start": 135,
+          "goal": 2870,
+          "offline_distance_m": 3877.029005908328
+        },
+        {
+          "start": 1841,
+          "goal": 585,
+          "offline_distance_m": 3981.810120850721
+        },
+        {
+          "start": 2308,
+          "goal": 2093,
+          "offline_distance_m": 3318.2232190494074
+        },
+        {
+          "start": 924,
+          "goal": 111,
+          "offline_distance_m": 3652.4658654375003
+        },
+        {
+          "start": 321,
+          "goal": 1839,
+          "offline_distance_m": 4045.29730052398
+        },
+        {
+          "start": 2770,
+          "goal": 2250,
+          "offline_distance_m": 5228.403091367099
+        },
+        {
+          "start": 345,
+          "goal": 1022,
+          "offline_distance_m": 5099.959996603103
+        },
+        {
+          "start": 2909,
+          "goal": 2573,
+          "offline_distance_m": 4551.798550256598
+        },
+        {
+          "start": 2070,
+          "goal": 784,
+          "offline_distance_m": 6084.305267018732
+        },
+        {
+          "start": 2211,
+          "goal": 596,
+          "offline_distance_m": 5709.39512305446
+        },
+        {
+          "start": 2330,
+          "goal": 1686,
+          "offline_distance_m": 4632.072126571682
+        },
+        {
+          "start": 996,
+          "goal": 524,
+          "offline_distance_m": 5956.510389911097
+        },
+        {
+          "start": 2973,
+          "goal": 1909,
+          "offline_distance_m": 3350.7420173970418
+        },
+        {
+          "start": 1418,
+          "goal": 2804,
+          "offline_distance_m": 3291.2681978526284
+        },
+        {
+          "start": 1155,
+          "goal": 1168,
+          "offline_distance_m": 3719.6800781028696
+        },
+        {
+          "start": 1918,
+          "goal": 2265,
+          "offline_distance_m": 4264.136373953958
+        },
+        {
+          "start": 2527,
+          "goal": 420,
+          "offline_distance_m": 4484.983207213052
+        },
+        {
+          "start": 1655,
+          "goal": 629,
+          "offline_distance_m": 3557.6539090616907
+        },
+        {
+          "start": 518,
+          "goal": 1025,
+          "offline_distance_m": 6211.01962376494
+        },
+        {
+          "start": 1236,
+          "goal": 2489,
+          "offline_distance_m": 4872.6803599441055
+        },
+        {
+          "start": 46,
+          "goal": 1291,
+          "offline_distance_m": 4830.449545847364
+        }
+      ]
+    },
+    "edge_cases": {
+      "start_equals_goal": [
+        0,
+        0
+      ],
+      "one_way_directed_edge": [
+        2,
+        1119
+      ],
+      "unreachable_pair": [
+        1881,
+        2911
+      ],
+      "nearest_edge_midpoint_lat_lon": [
+        10.7901102,
+        106.64325025
+      ]
+    }
+  },
+  "robot": {
+    "status": "prespecified_but_gated_on_upstream_execution_collision_validity",
+    "episode_limit": 100,
+    "radii": [
+      10,
+      20,
+      30
+    ],
+    "worlds": [
+      {
+        "file": "_map_deadend.csv",
+        "sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+        "bounds": [
+          -2,
+          -2,
+          102,
+          102
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "valid_lattice_goals": 32,
+        "goals": [
+          [
+            40,
+            40
+          ],
+          [
+            50,
+            50
+          ],
+          [
+            80,
+            40
+          ],
+          [
+            80,
+            60
+          ],
+          [
+            100,
+            40
+          ],
+          [
+            100,
+            50
+          ],
+          [
+            80,
+            100
+          ],
+          [
+            100,
+            100
+          ]
+        ],
+        "radii": [
+          10,
+          20,
+          30
+        ],
+        "robot_radius": 0.5,
+        "geometry_valid": true,
+        "clearance_component_valid": true
+      },
+      {
+        "file": "_map_bugtrap.csv",
+        "sha256": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+        "bounds": [
+          -2,
+          -2,
+          202,
+          202
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "valid_lattice_goals": 40,
+        "goals": [
+          [
+            40,
+            40
+          ],
+          [
+            80,
+            140
+          ],
+          [
+            160,
+            80
+          ],
+          [
+            160,
+            120
+          ],
+          [
+            200,
+            60
+          ],
+          [
+            160,
+            160
+          ],
+          [
+            200,
+            140
+          ],
+          [
+            200,
+            200
+          ]
+        ],
+        "radii": [
+          10,
+          20,
+          30
+        ],
+        "robot_radius": 0.5,
+        "geometry_valid": true,
+        "clearance_component_valid": true
+      }
+    ],
+    "expected_configurations": 48,
+    "method_episodes_if_gate_passes": 96
+  },
+  "road_timing": {
+    "warmup_per_pair_per_method": 1,
+    "batches": 7,
+    "batch_calls_by_stratum": {
+      "short": 20,
+      "medium": 10,
+      "long": 5
+    },
+    "clock": "C++ steady_clock",
+    "trace": false,
+    "search_only": true
+  },
+  "robot_metric_rules": {
+    "actual_distance": "sum Euclidean lengths of coordinate updates",
+    "planned_asp_distance": "sum logged ASP polyline lengths, separate from actual",
+    "turn_collinearity": "author inside_line_segment on each consecutive position triple",
+    "turn_heading": "absolute wrapped heading change greater than 15 degrees",
+    "collision": "each executed segment must avoid polygon interior and respect 0.5 clearance",
+    "failure_policy": "retain every prespecified failed or timed-out episode"
+  }
+}

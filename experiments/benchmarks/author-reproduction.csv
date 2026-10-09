@@ -1,0 +1,3 @@
+map,map_sha256,start,goal,vision_radius,robot_radius,limit,status,executed_distance,logged_planned_asp_distance,upstream_robot_cost,coordinate_updates,asp_paths,turns_collinearity,turns_heading_15deg,interior_collision_segments,clearance_violation_segments,elapsed_s,geometry_valid,comparison_valid
+_map_deadend.csv,7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab,"[0, 0]","[70, 90]",20,0.5,60,goal_reached,456.36618616677333,551.030081812392,551.030081812392,21,21,19,18,4,6,2.1842272999929264,True,False
+_map_bugtrap.csv,50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8,"[0, 0]","[160, 80]",20,0.5,60,goal_reached,543.7653234192933,566.025796286952,566.0257962869518,22,22,20,15,1,3,4.60183890000917,True,False
