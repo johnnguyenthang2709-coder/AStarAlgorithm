@@ -16,7 +16,7 @@
   "font_resources_with_Unicode_maps": 23,
   "type3_font_resources": 0,
   "checked_search_terms": [
-    "Affiliation",
+    "Nguyen Hoang Thang",
     "verified",
     "different",
     "effort",
@@ -27,6 +27,8 @@
     "\u2208",
     "\u2217"
   ],
-  "unchanged_assets": "metadata, bibliography, official class/style, all figures/tables",
+  "unchanged_assets": "bibliography, official class/style, all figures/tables",
+  "verified_metadata": "Nguyen Hoang Thang; supplied three-line affiliation",
+  "title_page_and_even_page_author_headers": "PASS",
   "extraction_limit": "Reading-order whitespace and line-wrap hyphens remain extractor-dependent; math is not a structured equation export."
 }
