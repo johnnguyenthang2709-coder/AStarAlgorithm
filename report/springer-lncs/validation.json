@@ -1,8 +1,8 @@
 {
   "status": "PASS",
   "baseline": "04c48468c6b6b4f6512be925383614267fa7ca32",
-  "total_pages": 18,
-  "references_start_page": 18,
+  "total_pages": 19,
+  "references_start_page": 19,
   "abstract_words_whitespace": 165,
   "figures": 8,
   "tables": 3,

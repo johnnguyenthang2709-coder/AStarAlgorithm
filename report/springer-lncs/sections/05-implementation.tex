@@ -2,7 +2,7 @@
 \subsection{Queue, Records, and Improved Paths}
 Preserving improvements to pending or expanded states requires separating records from queue entries. An \source{unordered_map} stores best $g$, predecessor, and last-expanded $g$ per state; a \source{priority_queue} stores state, inserted $g,h,f$, and insertion order. Lexicographic $(f,h,\mathrm{order})$ selects lower $f$, lower $h$, then earlier insertion, deterministically when neighbor enumeration is deterministic.
 
-Algorithm~\ref{alg:core} pushes a new entry for each improvement rather than decreasing a key. Older entries remain in OPEN: a stored $g$ exceeding the current record is stale and skipped. An entry no better than the last-expanded value is also skipped, but a strictly smaller $g$ remains eligible. CLOSED thus records expansion history without preventing reopening.
+Algorithm~\ref{alg:core} pushes a new entry for each improvement rather than decreasing a key. Entries with stored $g$ above the current best record, or no better than the last-expanded score, are skipped. The last-expanded $g$-score records expansion history without permanently closing a state, thereby allowing reopening when a strictly better path is found.
 
 \begin{algorithm}[H]
 \caption{Shared C++ search (trace and counters omitted)}\label{alg:core}

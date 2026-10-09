@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "original_report_commit": "861e1200083a1099c1b50e1c69ad67a34f68df5b",
-  "pages_checked_with_both_extractors": 18,
+  "pages_checked_with_both_extractors": 19,
   "original_pypdf_invalid_character_codes": [
     "U+0010",
     "U+0011",

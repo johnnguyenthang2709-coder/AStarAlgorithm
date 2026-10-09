@@ -1,5 +1,9 @@
 # Scientific QA
 
+## Final editorial supplement (2026-10-09)
+
+Branch `codex/springer-lncs-final-editorial` derives from `f9475d0`. All three requested precision corrections are addressed: conditional Phan return properties, observed-ancestor certification, and last-expanded g-score terminology. `EDITORIAL-CHANGELOG.md` records the local edits, source checks, and historical manifest wording note. Both report validators pass; 56 frozen hashes, scientific statistics, assets, citations, and Unicode maps remain valid. Production regression results below remain historical baseline executions. Final editorial PDF: 19 pages, references begin on page 19. No production code, benchmark script/result, or algorithm is changed.
+
 Date: 2026-10-09. Original reporting branch: `codex/springer-lncs-report`; writing revision: `codex/springer-lncs-writing-refinement` from `861e120`. Authoritative baseline: `04c48468c6b6b4f6512be925383614267fa7ca32`. This review produced documentation only.
 
 ## Writing-revision consistency check
