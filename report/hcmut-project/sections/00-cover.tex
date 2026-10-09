@@ -1,44 +1,38 @@
 \begin{titlepage}
 \thispagestyle{empty}
 \begin{tikzpicture}[remember picture,overlay]
-  \foreach \inset in {1.0,1.15,1.3} {
-    \draw[line width=0.5pt]
+  \foreach \inset/\weight in {1.0/0.4,1.3/1.2,1.6/0.4} {
+    \draw[line width=\weight pt]
       ([xshift=\inset cm,yshift=-\inset cm]current page.north west)
       rectangle
       ([xshift=-\inset cm,yshift=\inset cm]current page.south east);
   }
 \end{tikzpicture}
 \begin{center}
-{\small\bfseries \ReportUniversitySystem\par}
-\vspace{0.3cm}
 {\large\bfseries \ReportUniversity\par}
 \vspace{0.3cm}
-{\small\bfseries \ReportFaculty\par}
-\vspace{1.4cm}
-\IfFileExists{\ReportLogoPath}{%
-  % Trim only the supplied PNG's outer white margins (300 dpi); keep
-  % the original file unchanged and preserve the emblem's aspect ratio.
-  \includegraphics[trim=258.72bp 113.76bp 164.88bp 55.92bp,clip,width=3.4cm,height=3.4cm,keepaspectratio]{\ReportLogoPath}%
-}{%
-  \fbox{\parbox[c][3.2cm][c]{3.2cm}{\centering\small\color{gray}Official HCMUT logo\\to be supplied}}%
-}
-\vspace{1.4cm}
-\par{\Large\bfseries PROJECT REPORT\par}
-\vspace{0.9cm}
-{\Huge\bfseries A* SEARCH ALGORITHM\par}
+{\large\bfseries \ReportFaculty\par}
+\includegraphics[width=12cm,keepaspectratio]{\ReportLogoPath}
 \vspace{0.8cm}
+\par{\Large\bfseries PROJECT REPORT\par}
+\vspace{0.3cm}
+{\Large\bfseries TOPIC: A* SEARCH ALGORITHM\par}
+\vspace{0.3cm}
 {\large\bfseries Road Routing and Partially Observed\\Robot Navigation\par}
-\vspace{0.4cm}
-{\large Design, Implementation, and\\Experimental Evaluation\par}
-\vfill
-{\large Author: \textbf{\ReportAuthor}\par}
-% Blank optional fields print nothing; enter approved values in metadata.tex.
-\newcommand{\OptionalCoverField}[2]{\ifdefempty{#2}{}{\par\noindent #1: #2}}
-\OptionalCoverField{Course}{\ReportCourse}
-\OptionalCoverField{Lecturer}{\ReportLecturer}
-\OptionalCoverField{Student ID}{\ReportStudentID}
-\OptionalCoverField{Class}{\ReportClass}
-\OptionalCoverField{Submission date}{\ReportSubmissionDate}
+\vspace{0.3cm}
+{\large Design, Implementation, and Experimental Evaluation\par}
 \end{center}
-\vspace{1cm}
+\vspace{0.5cm}
+\noindent\textbf{Lecturer: \ReportLecturer}\par
+\vspace{0.3cm}
+\noindent\textbf{Class: \ReportClass}\par
+\vspace{0.6cm}
+\begingroup
+\fontencoding{T5}\selectfont
+\noindent\begin{tabular}{@{} l @{\hspace{1.2cm}} l @ {\hspace{1.2cm}} r @{}}
+\textbf{Name} & \textbf{Class} & \textbf{Student ID} \\
+\ReportStudentRows
+\end{tabular}
+\endgroup
+\vfill
 \end{titlepage}

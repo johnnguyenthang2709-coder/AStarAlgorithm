@@ -15,7 +15,7 @@
 
 The final document has **22 physical A4 pages**: cover (no printed number), abstract (i), contents (ii), and 19 Arabic-numbered body/reference pages. Introduction is physical page 4 with printed page 1. Contents is generated automatically, fits one page, and all numbered section/subsection destinations are checked against extracted page text. References begin on printed page 18 and continue on page 19.
 
-The format check confirms `article[a4paper,12pt,oneside]`, a 160 mm x 247 mm text area (2.5 cm margins), one column, and 1.15 body line spacing. The contents page uses ordinary single spacing without reducing font size. The three nested cover rectangles are confined to the cover. Institution names, report topic, subtitle, and author remain within the frame. The cover uses the author's supplied logo, Faculty of Applied Science, and lecturer Phan Thanh An. The PNG is unchanged; only white margins are trimmed in LaTeX, with proportional sizing. Other optional administrative fields remain empty and invisible.
+The format check confirms `article[a4paper,12pt,oneside]`, a 160 mm x 247 mm text area (2.5 cm margins), one column, and 1.15 body line spacing. The contents page uses ordinary single spacing without reducing font size. The three nested cover rectangles are confined to the cover. Institution names, report topic, subtitle, lecturer, and five-student table remain within the frame. The cover uses the author's supplied logo, Faculty of Applied Science, and lecturer Phan Thanh An. The PNG is unchanged and proportionally rendered at 12 cm width, including its original white margins. Border insets and line weights follow the supplied LaTeX template. The five supplied Vietnamese names, class CC06, and student IDs are printed without inferred emails or submission date.
 
 ## Build and extraction
 
@@ -39,4 +39,8 @@ pypdf and Poppler both extract searchable Unicode, including accented names and 
 
 All 22 final pages were rendered at 120 dpi and inspected using labeled contact sheets, with full-size checks of the cover, contents, algorithm, quantitative tables, equations, and references. No clipping, overlapping elements, unreadable captions, distorted figures, or unintended blank pages were observed. Dedicated float pages use compact top alignment rather than large distributed gaps. Body text and captions remain within the intended single-column area.
 
-The formal cover and complete contents meet the written presentation brief. The author supplied a sample-cover screenshot after the initial conversion; no source Calculus LaTeX template was available. The supplied university logo, lecturer, and faculty are incorporated without copying unrelated course, group, student, email, or date details from that screenshot. Remaining administrative fields can be filled later with verified information. No integrity declaration or rights grant was assumed. The separate LNCS affiliation remains unchanged.
+The cover now follows the supplied source LaTeX template, adapted to the A* topic, lecturer Phan Thanh An, Faculty of Applied Science, and verified five-student list. The sample Calculus title, lecturer, email list, group, and date are not reused. The separate LNCS author metadata and affiliation remain unchanged.
+
+## Cover revision validation
+
+The cover-only revision is rebuilt using the commands above (the independent HCMUT validator verifies the unchanged LNCS source blobs). Both pypdf and Poppler extraction check all five accented names, class CC06, and student IDs. All 21 pages after the cover have identical extracted text and pixel-identical 120 dpi renders compared with the preceding PDF. The complete rebuilt PDF is rendered for layout checks; cover fonts must be embedded with Unicode maps and no Type 3 glyphs.

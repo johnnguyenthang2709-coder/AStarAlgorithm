@@ -31,9 +31,9 @@ Numeric citations retain the supplied `splncs04.bst`, avoiding changes to verifi
 
 ## Verified and optional metadata
 
-`metadata.tex` contains Nguyen Hoang Thang, the university names, the supplied Faculty of Applied Science, and lecturer Phan Thanh An. Course, student ID, class, and submission date are unset and do not print. They are optional editable fields, not assertions that the course requires them. No supervisor, coauthor, email, ORCID, signed declaration, or copyright grant has been added.
+`metadata.tex` records the supplied five students, their student IDs, class CC06, lecturer Phan Thanh An, and Faculty of Applied Science. Vietnamese names use T5 font encoding on the cover; the manuscript body retains T1. No emails, submission date, ORCIDs, or additional administrative information are inferred.
 
-The initial repository contained no HCMUT logo or actual Calculus sample. The author subsequently supplied the university PNG, lecturer, faculty, and a sample-cover screenshot. The cover now uses that supplied logo proportionally, with white margins trimmed in LaTeX; see `assets/README.md`. The A* topic, single-author scope, and verified scientific content remain intact; unrelated Calculus/group metadata from the example is not imported.
+The cover follows the supplied LaTeX template: two university/faculty headings, three borders (insets 1.0/1.3/1.6 cm; widths 0.4/1.2/0.4 pt), proportionally rendered logo at 12 cm width, project topic, lecturer, and student table. The original PNG remains unchanged. The sample Calculus topic, lecturer, group, email list, and date are not imported. These group details apply to the university cover; the separate LNCS manuscript is unchanged.
 
 ## Scientific preservation
 

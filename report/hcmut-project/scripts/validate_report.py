@@ -85,8 +85,8 @@ def main():
     assert all(t.strip() for t in texts)
     assert all(abs(float(p.mediabox.width) - 595.276) < 0.1 and
                abs(float(p.mediabox.height) - 841.89) < 0.1 for p in pdf.pages)
-    for word in ('Nguyen Hoang Thang', 'PROJECT REPORT', 'A* SEARCH ALGORITHM',
-                 'VIETNAM NATIONAL UNIVERSITY, HO CHI MINH CITY',
+    for word in ('Nguyễn Đức Hòa', 'Nguyễn Hoàng Thắng', 'PROJECT REPORT', 'A* SEARCH ALGORITHM',
+                 'HCMC UNIVERSITY OF TECHNOLOGY',
                  'UNIVERSITY OF TECHNOLOGY', 'FACULTY OF APPLIED SCIENCE', 'Lecturer: Phan Thanh An'):
         assert ''.join(word.split()) in ''.join(texts[0].split()), word
     assert (REPORT / 'assets/hcmut-logo.png').exists()
@@ -121,7 +121,7 @@ def main():
     for text in ('\n'.join(texts), poppler):
         assert not any(c == '\ufffd' or (ord(c) < 32 and c not in '\n\r\t\f') for c in text)
         normalized = unicodedata.normalize('NFKC', text)
-        for term in ('Nguyen Hoang Thang', 'configuration', 'verified', 'Pérez', 'ε', '≤', '∈'):
+        for term in ('Nguyễn Đức Hòa', 'Phạm Văn Bảo Phong', 'Nguyễn Bá Hoàng', 'Nguyễn Hoàng Thắng', 'Nguyễn Hưng Phát', '2652600', '2652465', '2651237', '2550216', '2651590', 'CC06', 'configuration', 'verified', 'Pérez', 'ε', '≤', '∈'):
             assert term in normalized, term
     result = dict(status='PASS', source_revision=REVISION,
                   frozen_source_files_unchanged=len(tracked), source_sections_preserved=equivalence,
