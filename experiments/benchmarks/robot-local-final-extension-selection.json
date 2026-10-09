@@ -1,0 +1,175 @@
+{
+  "selection_version": 1,
+  "purpose": "One prospective extension of original-source frozen local decisions",
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "selection_basis": "Original unmodified polygon CSV maps with independently checked valid polygons and free start/goal points; vary original maps, endpoint, and sensing radius. Selection is fixed before these source runs. Prior two-map and held-out results are acknowledged, not pooled into an unqualified prospective claim.",
+  "episodes": [
+    {
+      "episode_id": "P01",
+      "map": "_map_deadend.csv",
+      "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        100,
+        100
+      ],
+      "sensing_radius": 10,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P02",
+      "map": "_map_deadend.csv",
+      "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        100,
+        100
+      ],
+      "sensing_radius": 30,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P03",
+      "map": "_map_bugtrap.csv",
+      "map_sha256": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        150,
+        150
+      ],
+      "sensing_radius": 10,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P04",
+      "map": "_map_bugtrap.csv",
+      "map_sha256": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        150,
+        150
+      ],
+      "sensing_radius": 30,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P05",
+      "map": "_map_block.csv",
+      "map_sha256": "95e5c8cdd23f12d302200395d809d65dcf21988a057efc2449cece5376e3da0b",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        70,
+        90
+      ],
+      "sensing_radius": 10,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P06",
+      "map": "_map_blocks_1.csv",
+      "map_sha256": "6cc5ba1aa48d8788c21a7de9412361f8a1d99037e3e3f7496a182b40d7bdb0db",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        100,
+        100
+      ],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P07",
+      "map": "_map_blocks.csv",
+      "map_sha256": "ea1bd4c2f3502e13d529be823397ce4c68da451c51ef9aa588c5c1120e22244e",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        150,
+        150
+      ],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P08",
+      "map": "_map_forest.csv",
+      "map_sha256": "bff83d4ae1ab370f4d1455970194f0a58d5a3a7139837c9a766d44e35f28dec9",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        100,
+        100
+      ],
+      "sensing_radius": 10,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P09",
+      "map": "_map_forest_1.csv",
+      "map_sha256": "3bb07660aafc34e48dc855fd3deef594d69aef14f27f2780e7fd6f6cb8b4fe87",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        160,
+        80
+      ],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "episode_id": "P10",
+      "map": "_map.csv",
+      "map_sha256": "d436e7133c40cab0b3d8cf6fb4cdb5f819508078c88e34a896af53dd81d502e9",
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        70,
+        90
+      ],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    }
+  ],
+  "episode_cap": 12,
+  "captured_snapshot_cap": 300,
+  "on_cap": "Stop capture at the first cap; report all earlier outcomes and truncation",
+  "eligibility_rule": "Every captured original skeleton with more than two vertices",
+  "selection_policy": "Compare every eligible snapshot; retain failures and invalid paths",
+  "collision_convention": "Point robot, obstacle interior excluded, boundary contact permitted in primary analysis; strict boundary exclusion secondary",
+  "no_adaptive_replacement": true
+}
