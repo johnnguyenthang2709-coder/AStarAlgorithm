@@ -17,6 +17,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--authors-dir", type=Path,
                         default=HERE.parents[2] / "AStarAlgorithm-authors-benchmark")
+    parser.add_argument("--verify-only", action="store_true",
+                        help="Replay the fixed source episodes and compare to committed snapshot hash")
     args = parser.parse_args()
     source = args.authors_dir.resolve()
     selection = json.loads(SELECTION.read_text(encoding="utf-8"))
@@ -24,7 +26,7 @@ def main():
     assert len(selection["episodes"]) <= selection["episode_cap"]
     assert subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip() == PIN
     assert not subprocess.check_output(["git", "-C", str(source), "status", "--porcelain"], text=True).strip()
-    if OUT.exists():
+    if OUT.exists() and not args.verify_only:
         raise FileExistsError(f"capture is immutable once written: {OUT}")
     snapshots, outcomes = [], []
     cap = selection["captured_snapshot_cap"]
@@ -59,8 +61,14 @@ def main():
         print(outcome, flush=True)
         if len(snapshots) >= cap:
             break
-    OUT.mkdir()
     content = (json.dumps({"authors_commit": PIN, "snapshots": snapshots}, indent=2) + "\n").encode()
+    if args.verify_only:
+        committed = json.loads((OUT / "robot-local-benchmark-manifest.json").read_text())
+        assert hashlib.sha256(content).hexdigest() == committed["snapshot_sha256"]
+        assert outcomes == committed["episode_outcomes"]
+        print(f"Exact source replay verified: {len(snapshots)} frozen decisions", flush=True)
+        return
+    OUT.mkdir()
     (OUT / "robot-local-snapshots.json").write_bytes(content)
     manifest = {
         "protocol_version": 1,

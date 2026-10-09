@@ -1,0 +1,27 @@
+{
+  "captured": 233,
+  "eligible": 14,
+  "excluded": 219,
+  "completed_pairs": 14,
+  "geometry_equivalence": {
+    "point_samples": 116500,
+    "source_derived_membership_mismatches": 0,
+    "certified_graph_link_samples": 98703,
+    "source_uncovered_graph_link_samples": 0
+  },
+  "original_asp_segments_sight_certified": 518,
+  "original_asp_segments_uncertified": 0,
+  "graph_edges_ground_truth_checked": 997,
+  "graph_edge_interior_crossings": 0,
+  "graph_edge_boundary_contacts": 0,
+  "asp_interior_valid": 14,
+  "astar_interior_valid": 14,
+  "asp_strict_valid": 12,
+  "astar_strict_valid": 14,
+  "asp_shorter": 3,
+  "astar_shorter": 9,
+  "median_astar_minus_asp_length": -2.491732489980894,
+  "median_asp_core_ms": 78.37075,
+  "median_astar_core_ms": 0.03375,
+  "median_astar_build_ms": 56.13915
+}

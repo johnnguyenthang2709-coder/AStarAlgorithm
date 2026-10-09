@@ -1,0 +1,260 @@
+{
+  "road": {
+    "pairs": 180,
+    "equal_cost": 180,
+    "astar_fewer_expansions": 180,
+    "astar_faster": 173,
+    "dijkstra_faster": 7,
+    "median_paired_expansion_reduction_fraction": 0.7601386642772849,
+    "median_paired_search_time_ratio": 0.3376093579979862,
+    "mean_paired_search_time_ratio": 0.3893892019192757,
+    "search_time_ratio_range": [
+      0.06082233310174951,
+      1.4346628774109689
+    ],
+    "worst_astar_time_ratio": {
+      "pair_id": 167,
+      "ratio": 1.4346628774109689
+    },
+    "strata": {
+      "short": {
+        "n": 60,
+        "median_astar_expanded": 101.0,
+        "median_dijkstra_expanded": 505.0,
+        "median_paired_expansion_reduction_fraction": 0.7855990783410138,
+        "median_astar_search_us": 44.9475,
+        "median_dijkstra_search_us": 128.085,
+        "median_paired_time_ratio": 0.32352956522161175
+      },
+      "medium": {
+        "n": 60,
+        "median_astar_expanded": 301.0,
+        "median_dijkstra_expanded": 1592.0,
+        "median_paired_expansion_reduction_fraction": 0.7739426016334352,
+        "median_astar_search_us": 282.94500000000005,
+        "median_dijkstra_search_us": 1117.24,
+        "median_paired_time_ratio": 0.28655699081225894
+      },
+      "long": {
+        "n": 60,
+        "median_astar_expanded": 714.5,
+        "median_dijkstra_expanded": 2588.5,
+        "median_paired_expansion_reduction_fraction": 0.6864506334901725,
+        "median_astar_search_us": 771.46,
+        "median_dijkstra_search_us": 1883.19,
+        "median_paired_time_ratio": 0.4493085497864028
+      }
+    }
+  },
+  "robot": {
+    "cohorts": {
+      "robot-local-benchmark": {
+        "captured": 43,
+        "eligible": 6,
+        "excluded": 37,
+        "source_goal_reached": 0,
+        "source_episodes": 0,
+        "validation": {
+          "captured": 43,
+          "eligible": 6,
+          "excluded": 37,
+          "completed_pairs": 6,
+          "geometry_equivalence": {
+            "point_samples": 21500,
+            "source_derived_membership_mismatches": 0,
+            "certified_graph_link_samples": 9801,
+            "source_uncovered_graph_link_samples": 0
+          },
+          "original_asp_segments_sight_certified": 196,
+          "original_asp_segments_uncertified": 0,
+          "graph_edges_ground_truth_checked": 99,
+          "graph_edge_interior_crossings": 0,
+          "graph_edge_boundary_contacts": 0,
+          "asp_interior_valid": 6,
+          "astar_interior_valid": 6,
+          "asp_strict_valid": 3,
+          "astar_strict_valid": 6,
+          "asp_shorter": 5,
+          "astar_shorter": 1,
+          "median_astar_minus_asp_length": 7.403443667567778,
+          "median_asp_core_ms": 14.8764,
+          "median_astar_core_ms": 0.02035,
+          "median_astar_build_ms": 29.582099999999997
+        },
+        "snapshot_sha256": "1bb3c927348e11bb2b7ccca151548b1da12ee5550284ccb7b60631d45a44aa9b"
+      },
+      "robot-local-extension": {
+        "captured": 75,
+        "eligible": 1,
+        "excluded": 74,
+        "source_goal_reached": 4,
+        "source_episodes": 4,
+        "validation": {
+          "captured": 75,
+          "eligible": 1,
+          "excluded": 74,
+          "completed_pairs": 1,
+          "geometry_equivalence": {
+            "point_samples": 37500,
+            "source_derived_membership_mismatches": 0,
+            "certified_graph_link_samples": 3168,
+            "source_uncovered_graph_link_samples": 0
+          },
+          "original_asp_segments_sight_certified": 151,
+          "original_asp_segments_uncertified": 0,
+          "graph_edges_ground_truth_checked": 32,
+          "graph_edge_interior_crossings": 0,
+          "graph_edge_boundary_contacts": 0,
+          "asp_interior_valid": 1,
+          "astar_interior_valid": 1,
+          "asp_strict_valid": 0,
+          "astar_strict_valid": 1,
+          "asp_shorter": 1,
+          "astar_shorter": 0,
+          "median_astar_minus_asp_length": 1.654207494612308,
+          "median_asp_core_ms": 563.6982,
+          "median_astar_core_ms": 0.0263,
+          "median_astar_build_ms": 48.6625
+        },
+        "snapshot_sha256": "ace2e0a76e29dcb96db1597c0c2ca41412a6ad961a9339fb06936dc64bf95185"
+      },
+      "robot-local-final-extension": {
+        "captured": 233,
+        "eligible": 14,
+        "excluded": 219,
+        "source_goal_reached": 9,
+        "source_episodes": 10,
+        "validation": {
+          "captured": 233,
+          "eligible": 14,
+          "excluded": 219,
+          "completed_pairs": 14,
+          "geometry_equivalence": {
+            "point_samples": 116500,
+            "source_derived_membership_mismatches": 0,
+            "certified_graph_link_samples": 98703,
+            "source_uncovered_graph_link_samples": 0
+          },
+          "original_asp_segments_sight_certified": 518,
+          "original_asp_segments_uncertified": 0,
+          "graph_edges_ground_truth_checked": 997,
+          "graph_edge_interior_crossings": 0,
+          "graph_edge_boundary_contacts": 0,
+          "asp_interior_valid": 14,
+          "astar_interior_valid": 14,
+          "asp_strict_valid": 12,
+          "astar_strict_valid": 14,
+          "asp_shorter": 3,
+          "astar_shorter": 9,
+          "median_astar_minus_asp_length": -2.491732489980894,
+          "median_asp_core_ms": 78.37075,
+          "median_astar_core_ms": 0.03375,
+          "median_astar_build_ms": 56.13915
+        },
+        "snapshot_sha256": "59d5fca9c28464d29c5252d5d6e4053af05dc729263b062605955a329aa9b339"
+      }
+    },
+    "captured": 351,
+    "eligible": 21,
+    "excluded": 330,
+    "distinct_maps": [
+      "_map.csv",
+      "_map_blocks_1.csv",
+      "_map_bugtrap.csv",
+      "_map_bugtrap_1.csv",
+      "_map_deadend.csv"
+    ],
+    "both_found": 21,
+    "asp_failures": 0,
+    "astar_failures": 0,
+    "asp_shorter": 9,
+    "astar_shorter": 10,
+    "equal_length": 2,
+    "paired_length_difference_astar_minus_asp": {
+      "mean": 2.9814148249286876,
+      "median": 0.0,
+      "min": -10.707029820571634,
+      "max": 44.265702286219685
+    },
+    "paired_turn_difference_astar_minus_asp": {
+      "mean": -14.19047619047619,
+      "median": -2
+    },
+    "asp_interior_valid": 21,
+    "astar_interior_valid": 21,
+    "asp_strict_valid": 15,
+    "astar_strict_valid": 21,
+    "asp_radius_0_5_clearance_diagnostic": 9,
+    "astar_radius_0_5_clearance_diagnostic": 11,
+    "median_asp_core_ms": 62.655,
+    "median_astar_graph_build_ms": 42.1023,
+    "median_astar_cpp_binding_ms": 0.0263,
+    "median_astar_build_plus_call_ms": 42.1419,
+    "worst_absolute_length_difference_snapshot": "P02-_map_deadend-01"
+  },
+  "supporting": {
+    "radar_pairs": 20,
+    "radar_shorter": 18,
+    "radar_longer": 2,
+    "radar_median_paired_distance_delta": -95.4192075,
+    "radar_largest_regression": 70.77169099999999,
+    "cache_pairs": 20,
+    "cache_equivalent": 20,
+    "cache_median_full_frontier_ms": 639.1655000000001,
+    "cache_median_cached_frontier_ms": 46.7225,
+    "sensor_episodes": 12,
+    "sensor_goal_success": 12,
+    "sensor_median_radius5_distance": 92.909018,
+    "sensor_median_radius7_distance": 113.27849850000001,
+    "parent_trace_rows": 4,
+    "certified_nonfallback_returns": 4
+  },
+  "initial_eligibility_audit": {
+    "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+    "datasets": {
+      "robot-local-benchmark": {
+        "captured": 43,
+        "eligible": 6,
+        "excluded": 37
+      },
+      "robot-local-extension": {
+        "captured": 75,
+        "eligible": 1,
+        "excluded": 74
+      },
+      "robot-local-final-extension": {
+        "captured": 233,
+        "eligible": 14,
+        "excluded": 219
+      }
+    },
+    "original_two_cohorts": {
+      "captured": 118,
+      "eligible": 7,
+      "excluded": 111,
+      "primary_reasons": {
+        "direct_target_at_range_boundary_no_bundle_refinement": 50,
+        "direct_target_visible_no_bundle_refinement": 61,
+        "eligible_nontrivial_bundle": 7
+      }
+    },
+    "captured": 351,
+    "eligible": 21,
+    "excluded": 330,
+    "primary_reasons": {
+      "direct_target_at_range_boundary_no_bundle_refinement": 154,
+      "direct_target_visible_no_bundle_refinement": 176,
+      "eligible_nontrivial_bundle": 21
+    },
+    "source_derived_visibility_disagreements": 154,
+    "disagreements_explained_by_strict_radius_boundary": 154,
+    "eligibility_checker_mismatches": 0,
+    "missing_data": 0,
+    "invalid_endpoints": 0,
+    "geometry_or_information_incompatibility": 0,
+    "excluded_but_direct_path_comparable": 330,
+    "excluded_direct_paths_with_ground_truth_interior_crossing": 0,
+    "excluded_direct_paths_with_ground_truth_boundary_contact": 0,
+    "selection_uses_method_outcome": false
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "datasets": {
+    "robot-local-benchmark": {
+      "captured": 43,
+      "eligible": 6,
+      "excluded": 37
+    },
+    "robot-local-extension": {
+      "captured": 75,
+      "eligible": 1,
+      "excluded": 74
+    },
+    "robot-local-final-extension": {
+      "captured": 233,
+      "eligible": 14,
+      "excluded": 219
+    }
+  },
+  "original_two_cohorts": {
+    "captured": 118,
+    "eligible": 7,
+    "excluded": 111,
+    "primary_reasons": {
+      "direct_target_at_range_boundary_no_bundle_refinement": 50,
+      "direct_target_visible_no_bundle_refinement": 61,
+      "eligible_nontrivial_bundle": 7
+    }
+  },
+  "captured": 351,
+  "eligible": 21,
+  "excluded": 330,
+  "primary_reasons": {
+    "direct_target_at_range_boundary_no_bundle_refinement": 154,
+    "direct_target_visible_no_bundle_refinement": 176,
+    "eligible_nontrivial_bundle": 21
+  },
+  "source_derived_visibility_disagreements": 154,
+  "disagreements_explained_by_strict_radius_boundary": 154,
+  "eligibility_checker_mismatches": 0,
+  "missing_data": 0,
+  "invalid_endpoints": 0,
+  "geometry_or_information_incompatibility": 0,
+  "excluded_but_direct_path_comparable": 330,
+  "excluded_direct_paths_with_ground_truth_interior_crossing": 0,
+  "excluded_direct_paths_with_ground_truth_boundary_contact": 0,
+  "selection_uses_method_outcome": false
+}

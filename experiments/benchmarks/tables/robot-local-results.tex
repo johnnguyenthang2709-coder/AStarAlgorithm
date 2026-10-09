@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Frozen local planned paths from the authors' recorded sights. Validity counts are ASP/A*; the strict convention excludes obstacle-boundary contact. The methods use different planning graphs.}
+\label{tab:robot-local-final}
+\begin{tabular}{lrrrrrrr}
+\hline
+Cohort & Captured & Eligible & ASP shorter & A* shorter & Interior-valid & Strict-valid & Median $\Delta L$ \\
+\hline
+robot-local-benchmark & 43 & 6 & 5 & 1 & 6/6 & 3/6 & 7.403 \\
+robot-local-extension & 75 & 1 & 1 & 0 & 1/1 & 0/1 & 1.654 \\
+robot-local-final-extension & 233 & 14 & 3 & 9 & 14/14 & 12/14 & -2.492 \\
+\hline
+\end{tabular}
+\footnotesize{$\Delta L=L_{A*}-L_{ASP}$, in source world units. Equal-length cases are omitted from shorter counts.}
+\end{table}

@@ -1,0 +1,14 @@
+\begin{table}[t]
+\centering
+\caption{Frozen directed-road A* versus Dijkstra. Times are C++ search-call medians in microseconds; reductions and ratios are medians of paired values, so they need not equal ratios of column medians.}
+\label{tab:road-final}
+\begin{tabular}{lrrrrrrr}
+\hline
+Stratum & $n$ & A* expanded & Dijkstra expanded & Paired reduction & A* $\mu$s & Dijkstra $\mu$s & Paired time ratio \\
+\hline
+Short & 60 & 101.0 & 505.0 & 78.6\% & 44.95 & 128.09 & 0.324 \\
+Medium & 60 & 301.0 & 1592.0 & 77.4\% & 282.95 & 1117.24 & 0.287 \\
+Long & 60 & 714.5 & 2588.5 & 68.6\% & 771.46 & 1883.19 & 0.449 \\
+\hline
+\end{tabular}
+\end{table}
