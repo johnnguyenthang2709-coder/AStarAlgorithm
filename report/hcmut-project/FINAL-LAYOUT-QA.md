@@ -1,5 +1,12 @@
 # Final comprehensive layout and pagination QA
 
+## Latest update: standard first-line indentation
+
+Added `\usepackage{indentfirst}` and retained `\setlength{\parindent}{1.5em}` in `main.tex`. Normal paragraphs immediately after section/subsection headings now receive the same first-line indent as other normal paragraphs, including the abstract text. Explicit unindented cover labels and the keywords label remain intentional non-body elements. No manuscript content or section-break controls were changed.
+
+Rebuilt using the existing pdfLaTeX/BibTeX script, rendered all pages at 120 dpi and inspected all six consecutive contact sheets. The report remains 21 physical pages; Section 2 still follows Section 1 on physical page 4. No clipping, heading isolation or new pagination defect was found. Build and all report/reference/Unicode/frozen-artifact validators pass without warnings. No further layout edits were necessary. The editor's existing XeTeX incompatibility with pdfTeX Unicode mapping remains separate from the successful project build.
+
+
 ## Latest correction: gap after Section 1
 
 The earlier correction removed explicit section controls but left paragraph/display penalties at 10000, which still prevented Section 2's opening from using the available space. These penalties are now preferences (3000), and the pre-display penalty is 0. This permits normal breaks before a display without changing text, equation structure, fonts, margins or line spacing. Section 2 now starts directly after Section 1 on physical page 4; Section 3 follows the preceding text on physical page 6. No body section break/reservation/barrier was added.
