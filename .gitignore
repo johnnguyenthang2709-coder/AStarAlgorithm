@@ -12,3 +12,7 @@ cache/
 .env.*
 !.env.example
 /2550216 (1).rar
+
+# Local diagnostics and privately supplied research papers (not redistributed)
+/tmp/
+/reference/Papers/

@@ -1,41 +1,82 @@
-# A* Navigation Lab
+# A* Algorithm — Road and Robot Navigation
 
-Explore shortest paths on a directed road graph near HCMUT Campus 1 and on an editable robot grid. **A* and Dijkstra run in C++17**. Python, pybind11, and FastAPI adapt and serve the results; React, TypeScript, and Leaflet visualize them. The original algorithm reference remains in `reference/2550216/` and is exercised by regression tests.
+A completed university algorithms project demonstrating one reusable **C++17 A* search engine** in road routing and partially observed robot navigation. FastAPI exposes the engine through pybind11; React/TypeScript visualizes searches, sensing, exploration, and recovery.
 
-For a source-guided explanation of the algorithm, see [How A* works in this project](docs/astar-implementation.md).
+## Applications
 
-Application 1, **Blind-Alley Robot Navigation**, is a separate limited-sensing
-mode under **Blind Alley**. It uses the existing C++ four-direction A* with a
-discovered occupancy map, frontier exploration, and autonomous exhausted-branch
-recovery. The benchmark gate labels events only after navigation. See
-[BAR methods and experiments](docs/bar-application.md) and the
-[exact recovery trigger](docs/bar-recovery-trigger.md). The
-[independent paper/source review](docs/bar-independent-review.md) distinguishes
-this grid adaptation from the authors' continuous-space method. Run the fixed experiment
-matrix with `.venv\Scripts\python.exe scripts\benchmark_bar.py`; see the
-[frozen results table](docs/bar-results.md).
-For a larger visual demonstration, the Blind Alley screen also includes
-32 × 32 and 40 × 40 maps; see [large simulation measurements](docs/bar-large-simulation.md).
-It also accepts polygon CSV maps from the original research generator format
-through an offline, conservative grid converter. Two independently authored
-irregular maps are included; see [polygon-map adaptation and results](docs/bar-polygon-maps.md).
-The default Blind Alley view now offers **Maze 3: Irregular Labyrinth**, a seeded
-continuous 2D point-robot demonstration with winding polygon corridors, dead
-ends, and loops. The earlier room-based Maze 3 is still selectable.
-It uses certified 360° observations, arbitrary-angle segments, and the same
-C++ A* core through a Euclidean visibility graph adapter. The previous fixed
-polygon scenarios and original grid benchmarks remain selectable. See
-[irregular labyrinth design and results](docs/bar-labyrinth.md),
-[parent-aware backtracking audit](docs/bar-parent-backtracking-audit.md),
-[original Maze 3 baseline](docs/bar-maze-3.md), and
-[continuous method and assumptions](docs/bar-continuous.md).
-The **Indoor Exploration** presets add rooms, doors, furniture, and observed
-parent-branch playback using the same continuous sensor and C++ A* planner;
-see the [indoor design, assumptions, and results](docs/bar-indoor.md).
+- **Road Navigation:** shortest-distance routing on 2,986 nodes and 7,152 directed road edges near HCMUT Campus 1. Clicking a road projects onto its polyline; request-local virtual endpoints preserve partial-edge costs and one-way direction. Compare A* and Dijkstra on identical snapped inputs. Local road geometry works without online map tiles.
+- **Robot Navigation:** continuous 360° point-robot movement through polygonal mazes and indoor rooms, using limited-range, occlusion-aware sensing and accumulated discovered geometry. Radar-informed frontier exploration repeatedly invokes C++ A* on an observed visibility graph. Parent-aware backtracking plans a verified return with A*, with a reversed-entry fallback. Branch recovery certification applies under the documented reversible-trajectory assumptions; it is not general polygonal blind-alley detection.
+- **Retained baselines:** editable four/eight-direction Robot Lab, limited-sensing grid BAR fixtures, fixed polygon environments, seeded Maze 3 and irregular labyrinths, and indoor rooms with furniture and doorways. These remain selectable alongside the continuous demonstrations.
+
+![Continuous labyrinth observation and executed-path diagnostic](docs/images/labyrinth-observed-trace.png)
+
+*Existing diagnostic figure: observed geometry and navigation trace; not a screenshot or evidence of universal navigation success.*
+
+## Architecture and source guide
 
 ```text
-React + Leaflet → FastAPI → pybind11 → C++ search → RoadProblem / GridProblem / visibility graph
+React / TypeScript / Leaflet
+            ↓ HTTP
+FastAPI routers and robot exploration controllers
+            ↓ pybind11
+Shared C++ A* / Dijkstra search
+            ↓
+GridProblem | RoadProblem + temporary snapped edges | observed visibility graph
 ```
+
+| Location | Responsibility |
+| --- | --- |
+| [include/astar/search.hpp](include/astar/search.hpp) | Main generic A* loop, queue updates, reopening, parent reconstruction; Dijkstra uses zero heuristic |
+| [include/astar/](include/astar/) and [src/](src/) | Grid and directed-road problem adapters, edge snapping |
+| [backend/bindings.cpp](backend/bindings.cpp) | Python/C++ interface |
+| [backend/app/](backend/app/) | API validation, road loading, sensing, continuous exploration and recovery |
+| [frontend/src/](frontend/src/) | Application interface, maps, trace and movement playback |
+| [data/](data/) | Reproducible road bundle and robot fixtures |
+| [tests/](tests/) | C++/Python correctness and regression coverage |
+| [experiments/benchmarks/](experiments/benchmarks/) | Frozen protocols, manifests, raw results, diagnostics and validators |
+| [reference/2550216/](reference/2550216/) | Original provided A* reference, preserved and regression-tested |
+
+See [how A* is implemented](docs/astar-implementation.md), [continuous sensing and motion assumptions](docs/bar-continuous.md), [parent-aware backtracking audit](docs/bar-parent-backtracking-audit.md), [radar-informed exploration](docs/bar-radar-informed-exploration.md), [indoor exploration](docs/bar-indoor.md), and [irregular labyrinth design](docs/bar-labyrinth.md).
+
+## Final reports
+
+- **Approved HCMUT report:** [PDF](report/hcmut-project/report.pdf), [LaTeX entry point](report/hcmut-project/main.tex), [sources and build instructions](report/hcmut-project/), [final layout QA](report/hcmut-project/FINAL-LAYOUT-QA.md). The approved PDF has 21 pages. Its content and pagination are frozen.
+- **Springer LNCS manuscript:** [PDF](report/springer-lncs/report.pdf), [LaTeX entry point](report/springer-lncs/main.tex), [sources](report/springer-lncs/), [literature review matrix](report/springer-lncs/LITERATURE-REVIEW-MATRIX.md).
+
+The report-directory READMEs contain historical conversion notes; the checked-in PDFs, current metadata sources, and final validation records define the finalized versions. Rebuilding is optional and requires pdfLaTeX/BibTeX and the documented TeX packages. The application does not require LaTeX.
+
+## Verified experiments and their limits
+
+These are **frozen measurements**, not new experiments run during repository integration. See the [final benchmark report](experiments/benchmarks/FINAL-BENCHMARK-REPORT.md), [summary](experiments/benchmarks/FINAL-BENCHMARK-SUMMARY.md), [manifest and hashes](experiments/benchmarks/benchmark-final-manifest.json), and [data dictionary](experiments/benchmarks/benchmark-data-dictionary.md).
+
+| Experiment | Verified result | Interpretation |
+| --- | --- | --- |
+| Road A* vs Dijkstra, 180 identical directed pairs | Equal optimal costs in 180/180; A* fewer expansions in 180/180; median paired expansion reduction 76%; median A*/Dijkstra search-time ratio 0.338 | Frozen local graph; C++ search timing only; no universal speed claim |
+| Authors' ASP/DAP vs our A*, shared observed local states | 351 decisions captured, 21 eligible pairs; ASP shorter 9, A* shorter 10, equal 2 | Same observations/endpoints, different planning representations; not online navigation distance |
+| Point-path validity of those 21 pairs | Interior-only validity 21/21 for both; strict boundary-free validity ASP 15/21, A* 21/21 | Boundary conventions matter; finite-radius safety is not established by the primary comparison |
+| Frontier-cache study | Identical navigation playback in 20/20 paired episodes; median frontier processing 639.166 ms full vs 46.723 ms cached | Measured optimization on these configurations |
+| Radar ranking study | 20 successful pairs; radar shorter in 18, longer in 2 | Exploration ordering can regress; no claim of global online optimality |
+
+ASP Python core time and C++ A* search time have different scope and implementation language and must not be presented as an equivalent end-to-end speed comparison. The prespecified **48-case end-to-end authors-versus-our-robot comparison remains blocked** because source waypoint execution and footprint semantics are not reconciled. Planned path lengths, source coordinate transitions, and physically collision-checked executed distances are distinct quantities.
+
+### Validate the frozen artifacts
+
+From the repository root:
+
+```powershell
+.venv\Scripts\python.exe experiments\benchmarks\validate_road.py
+.venv\Scripts\python.exe experiments\benchmarks\validate_supporting.py
+.venv\Scripts\python.exe experiments\benchmarks\validate_final_benchmark.py
+py -3.14 report\hcmut-project\scripts\validate_report.py
+```
+
+The final benchmark and report validators also require a clean, separately obtained authors' checkout at sibling directory `../AStarAlgorithm-authors-benchmark`, pinned to `8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8`. This checkout is not needed to run the applications. Report validation additionally uses `pypdf` and Poppler `pdftotext`; the command above uses the existing Python 3.14 report environment. Install `pypdf` in your chosen validator environment if necessary. Replaying authors' experiments has separate dependencies and source-commit requirements in the [benchmark reproduction documentation](experiments/benchmarks/FINAL-BENCHMARK-REPORT.md); validators check frozen data rather than regenerate measurements.
+
+## Research attribution
+
+The robot application studies the limited-vision blind-alley problem discussed by Phan Thanh An et al., *The sequences of bundles of line segments for autonomous robots with limited vision range to escape from blind alley regions*, **Robotics and Autonomous Systems 195 (2026), 105185**, [DOI](https://doi.org/10.1016/j.robot.2025.105185). Original research code: [ThanhBinhTran/autonomousRobot](https://github.com/ThanhBinhTran/autonomousRobot).
+
+Our application keeps A* central and uses an observed visibility graph and frontier exploration. It does not reproduce the paper's bundle optimization/DAP algorithm. The [independent review](docs/bar-independent-review.md) and [motion-validity audit](experiments/benchmarks/author-motion-validity-audit.md) document the distinctions. No authors' source or CSV maps are bundled; their repository has no license granting redistribution. Local third-party papers remain untracked. Existing Springer template/style attribution and nlohmann/json licensing are retained; OSM-derived data retain the attribution below.
 
 ## Search behavior
 
@@ -118,17 +159,6 @@ npm run build
 ```
 
 The C++ targets cover the reference, generic core, RoadProblem, and edge snapping. Other tests cover preprocessing, pybind11, FastAPI, deterministic robot cases, and frontend state/race behavior. `npm run build` writes `frontend/dist/`.
-
-## Deterministic demos
-
-Enter coordinates in Road Navigation and press each **Set** button. Search results and metrics always come from the live C++ engine.
-
-| Demo | Start (lat, lon) | Goal (lat, lon) | Action | Measured result for checked-in graph |
-| --- | --- | --- | --- | --- |
-| A: Road A* | 10.7901425, 106.6432639 | 10.7909411, 106.6627844 | A* → Visualize search | 3,925.09 m, 458 expansions |
-| B: Compare | 10.773535, 106.662370 | 10.7901425, 106.6432639 | Compare Dijkstra | Same 4,042.89 m; A* 694, Dijkstra 2,968 expansions |
-
-Demo C uses the built-in 20 × 30 Robot Lab map. Select **8 directions**, **A***, then **Run search** (initial path cost 29). Press **Run robot** and pause after it reaches displayed row 11, column 5 (zero-based `(10,4)`). With **Draw obstacle** selected, click displayed row 11, column 7 (zero-based `(10,6)`). The app calls `/api/grid/replan` from `(10,4)`, updates the route and current search metrics, and increments the simulation replan count. The checked-in scenario replans to cost 27 from that cell; press **Run robot** again to reach the goal. Coordinates and obstacles are deterministic inputs, not stored algorithm output.
 
 ## Local cartography
 
