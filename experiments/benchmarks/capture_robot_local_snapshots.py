@@ -33,7 +33,8 @@ def plain(value):
     return value
 
 
-def capture(source, filename, goal):
+def capture(source, filename, goal, start=(0, 0), sensor_radius=20,
+            robot_radius=0.5, iteration_cap=60):
     if str(source) not in sys.path:
         sys.path.insert(0, str(source))
     import Robot_run
@@ -72,16 +73,18 @@ def capture(source, filename, goal):
     previous_dir = Path.cwd()
     try:
         os.chdir(source)
-        robot = Robot_run.robot_main(start=(0, 0), goal=goal, map_name=filename,
-                                     num_iter=60, robot_vision=20, robot_radius=0.5,
+        robot = Robot_run.robot_main(start=start, goal=goal, map_name=filename,
+                                     num_iter=iteration_cap, robot_vision=sensor_radius,
+                                     robot_radius=robot_radius,
                                      open_points_type=Robot_base.Open_points_type.Open_Arcs,
                                      picking_strategy=Robot_base.Picking_strategy.neighbor_first,
                                      experiment=True, save_image=False, save_log=False)
     finally:
         os.chdir(previous_dir)
         Robot.expand_visited_path = old_expand
-    assert robot is not None and robot.reach_goal
-    return decisions
+    assert robot is not None
+    return decisions, {"reach_goal": bool(robot.reach_goal),
+                       "no_way_to_goal": bool(robot.no_way_to_goal)}
 
 
 def main():
@@ -101,7 +104,8 @@ def main():
     for filename, goal in CASES:
         digest = hashlib.sha256((source / filename).read_bytes()).hexdigest()
         assert digest == map_hashes[filename]
-        captured = capture(source, filename, goal)
+        captured, status = capture(source, filename, goal)
+        assert status["reach_goal"]
         old = original["cases"][filename]["decisions"]
         assert len(captured) == len(old)
         for fresh, prior in zip(captured, old):
