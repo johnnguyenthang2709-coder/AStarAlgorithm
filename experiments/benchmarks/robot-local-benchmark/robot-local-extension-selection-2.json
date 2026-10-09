@@ -1,0 +1,26 @@
+{
+  "selection_version": 2,
+  "purpose": "Second prespecified held-out batch after first batch yielded zero nontrivial skeletons; retain first batch",
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "selection_reason": "Choose two other original polygon maps with valid free endpoints and longer start-goal separation; committed before source execution and before local-planner metrics",
+  "episodes": [
+    {
+      "map": "_map_blocks.csv",
+      "map_sha256": "ea1bd4c2f3502e13d529be823397ce4c68da451c51ef9aa588c5c1120e22244e",
+      "start": [0, 0],
+      "goal": [300, 300],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "map": "_map_bugtrap_1.csv",
+      "map_sha256": "8b00d8bb9ffa2b4ffc1b4f9a76290640e330d8dfdfa9c438d307002d64374629",
+      "start": [0, 0],
+      "goal": [160, 80],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    }
+  ]
+}
