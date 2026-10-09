@@ -87,9 +87,10 @@ def main():
                abs(float(p.mediabox.height) - 841.89) < 0.1 for p in pdf.pages)
     for word in ('Nguyen Hoang Thang', 'PROJECT REPORT', 'A* SEARCH ALGORITHM',
                  'VIETNAM NATIONAL UNIVERSITY, HO CHI MINH CITY',
-                 'UNIVERSITY OF TECHNOLOGY', 'FACULTY OF COMPUTER SCIENCE AND ENGINEERING'):
+                 'UNIVERSITY OF TECHNOLOGY', 'FACULTY OF APPLIED SCIENCE', 'Lecturer: Phan Thanh An'):
         assert ''.join(word.split()) in ''.join(texts[0].split()), word
-    assert 'OfficialHCMUTlogo' in ''.join(texts[0].split()) or (REPORT / 'assets/hcmut-logo.pdf').exists()
+    assert (REPORT / 'assets/hcmut-logo.png').exists()
+    assert 'tobesupplied' not in ''.join(texts[0].split())
     intro = next(i for i, text in enumerate(texts) if re.search(r'1\s+Introduction', text)
                  and 'Contents' not in text and 'Abstract' not in text)
     assert pdf.page_labels[intro] == '1', pdf.page_labels

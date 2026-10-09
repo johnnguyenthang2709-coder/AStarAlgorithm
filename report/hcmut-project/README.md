@@ -31,9 +31,9 @@ Numeric citations retain the supplied `splncs04.bst`, avoiding changes to verifi
 
 ## Verified and optional metadata
 
-`metadata.tex` contains Nguyen Hoang Thang and the verified university/faculty names. Course, lecturer, student ID, class, and submission date are unset and do not print. They are optional editable fields, not assertions that the course requires them. No supervisor, coauthor, email, ORCID, signed declaration, or copyright grant has been added.
+`metadata.tex` contains Nguyen Hoang Thang, the university names, the supplied Faculty of Applied Science, and lecturer Phan Thanh An. Course, student ID, class, and submission date are unset and do not print. They are optional editable fields, not assertions that the course requires them. No supervisor, coauthor, email, ORCID, signed declaration, or copyright grant has been added.
 
-No official HCMUT logo or actual Calculus sample was found in the repository. Presentation follows the user's written specification. The cover explicitly labels the missing official logo; see `assets/README.md` for replacement instructions. The placeholder is the only incomplete institutional asset.
+The initial repository contained no HCMUT logo or actual Calculus sample. The author subsequently supplied the university PNG, lecturer, faculty, and a sample-cover screenshot. The cover now uses that supplied logo proportionally, with white margins trimmed in LaTeX; see `assets/README.md`. The A* topic, single-author scope, and verified scientific content remain intact; unrelated Calculus/group metadata from the example is not imported.
 
 ## Scientific preservation
 

@@ -16,7 +16,9 @@
 {\small\bfseries \ReportFaculty\par}
 \vspace{1.4cm}
 \IfFileExists{\ReportLogoPath}{%
-  \includegraphics[width=3.4cm,height=3.4cm,keepaspectratio]{\ReportLogoPath}%
+  % Trim only the supplied PNG's outer white margins (300 dpi); keep
+  % the original file unchanged and preserve the emblem's aspect ratio.
+  \includegraphics[trim=258.72bp 113.76bp 164.88bp 55.92bp,clip,width=3.4cm,height=3.4cm,keepaspectratio]{\ReportLogoPath}%
 }{%
   \fbox{\parbox[c][3.2cm][c]{3.2cm}{\centering\small\color{gray}Official HCMUT logo\\to be supplied}}%
 }
@@ -30,7 +32,6 @@
 {\large Design, Implementation, and\\Experimental Evaluation\par}
 \vfill
 {\large Author: \textbf{\ReportAuthor}\par}
-\end{center}
 % Blank optional fields print nothing; enter approved values in metadata.tex.
 \newcommand{\OptionalCoverField}[2]{\ifdefempty{#2}{}{\par\noindent #1: #2}}
 \OptionalCoverField{Course}{\ReportCourse}
@@ -38,5 +39,6 @@
 \OptionalCoverField{Student ID}{\ReportStudentID}
 \OptionalCoverField{Class}{\ReportClass}
 \OptionalCoverField{Submission date}{\ReportSubmissionDate}
+\end{center}
 \vspace{1cm}
 \end{titlepage}
