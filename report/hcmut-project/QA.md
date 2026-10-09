@@ -48,3 +48,11 @@ The cover-only revision is rebuilt using the commands above (the independent HCM
 ## Final layout refinement
 
 See `FINAL-LAYOUT-REVIEW.md` for the final 22-page placement audit. The centered cover, every rendered page, coherent road-results page, unchanged figure sizes, and final single-page bibliography were reviewed. Source and benchmark validators pass. The earlier pixel-identical body-page comparison applies to the previous cover-only revision; the current revision intentionally changes body pagination while preserving scientific text.
+
+## Cover wording and typography update
+
+The cover now uses the supplied Vietnam National University Ho Chi Minh City / Ho Chi Minh City University of Technology hierarchy, retaining FACULTY OF APPLIED SCIENCE. All three topic components use bold uppercase at the same size, and the logo width is reduced from 12 cm to 10.5 cm. The rebuilt cover was visually inspected; all five title lines share the same embedded font and size. All 21 subsequent pages retain identical extracted text and PDF drawing commands compared with the preceding layout revision. Build and report validators pass; the report remains 22 pages.
+
+## Comprehensive final pagination audit
+
+The current review supersedes the preceding placement review: see `FINAL-LAYOUT-QA.md` and `assets/layout-overview.png`. All 22 pages and consecutive transitions were inspected after the final pdfLaTeX build. Scientific content and frozen artifacts pass preservation checks. The approved cover retains PROJECT REPORT CALCULUS 1 and FACULTY OF APPLIED SCIENCE; it is pixel-identical to the pre-audit working-tree cover. The older initial-conversion course/figure-size statements above are historical, not the current specification.

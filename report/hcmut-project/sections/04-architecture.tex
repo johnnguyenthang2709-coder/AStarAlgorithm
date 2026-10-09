@@ -3,13 +3,14 @@
 Figure~\ref{fig:architecture} separates shared search from application knowledge. React/TypeScript requests pass through FastAPI and pybind11 to C++17. Road loading and adapters are C++; Python handles continuous sensing, accumulated geometry, targets, ancestry, and execution. Python constructs the continuous graph; the binding validates points and links and assigns Euclidean costs. Search therefore needs no hidden obstacle geometry.
 
 \begin{figure}[!htbp]
-\centering\includegraphics[width=\textwidth]{architecture.pdf}
+\centering\includegraphics[width=0.8\textwidth]{architecture.pdf}
 \caption{Implemented system boundaries. Ground truth enters sensing and motion validation; the continuous planner receives observations and verified links. Traces support frontend playback.}
 \label{fig:architecture}
 \end{figure}
 
 Reuse requires a common problem contract. \source{include/astar/search.hpp} accepts neighbors, heuristic, goal predicate, and state hashing/equality, maintaining costs, predecessors, counters, and traces without coordinate or equal-cost assumptions. Disabling the heuristic gives Dijkstra in the same core, isolating guidance in the road comparison.
 
+\FloatBarrier
 \subsection{Road Representation and Coordinate Requests}
 The OSM-derived graph contains 2,986 vertices and 7,152 directed edges. Adjacency determines legal travel; polyline metadata supplies geometry (Fig.~\ref{fig:roads}). Snapping a click between intersections to a vertex would shift the endpoint. Queries instead scan segments and project using latitude-scaled coordinates. Cumulative Haversine lengths determine edge fraction $r\in[0,1]$; projection remains a local approximation.
 
@@ -23,6 +24,8 @@ For directed edge $u\rightarrow v$ of weight $w$, a snapped start connects forwa
 \label{fig:roads}
 \end{figure}
 
+\FloatBarrier
+\par\Needspace{7\baselineskip}
 \subsection{Sensing, Exploration, and Observed Ancestry}
 Robot Lab supports four or eight directions (diagonal cost 1.5, without corner cutting), and grid BAR uses four unit-cost directions. Continuous polygon, seeded-maze, and indoor modes admit arbitrary straight-link headings, but require conservative observation geometry.
 

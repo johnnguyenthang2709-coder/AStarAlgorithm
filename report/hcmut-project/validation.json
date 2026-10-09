@@ -30,7 +30,7 @@
     "pypdf",
     "Poppler"
   ],
-  "mapped_font_instances": 145,
+  "mapped_font_instances": 132,
   "frozen_benchmark_hashes_checked": 56,
-  "visual_qa": "See QA.md; automated checks do not replace visual inspection."
+  "visual_qa": "See FINAL-LAYOUT-QA.md; automated checks do not replace visual inspection."
 }

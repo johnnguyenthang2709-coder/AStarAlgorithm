@@ -1,5 +1,7 @@
 # Final layout review
 
+> Historical review of the preceding revision. The current comprehensive review is in `FINAL-LAYOUT-QA.md`.
+
 ## Scope and baseline
 
 Reviewed the actual PDF from commit `597db50` (22 physical pages) on `codex/hcmut-project-report`. The attachment's `report(6).pdf` filename was not provided as a separate accessible artifact; the current compiled repository PDF was used as the before baseline. The final report still has 22 physical pages: cover, two Roman-numbered front-matter pages, and 19 Arabic-numbered body/reference pages.

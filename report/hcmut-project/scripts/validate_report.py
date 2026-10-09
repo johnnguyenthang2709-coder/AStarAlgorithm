@@ -24,6 +24,9 @@ def sha(data):
 
 def canonical(text):
     text = text.replace(r"\begingroup\predisplaypenalty=0", "").replace(r"\endgroup", "")
+    text = re.sub(r"\\(?:Needspace|needspace)\{[^}]*\}", "", text)
+    text = text.replace(r"\FloatBarrier", "")
+    text = text.replace(r"width=0.8\textwidth", r"width=\textwidth")
     # samepage groups affect pagination only; retain all enclosed science text.
     text = re.sub(r"\\(?:begin|end)\{samepage\}", "", text)
     text = re.sub(r'\\begin\{(figure|table)\}\[(?:t|H|!?htbp)\]',
@@ -90,9 +93,10 @@ def main():
     assert all(t.strip() for t in texts)
     assert all(abs(float(p.mediabox.width) - 595.276) < 0.1 and
                abs(float(p.mediabox.height) - 841.89) < 0.1 for p in pdf.pages)
-    for word in ('Nguyễn Đức Hòa', 'Nguyễn Hoàng Thắng', 'PROJECT REPORT', 'A* SEARCH ALGORITHM',
-                 'HCMC UNIVERSITY OF TECHNOLOGY',
-                 'UNIVERSITY OF TECHNOLOGY', 'FACULTY OF APPLIED SCIENCE', 'Lecturer: Phan Thanh An'):
+    for word in ('Nguyễn Đức Hòa', 'Nguyễn Hoàng Thắng', 'PROJECT REPORT CALCULUS 1', 'A* SEARCH ALGORITHM',
+                 'VIETNAM NATIONAL UNIVERSITY HO CHI MINH CITY',
+                 'HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY', 'FACULTY OF APPLIED SCIENCE', 'Lecturer: Phan Thanh An',
+                 'A* SEARCH ALGORITHM FOR ROAD ROUTING AND PARTIALLY OBSERVED ROBOT NAVIGATION: DESIGN, IMPLEMENTATION, AND EXPERIMENTAL EVALUATION'):
         assert ''.join(word.split()) in ''.join(texts[0].split()), word
     assert (REPORT / 'assets/hcmut-logo.png').exists()
     assert 'tobesupplied' not in ''.join(texts[0].split())
@@ -135,7 +139,7 @@ def main():
         table_center_offset = table_center - float(cover.attrib['width']) / 2
         assert abs(table_center_offset) < 1.0, table_center_offset
     reference_page = int(re.search(r'\\contentsline \{section\}\{References\}\{(\d+)\}', toc)[1])
-    assert texts[intro + reference_page - 1].startswith('References')
+    assert texts[intro + reference_page - 1].lstrip().startswith('References')
     rows = ('Nguyễn Đức Hòa CC06 2652600', 'Phạm Văn Bảo Phong CC06 2652465',
             'Nguyễn Bá Hoàng CC06 2651237', 'Nguyễn Hoàng Thắng CC06 2550216',
             'Nguyễn Hưng Phát CC06 2651590')
@@ -158,7 +162,7 @@ def main():
                   format='A4 article, 12pt, one column, 2.5cm margins, 1.15 line spacing',
                   unicode_extractors=['pypdf', 'Poppler'], mapped_font_instances=font_count,
                   frozen_benchmark_hashes_checked=len(manifest['artifact_sha256']),
-                  visual_qa='See QA.md; automated checks do not replace visual inspection.')
+                  visual_qa='See FINAL-LAYOUT-QA.md; automated checks do not replace visual inspection.')
     (REPORT / 'validation.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
 

@@ -30,8 +30,10 @@
 \renewcommand{\floatpagefraction}{0.8}
 \setcounter{topnumber}{3}
 \setcounter{totalnumber}{4}
-\widowpenalty=3000
-\clubpenalty=3000
+% Prevent isolated paragraph lines without keeping long paragraphs wholesale.
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
 % Keep dedicated float pages compact and aligned to the top, rather than
 % distributing large vertical gaps between a table and a figure.
 \makeatletter
@@ -60,13 +62,20 @@
 \clearpage
 \pagenumbering{arabic}
 \input{sections/01-introduction}
+% Keep the combined section/subsection opening with its introductory argument.
+\par\Needspace{10\baselineskip}
 \input{sections/02-background}
+% Keep the road formulation heading, definitions, and first display together.
+\par\Needspace{10\baselineskip}
 \input{sections/03-formulation}
 \input{sections/04-architecture}
 \input{sections/05-implementation}
+\par\Needspace{10\baselineskip}
 \input{sections/06-methodology}
 \par\Needspace{32\baselineskip}
 \input{sections/07-results}
+% Finish the supporting-results floats before changing to limitations.
+\FloatBarrier
 \input{sections/08-limitations}
 \input{sections/09-conclusion}
 \FloatBarrier

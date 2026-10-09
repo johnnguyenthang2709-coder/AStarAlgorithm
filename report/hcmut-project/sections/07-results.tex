@@ -38,7 +38,7 @@ Boundary conventions explain part of this variation. ASP passes strict validity 
 Radius-0.5 clearance passes only nine ASP and eleven A* paths, precluding disk-safety claims. Significant-turn medians are two and one respectively; paired all-turn delta median is $-2$. Tiny ASP bends can inflate all-turn counts without corresponding physical steering. ASP vertices can lie inside bundles absent from the sparse A* graph, so mixed lengths do not contradict graph-optimal search.
 
 \begin{figure}[!htbp]
-\centering\includegraphics[width=\textwidth]{robot-validity.pdf}
+\centering\includegraphics[width=0.8\textwidth]{robot-validity.pdf}
 \caption{Validity outcomes for the same 21 requests. Primary point validity allows boundary tangency; strict validity forbids it. Disk clearance is only a post-plan sensitivity check, not a guarantee of executed finite-robot motion.}
 \label{fig:validity}
 \end{figure}
@@ -47,13 +47,16 @@ Radius-0.5 clearance passes only nine ASP and eleven A* paths, precluding disk-s
 Figure~\ref{fig:runtime} separates the measured components. Across state medians, ASP core time is 62.655 ms, critical-line construction 0.319 ms, and optimization 62.400 ms. A* link-build time is 42.102 ms, binding/search 0.0263 ms, and the median per-state build-plus-call sum 42.142 ms. The small C++ call is a search on already constructed sparse graphs, while Python geometric certification can dominate its surrounding pipeline.
 
 \begin{figure}[!htbp]
-\centering\includegraphics[width=\textwidth]{robot-runtime.pdf}
+\centering\includegraphics[width=0.8\textwidth]{robot-runtime.pdf}
 \caption{Per-state median local computation times (three warm-ups, 31 calls). A logarithmic axis exposes component scale. ASP core excludes skeleton generation; A* build includes observed-link certification. Components and languages differ, so isolated search ratios are not algorithm-only speedups.}
 \label{fig:runtime}
 \end{figure}
 
+\begin{samepage}
 Construction and certification dominate the small C++ call in these requests. Dividing ASP core time by that call would compare different languages and preparation; even build-plus-call and ASP core omit different upstream work. Thus the evidence locates computational cost without isolating intrinsic algorithm speedup. Stronger timing conclusions require matched pipelines.
+\par\end{samepage}
 
+\FloatBarrier
 \subsection{Supporting Online Behavior and Recovery}
 Online navigation adds target ordering. Both legacy and radar reach the goal in 20 paired episodes; radar travels less in 18 and more in two, with median difference $-95.419$ world units. Its largest regression is $+70.772$ in Complex Irregular Labyrinth at radius 7. Estimated information changes branch ordering, with useful but non-dominating outcomes; low scores cannot justify exhaustion. All twelve sensor episodes reach their goals, but radius-5 and radius-7 distance medians are 92.909 and 113.278 units. Greater range need not shorten travel in this sample because it also changes decisions.
 
@@ -65,4 +68,6 @@ Caching addresses computation without changing exploration ordering. Full and ca
 \label{fig:support}
 \end{figure}
 
+\begin{samepage}
 The four certified indoor returns in Fig.~\ref{fig:support} are explicitly nonfallback: they demonstrate participation of C++ A* in recovery rather than automatic reversal of entry. Certification checks executed length to the observed ancestor under the assumptions of Eq.~\ref{eq:return}. Successful uncertified exits, unreachable-goal fixtures, and budget termination remain separate outcomes. In particular, a continuous no-frontier status establishes exhaustion of the controller's candidates, not unreachability in the unknown world.
+\par\end{samepage}

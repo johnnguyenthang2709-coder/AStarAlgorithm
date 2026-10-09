@@ -26,7 +26,9 @@ Combined &351&21&330\\\bottomrule
 \end{tabular}
 \end{table}
 
+\begin{samepage}
 Direct exclusions comprise 176 source-visible and 154 strict-range-boundary cases. Boundary convention explains endpoint predicate differences, with no missing-input or eligibility-checker mismatch. All 21 eligible requests remain, regardless of planner outcome.
+\par\end{samepage}
 
 \subsection{Validity, Metrics, and Timing Boundaries}
 Primary robot validity requires matching endpoints within $10^{-7}$, full observed-sight segment coverage, and no polygon-interior entry; boundary contact is permitted. Strict point validity rejects boundary contacts as well. Radius-0.5 clearance is a separate offline diagnostic, not the planned collision model. Event-based segment certification uses tolerance $10^{-9}$; sampled predicate comparisons supplement it rather than prove universal sensor equivalence. Across all cohorts, 175,500 membership samples and 111,672 graph-link samples have no unexplained mismatch or uncovered sample. All 865 recorded ASP segments are sight-certified; 1,128 accepted A* graph links avoid polygon interiors and boundaries offline.
