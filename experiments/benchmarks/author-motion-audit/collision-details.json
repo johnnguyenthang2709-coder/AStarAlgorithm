@@ -1,0 +1,502 @@
+[
+  {
+    "collision_id": "C1",
+    "source_map": "_map_deadend.csv",
+    "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+    "move_index_0based": 3,
+    "source_iteration_from": 4,
+    "source_iteration_to": 5,
+    "from": [
+      26.158043373,
+      38.4317822412
+    ],
+    "to": [
+      19.6355890808,
+      -3.8004791077
+    ],
+    "polygon_index_1based": 1,
+    "polygon_csv_rows": [
+      2,
+      340
+    ],
+    "shapely_de9im": "101FF0212",
+    "shapely_interior_crossing": true,
+    "independent_interior_length": 22.935924833691697,
+    "minimum_polygon_distance": 0.0,
+    "boundary_crossings": [
+      {
+        "at": [
+          21.22371394816705,
+          6.4824759654447
+        ],
+        "csv_edge_rows": [
+          27,
+          28
+        ],
+        "csv_edge_endpoints": [
+          [
+            22.0,
+            7.0
+          ],
+          [
+            19.0,
+            5.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          24.724489542109442,
+          29.14965969473963
+        ],
+        "csv_edge_rows": [
+          45,
+          46
+        ],
+        "csv_edge_endpoints": [
+          [
+            23.0,
+            28.0
+          ],
+          [
+            26.0,
+            30.0
+          ]
+        ]
+      }
+    ],
+    "original_boundary_collision_function": true,
+    "corresponding_asp_segments": 24,
+    "corresponding_asp_interior_collisions": 0
+  },
+  {
+    "collision_id": "C2",
+    "source_map": "_map_deadend.csv",
+    "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+    "move_index_0based": 5,
+    "source_iteration_from": 6,
+    "source_iteration_to": 7,
+    "from": [
+      29.781401685,
+      13.4350216567
+    ],
+    "to": [
+      -14.9676961384,
+      34.0246177948
+    ],
+    "polygon_index_1based": 1,
+    "polygon_csv_rows": [
+      2,
+      340
+    ],
+    "shapely_de9im": "101FF0212",
+    "shapely_interior_crossing": true,
+    "independent_interior_length": 13.598023998706879,
+    "minimum_polygon_distance": 0.0,
+    "boundary_crossings": [
+      {
+        "at": [
+          26.0,
+          15.174889884599065
+        ],
+        "csv_edge_rows": [
+          24,
+          25
+        ],
+        "csv_edge_endpoints": [
+          [
+            26.0,
+            18.0
+          ],
+          [
+            26.0,
+            14.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          20.55939281510085,
+          17.678178445302553
+        ],
+        "csv_edge_rows": [
+          41,
+          42
+        ],
+        "csv_edge_endpoints": [
+          [
+            20.0,
+            16.0
+          ],
+          [
+            21.0,
+            19.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          9.416067651480999,
+          22.805355883826998
+        ],
+        "csv_edge_rows": [
+          60,
+          61
+        ],
+        "csv_edge_endpoints": [
+          [
+            10.0,
+            23.0
+          ],
+          [
+            7.0,
+            22.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          2.503525115556155,
+          25.98589953777538
+        ],
+        "csv_edge_rows": [
+          63,
+          64
+        ],
+        "csv_edge_endpoints": [
+          [
+            3.0,
+            24.0
+          ],
+          [
+            2.0,
+            28.0
+          ]
+        ]
+      }
+    ],
+    "original_boundary_collision_function": true,
+    "corresponding_asp_segments": 21,
+    "corresponding_asp_interior_collisions": 0
+  },
+  {
+    "collision_id": "C3",
+    "source_map": "_map_deadend.csv",
+    "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+    "move_index_0based": 10,
+    "source_iteration_from": 11,
+    "source_iteration_to": 12,
+    "from": [
+      40.5194607514,
+      43.8602511262
+    ],
+    "to": [
+      14.6788758165,
+      46.5702106279
+    ],
+    "polygon_index_1based": 1,
+    "polygon_csv_rows": [
+      2,
+      340
+    ],
+    "shapely_de9im": "101FF0212",
+    "shapely_interior_crossing": true,
+    "independent_interior_length": 13.649822686323366,
+    "minimum_polygon_distance": 0.0,
+    "boundary_crossings": [
+      {
+        "at": [
+          23.0,
+          45.69755586398071
+        ],
+        "csv_edge_rows": [
+          87,
+          88
+        ],
+        "csv_edge_endpoints": [
+          [
+            23.0,
+            45.0
+          ],
+          [
+            23.0,
+            50.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          36.57537460145998,
+          44.273876195620076
+        ],
+        "csv_edge_rows": [
+          105,
+          106
+        ],
+        "csv_edge_endpoints": [
+          [
+            36.0,
+            46.0
+          ],
+          [
+            37.0,
+            43.0
+          ]
+        ]
+      }
+    ],
+    "original_boundary_collision_function": true,
+    "corresponding_asp_segments": 19,
+    "corresponding_asp_interior_collisions": 0
+  },
+  {
+    "collision_id": "C4",
+    "source_map": "_map_deadend.csv",
+    "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+    "move_index_0based": 11,
+    "source_iteration_from": 12,
+    "source_iteration_to": 13,
+    "from": [
+      14.6788758165,
+      46.5702106279
+    ],
+    "to": [
+      4.9567089108,
+      35.7618809971
+    ],
+    "polygon_index_1based": 1,
+    "polygon_csv_rows": [
+      2,
+      340
+    ],
+    "shapely_de9im": "101FF0212",
+    "shapely_interior_crossing": true,
+    "independent_interior_length": 8.229792436823324,
+    "minimum_polygon_distance": 0.0,
+    "boundary_crossings": [
+      {
+        "at": [
+          7.7626868292302955,
+          38.881343414615145
+        ],
+        "csv_edge_rows": [
+          75,
+          76
+        ],
+        "csv_edge_endpoints": [
+          [
+            8.0,
+            39.0
+          ],
+          [
+            6.0,
+            38.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          13.266460547627608,
+          45.0
+        ],
+        "csv_edge_rows": [
+          82,
+          83
+        ],
+        "csv_edge_endpoints": [
+          [
+            11.0,
+            45.0
+          ],
+          [
+            14.0,
+            45.0
+          ]
+        ]
+      }
+    ],
+    "original_boundary_collision_function": true,
+    "corresponding_asp_segments": 12,
+    "corresponding_asp_interior_collisions": 0
+  },
+  {
+    "collision_id": "C1",
+    "source_map": "_map_bugtrap.csv",
+    "map_sha256": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+    "move_index_0based": 12,
+    "source_iteration_from": 13,
+    "source_iteration_to": 14,
+    "from": [
+      153.8682042331,
+      116.7681230208
+    ],
+    "to": [
+      74.8138797609,
+      -5.2756482706
+    ],
+    "polygon_index_1based": 1,
+    "polygon_csv_rows": [
+      2,
+      197
+    ],
+    "shapely_de9im": "101FF0212",
+    "shapely_interior_crossing": true,
+    "independent_interior_length": 25.95371156276543,
+    "minimum_polygon_distance": 0.0,
+    "boundary_crossings": [
+      {
+        "at": [
+          85.35649382276223,
+          11.0
+        ],
+        "csv_edge_rows": [
+          3,
+          4
+        ],
+        "csv_edge_endpoints": [
+          [
+            88.0,
+            11.0
+          ],
+          [
+            85.0,
+            11.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          88.59526314444456,
+          16.0
+        ],
+        "csv_edge_rows": [
+          6,
+          7
+        ],
+        "csv_edge_endpoints": [
+          [
+            88.0,
+            16.0
+          ],
+          [
+            89.0,
+            16.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          132.78305371426345,
+          84.21694628573657
+        ],
+        "csv_edge_rows": [
+          31,
+          32
+        ],
+        "csv_edge_endpoints": [
+          [
+            133.0,
+            84.0
+          ],
+          [
+            131.0,
+            86.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          143.654341613044,
+          101.0
+        ],
+        "csv_edge_rows": [
+          40,
+          41
+        ],
+        "csv_edge_endpoints": [
+          [
+            143.0,
+            101.0
+          ],
+          [
+            144.0,
+            101.0
+          ]
+        ]
+      }
+    ],
+    "original_boundary_collision_function": true,
+    "corresponding_asp_segments": 77,
+    "corresponding_asp_interior_collisions": 0
+  },
+  {
+    "collision_id": "C2",
+    "source_map": "_map_bugtrap.csv",
+    "map_sha256": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+    "move_index_0based": 12,
+    "source_iteration_from": 13,
+    "source_iteration_to": 14,
+    "from": [
+      153.8682042331,
+      116.7681230208
+    ],
+    "to": [
+      74.8138797609,
+      -5.2756482706
+    ],
+    "polygon_index_1based": 2,
+    "polygon_csv_rows": [
+      199,
+      564
+    ],
+    "shapely_de9im": "101FF0212",
+    "shapely_interior_crossing": true,
+    "independent_interior_length": 18.94411508123394,
+    "minimum_polygon_distance": 0.0,
+    "boundary_crossings": [
+      {
+        "at": [
+          126.1001285929473,
+          73.8998714070527
+        ],
+        "csv_edge_rows": [
+          529,
+          530
+        ],
+        "csv_edge_endpoints": [
+          [
+            126.0,
+            74.0
+          ],
+          [
+            129.0,
+            71.0
+          ]
+        ]
+      },
+      {
+        "at": [
+          115.80092544657606,
+          58.0
+        ],
+        "csv_edge_rows": [
+          536,
+          537
+        ],
+        "csv_edge_endpoints": [
+          [
+            116.0,
+            58.0
+          ],
+          [
+            115.0,
+            58.0
+          ]
+        ]
+      }
+    ],
+    "original_boundary_collision_function": true,
+    "corresponding_asp_segments": 77,
+    "corresponding_asp_interior_collisions": 0
+  }
+]

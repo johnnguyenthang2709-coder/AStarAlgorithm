@@ -1,0 +1,63 @@
+{
+  "_map_deadend.csv": {
+    "map_sha256": "7cd52d0bb87e1acfb649ee71f28fce8bd68e231bbda9be98b3fc1ac2185066ab",
+    "polygons": 1,
+    "polygon_vertices": [
+      339
+    ],
+    "all_polygons_valid": true,
+    "source_goal_reached": true,
+    "source_no_way": false,
+    "iterations": 21,
+    "executed_nonzero_transitions": 20,
+    "source_next_coordinate_equals_selected_next_point": true,
+    "executed_distance": 456.36618616677333,
+    "planned_asp_length": 551.030081812392,
+    "crossing_transitions": 4,
+    "collision_polygon_records": 4,
+    "planned_asp_segments": 98,
+    "planned_asp_interior_collision_records": 0,
+    "planned_asp_radius_0_5_violation_records": 17,
+    "planned_asp_boundary_touch_segments": 9,
+    "planned_asp_minimum_clearance": 0.0,
+    "start_polygon_clearance": 10.816653826391969,
+    "goal_polygon_clearance": 0.316227766016838,
+    "asp_interior_visibility_sample_count": 294,
+    "source_visited_sights_uncovered_samples": 0,
+    "geometric_line_of_sight_uncovered_samples": 0,
+    "path_endpoint_errors": [],
+    "maximum_replay_position_delta": 0.0,
+    "maximum_replay_asp_vertex_delta": 0.0
+  },
+  "_map_bugtrap.csv": {
+    "map_sha256": "50d59ed7ff96cbd7e6c45912691c59bd2568f9e4e00a018a492ed1b005799cf8",
+    "polygons": 2,
+    "polygon_vertices": [
+      196,
+      366
+    ],
+    "all_polygons_valid": true,
+    "source_goal_reached": true,
+    "source_no_way": false,
+    "iterations": 22,
+    "executed_nonzero_transitions": 21,
+    "source_next_coordinate_equals_selected_next_point": true,
+    "executed_distance": 543.7653234192933,
+    "planned_asp_length": 566.025796286952,
+    "crossing_transitions": 1,
+    "collision_polygon_records": 2,
+    "planned_asp_segments": 98,
+    "planned_asp_interior_collision_records": 0,
+    "planned_asp_radius_0_5_violation_records": 5,
+    "planned_asp_boundary_touch_segments": 2,
+    "planned_asp_minimum_clearance": 0.0,
+    "start_polygon_clearance": 38.8329756778952,
+    "goal_polygon_clearance": 1.4142135623730951,
+    "asp_interior_visibility_sample_count": 294,
+    "source_visited_sights_uncovered_samples": 0,
+    "geometric_line_of_sight_uncovered_samples": 0,
+    "path_endpoint_errors": [],
+    "maximum_replay_position_delta": 0.0,
+    "maximum_replay_asp_vertex_delta": 0.0
+  }
+}
