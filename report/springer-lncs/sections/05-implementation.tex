@@ -1,8 +1,8 @@
 \section{A* Algorithm Implementation}
 \subsection{Queue, Records, and Improved Paths}
-An \source{unordered_map} stores best $g$, parent, and last-expanded $g$ per state; a \source{priority_queue} stores state, inserted $g,h,f$, and insertion order. Lexicographic $(f,h,\mathrm{order})$ selects lower $f$, lower $h$, then earlier insertion. Determinism requires deterministic neighbor enumeration.
+Preserving improvements to pending or expanded states requires separating records from queue entries. An \source{unordered_map} stores best $g$, predecessor, and last-expanded $g$ per state; a \source{priority_queue} stores state, inserted $g,h,f$, and insertion order. Lexicographic $(f,h,\mathrm{order})$ selects lower $f$, lower $h$, then earlier insertion, deterministically when neighbor enumeration is deterministic.
 
-Algorithm~\ref{alg:core} summarizes the actual implementation. There is no decrease-key operation: an improved path pushes a new entry. An old entry whose stored $g$ exceeds the current record is stale and skipped. An entry no better than the last-expanded value is also skipped. A strictly smaller $g$ is still eligible after prior expansion. This preserves reopening instead of treating CLOSED as a permanent visited flag.
+Algorithm~\ref{alg:core} pushes a new entry for each improvement rather than decreasing a key. Older entries remain in OPEN: a stored $g$ exceeding the current record is stale and skipped. An entry no better than the last-expanded value is also skipped, but a strictly smaller $g$ remains eligible. CLOSED thus records expansion history without preventing reopening.
 
 \begin{algorithm}[H]
 \caption{Shared C++ search (trace and counters omitted)}\label{alg:core}
@@ -31,22 +31,24 @@ Algorithm~\ref{alg:core} summarizes the actual implementation. There is no decre
 \end{algorithmic}
 \end{algorithm}
 
-The engine checks finite nonnegative weights/estimates and rejects overflow; adapters establish admissibility. Relaxation uses strict improvement, with tolerances only in external validation. Reconstruction reverses predecessors from goal to the parentless start. Start equals goal returns a singleton of zero cost; unreachable search returns an empty path, failure, and internal infinity serialized as nullable cost.
+The subsequent goal test prevents stale entries from terminating search. Reconstruction follows predecessors to the parentless start and reverses them. Start equals goal yields a zero-cost singleton; failure yields an empty path and internal infinity, serialized as nullable cost. The engine rejects nonfinite or negative weights/estimates and overflow. Relaxation uses strict improvement, with tolerances only in external validation. Adapters remain responsible for admissibility.
 
 For a finite graph, consistent heuristic, binary heap, and expected constant hashing time, lazy entries give a conservative $O((|V|+|E|)\log(|V|+|E|))$ time and $O(|V|+|E|)$ auxiliary-space bound. Geometry and traces add costs. Inconsistent estimates may reopen states, invalidating a single-expansion bound.
 
 \subsection{Application Heuristics and Trace Semantics}
-For a road edge, define geographic distance $d_H$. The loader chooses a scale $\alpha\leq1$ respecting $\alpha d_H(u,v)\leq w(u,v)$ and uses $h(u)=\alpha d_H(u,t)$. By the spherical-distance triangle inequality, this implies Eq.~\ref{eq:consistency}. The frozen graph validates every directed edge and retains $\alpha=1$. Directionality does not invalidate the geometric lower bound. Four-direction unit grids use Manhattan distance; the educational eight-direction grid uses $\max(dx,dy)+0.5\min(dx,dy)$ for its actual 1.5 diagonal cost. Euclidean weights in the continuous visibility adapter make Euclidean goal distance consistent by the ordinary triangle inequality.
+Heuristics follow the movement model. For roads, let $d_H$ be Haversine distance in meters. The loader chooses $0\leq\alpha\leq1$ with $\alpha d_H(u,v)\leq w(u,v)$ on every edge and sets $h(u)=\alpha d_H(u,t)$. The spherical triangle inequality gives $h(u)\leq\alpha d_H(u,v)+h(v)\leq w(u,v)+h(v)$, establishing Eq.~\ref{eq:consistency}. The frozen graph retains $\alpha=1$; this bound requires no reverse edges.
+
+For absolute grid differences $dx,dy$, four-direction unit movement uses Manhattan distance; eight-direction Robot Lab uses $\max(dx,dy)+0.5\min(dx,dy)$ for its diagonal cost of 1.5. Euclidean continuous-link weights make Euclidean goal distance consistent by the ordinary triangle inequality. Each guarantee thus concerns the adapter's admitted paths.
 
 Expanded nodes count valid pops, including goal and re-expansions; generated nodes count all pushes. Unique counts are separate. Examined and relaxed edges count scanned neighbors and improvements. Trace events expose discovery, updates, expansion, closure, and goal scores. Stale entries are skipped; timing disables traces.
 
 \subsection{Executed Return Certificate}
-Let $T=(a=x_0,\ldots,x_m=b)$ be the actual entry trajectory from the selected observed anchor $a$ to current $b$, with length $L_T$. Under static obstacles, sound observed-free checks, and reversible point motion, its reverse is a feasible return of the same length. Recorded waypoints and verified links preserve this candidate. If those links appear in the current planning graph, exact graph-optimal \astar{} gives $L_{A^*}\leq L_T$. The controller additionally checks the proposed route's endpoints, segment coverage, and length before accepting it. If planning fails or the route exceeds the entry bound, it verifies and uses the recorded reverse.
+Recovery requires an executed-motion bound. Let $T=(a=p_0,\ldots,p_m=b)$ be recorded entry from anchor $a$ to current $b$, with $L_T=\sum_{i=0}^{m-1}\|p_{i+1}-p_i\|_2$. Under static obstacles, sound observed-free checks, and reversible point motion, its reverse is feasible with equal length. If recorded waypoints and links appear in the planning graph, graph-optimal \astar{} gives $L_{A^*}\leq L_T$. Acceptance additionally checks endpoints, segment coverage, and length. Planning failure or an excessive length invokes the separately verified recorded reverse.
 
-Execution follows the entire accepted return without switching to exploration. The simulator records the executed geometric length $L_R$ and requires
+To preserve the bound during execution, the controller completes the accepted return without switching to exploration. For measured length $L_R$ and final position $x_{\rm end}$, it requires
 \begin{equation}
 L_R\leq L_T+\varepsilon,\qquad
 \|x_{\rm end}-a\|_2\leq\varepsilon,
 \label{eq:return}
 \end{equation}
-using the implementation's numerical checks. New sensing during return may add observations, but does not change its destination. Consequently the certificate concerns an observed-anchor episode with reversible verified entry and locked execution. It does not certify arbitrary semantic BAR boundaries, physical disk clearance, universal detection, or complete navigation. A reversed-entry fallback establishes the bound without showing that \astar{} shortened that episode; the trace must distinguish these outcomes.
+Here $\varepsilon$ represents numerical length and endpoint tolerances in world units. Sensing may add observations without changing the destination. Certification requires verified reversible entry and locked execution; it does not establish semantic BAR boundaries, disk clearance, universal detection, or completeness. Reversed-entry fallback can satisfy the bound without an A*-computed shortcut, so outcomes are recorded separately.

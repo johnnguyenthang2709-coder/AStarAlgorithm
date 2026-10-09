@@ -12,5 +12,6 @@
   "robot_snapshots": 351,
   "eligible_robot_pairs": 21,
   "frozen_benchmark_hashes_checked": 56,
+  "pdf_text_validation": "PASS",
   "visual_qa": "See LAYOUT-QA.md; automated checks do not substitute for page inspection."
 }

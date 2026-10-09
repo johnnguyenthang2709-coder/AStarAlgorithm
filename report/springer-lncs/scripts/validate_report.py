@@ -8,6 +8,7 @@ import statistics as st
 import subprocess
 import sys
 from pypdf import PdfReader
+from validate_pdf_text import check_pdf_text
 
 REPORT=Path(__file__).resolve().parents[1]
 ROOT=REPORT.parents[1]
@@ -39,6 +40,9 @@ def main():
     delta=[float(p['astar_planned_length'])-float(p['asp_planned_length']) for p in r]
     assert len(r)==21 and (sum(d>1e-7 for d in delta),sum(d<-1e-7 for d in delta))==(9,10)
     assert round(st.median(delta),3)==0 and round(st.mean(delta),3)==2.981
+    for method,strict in [('asp',15),('astar',21)]:
+        assert sum(p[f'{method}_interior_only_valid']=='True' for p in r)==21
+        assert sum(p[f'{method}_strict_boundary_valid']=='True' for p in r)==strict
     maintex=(REPORT/'main.tex').read_text()
     abstract=maintex.split(r'\begin{abstract}')[1].split(r'\keywords')[0]
     abstractwords=len(abstract.split())
@@ -55,6 +59,7 @@ def main():
     pdf=PdfReader(REPORT/'report.pdf')
     texts=[p.extract_text() or '' for p in pdf.pages]
     assert all(t.strip() for t in texts)
+    text_validation=check_pdf_text()
     assert len(re.findall(r'\\begin\{figure\}',alltex))==8
     assert len(list((REPORT/'figures').glob('*.pdf')))==8
     # This unmodified class/article configuration defaults to US Letter media.
@@ -65,6 +70,7 @@ def main():
             'abstract_words_whitespace':abstractwords,'figures':8,'tables':3,'algorithms':1,
             'bibliography_entries':len(keys),'road_pairs':180,'robot_snapshots':351,
             'eligible_robot_pairs':21,'frozen_benchmark_hashes_checked':len(manifest['artifact_sha256']),
+            'pdf_text_validation':text_validation['status'],
             'visual_qa':'See LAYOUT-QA.md; automated checks do not substitute for page inspection.'}
     (REPORT/'validation.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2))

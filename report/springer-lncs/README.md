@@ -7,6 +7,7 @@ This complete manuscript describes the frozen implementation and its actual expe
 ## Provenance and protected baseline
 
 - Reporting branch: `codex/springer-lncs-report`, created directly from `04c48468c6b6b4f6512be925383614267fa7ca32` on `codex/academic-benchmark-final`.
+- Scientific-writing revision: `codex/springer-lncs-writing-refinement`, based on completed report commit `861e120`. See `WRITING-STYLE-REVIEW.md` for scope and before/after assessment.
 - Authors' original checkout: `D:/Project/AStarAlgorithm-authors-benchmark`, clean at Git commit `8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8`.
 - No production, sensing, navigation, historical result, source-map, or benchmark file is changed. No merge or hosting action is performed.
 - Figures are redrawn at LNCS width from committed raw data; original plots and measurements remain unchanged. The map figure calls the existing RoadEngine only to recover three fixed routes and checks recorded costs. The robot figure reads frozen sightings and paths, never hidden polygons.
@@ -32,12 +33,15 @@ From repository root, in this Windows environment:
 py -3.14 report/springer-lncs/scripts/make_figures.py
 & report/springer-lncs/scripts/build.ps1
 py -3.14 report/springer-lncs/scripts/validate_report.py
+py -3.14 report/springer-lncs/scripts/validate_pdf_text.py
 py -3.14 report/springer-lncs/scripts/render_qa.py
 ```
 
 `build.ps1` runs pdfLaTeX, BibTeX, then two pdfLaTeX passes with `-jobname=report`, failing on compilation errors or final warnings. Pass `-TexBin` to select another MiKTeX directory. With a Unix TeX installation, run the equivalent `pdflatex -interaction=nonstopmode -halt-on-error -jobname=report main.tex`, `bibtex report`, and two further LaTeX passes from this directory. Class/style and final figures are included, so a manuscript build needs no figure regeneration or original research checkout.
 
 Figure regeneration requires Python with Matplotlib, Shapely, and the unchanged project Python 3.12 C++ binding. QA requires pypdf, Pillow, and Poppler `pdftoppm`. The provided workflow used system Python 3.14, Matplotlib 3.10.8, Shapely 2.1.2, pypdf 6.10.2, and MiKTeX pdfTeX 1.40.28. These are report-generation dependencies, separate from historical measurement runtimes.
+
+For searchable ligatures, install **CM-Super** and enable its standard TeX font maps (MiKTeX package `cm-super`, or the equivalent TeX Live package). The preamble enables `glyphtounicode` and `pdfgentounicode=1`; these map glyphs without changing the LNCS font family or sizes. `validate_pdf_text.py` rejects Type 3 fonts, missing Unicode maps, replacement/control characters, or broken representative search terms, checking both pypdf and Poppler. A report build needs these checks as well as successful compilation.
 
 `validate_report.py` verifies all frozen final-manifest hashes, independently recomputes principal paired statistics, checks citation coverage, sections, abstract length, page size, and final log. It calls the existing read-only benchmark consistency validator. It writes only report-local `validation.json`. `render_qa.py` writes ignored page images and contact sheets. `SCIENTIFIC-QA.md` and `LAYOUT-QA.md` record the evidence and completed review.
 

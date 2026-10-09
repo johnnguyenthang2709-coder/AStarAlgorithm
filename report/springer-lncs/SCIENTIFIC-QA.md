@@ -1,6 +1,10 @@
 # Scientific QA
 
-Date: 2026-10-09. Reporting branch: `codex/springer-lncs-report`. Authoritative baseline: `04c48468c6b6b4f6512be925383614267fa7ca32`. This review produced documentation only.
+Date: 2026-10-09. Original reporting branch: `codex/springer-lncs-report`; writing revision: `codex/springer-lncs-writing-refinement` from `861e120`. Authoritative baseline: `04c48468c6b6b4f6512be925383614267fa7ca32`. This review produced documentation only.
+
+## Writing-revision consistency check
+
+The revised exposition preserves the source-to-claim evidence below. The final report and benchmark validators were rerun: all 56 frozen hashes, principal paired statistics, and newly explicit 21/21 interior and 15/21 versus 21/21 strict-validity assertions pass. Figures, tables, bibliography, metadata, and official class/style remain byte-identical to `861e120`. Production regression executions below are preserved historical results from that baseline, not reruns in this writing-only revision. The original PDF's ligature/Unicode defect was independently reproduced and corrected; both extraction engines pass the new check. Details and before/after review are in `WRITING-STYLE-REVIEW.md` and `pdf-text-validation.json`.
 
 ## Source-to-claim review
 

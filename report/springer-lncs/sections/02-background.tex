@@ -1,28 +1,28 @@
 \section{Theoretical Background and Related Work}
 \subsection{Shortest-Path Search and Heuristic Assumptions}
-For directed $G=(V,E,w)$ with nonnegative weights, Dijkstra selects the smallest tentative start cost~\cite{dijkstra1959}. \astar{} adds domain knowledge~\cite{hart1968}:
+Once a graph is available, both applications require minimum-cost paths. On directed $G=(V,E,w)$ with nonnegative weights, Dijkstra orders pending states by tentative start cost~\cite{dijkstra1959}. \astar{} adds estimated remaining cost to guide search toward the goal~\cite{hart1968}:
 \begin{equation}f(n)=g(n)+h(n).
 \end{equation}
-Here $g(n)$ is the best start-to-$n$ cost found so far and $h(n)$ estimates remaining goal cost. OPEN contains pending states; improvements update predecessors. Acceptance occurs on a valid minimum-priority goal extraction. Setting $h=0$ gives the project's Dijkstra baseline.
+Here $g(n)$ is the best start-to-$n$ cost found so far and $h(n)$ estimates cost to goal $t$. OPEN contains pending states; improvements update costs and predecessors. The goal is accepted on valid minimum-priority extraction, not discovery. Setting $h=0$ gives Dijkstra in the same implementation.
 
-Admissibility requires $0\leq h(n)\leq h^*(n)$, with $h^*$ the true remaining graph cost. Consistency requires
+This stopping rule requires suitable estimates. Admissibility means $0\leq h(n)\leq h^*(n)$, where $h^*(n)$ is minimum remaining graph cost. Consistency additionally requires
 \begin{equation}
 h(u)\leq w(u,v)+h(v)\quad\text{for every }(u,v)\in E,\qquad h(t)=0.
 \label{eq:consistency}
 \end{equation}
-Consistency makes each valid first expansion optimal. Admissible but inconsistent estimates require reopening improved states. Hart et al.~\cite{hart1968} distinguish these assumptions and tie resolution. Their efficiency analysis is not universal wall-time superiority: heuristic computation and representation also cost time.
+Consistency makes the first valid expansion's cost optimal. Admissible but inconsistent estimates can require reopening improved states. These distinctions and tie resolution underlie Hart et al.~\cite{hart1968} and the implementation in Section~5. Fewer expansions need not mean lower wall time: heuristic evaluation and representation also incur work.
 
 \subsection{Geometric Representation and Replanning}
-Grids restrict headings and can miss narrow passages. Classical visibility-based planning uses obstacle-free geometric connections~\cite{lozano1979}; finite robot footprints require configuration-space treatment. A complete polygonal visibility graph differs from our sparse scan-center graph. Optimality on the latter does not imply a continuous shortest path.
+Optimality depends on admitted paths. Grids restrict headings and may miss narrow passages; visibility-based planning uses obstacle-free geometric connections~\cite{lozano1979}. Finite footprints require configuration-space treatment. A complete polygonal visibility graph and a sparse scan-center graph admit different paths, so optimality in the latter need not imply a continuous shortest path.
 
-Theta* examines this tradeoff~\cite{daniel2010}. It propagates grid search information while permitting off-grid headings, but Basic Theta* is not guaranteed to find the true continuous shortest path. Random-grid and game-map experiments compare length, time, expansions, and heading changes: shorter paths than grid smoothing are possible without full visibility-graph construction. Our system instead retains ordinary A* on verified continuous links. The relevant lesson is to assess representation and search separately.
+Theta* uses grid search with off-grid connections~\cite{daniel2010}. Experiments on random grids and game maps compare length, time, expansions, and heading changes, finding shorter paths than grid smoothing without a full visibility graph. Basic Theta* nevertheless does not guarantee a continuous shortest path. Our ordinary A* on verified continuous links likewise requires separate assessment of representation and search.
 
-D* Lite reuses previous search information through locally consistent value updates~\cite{koenig2002}. Its unknown-terrain experiments reduce operations relative to repeated search in tested navigation and mapping tasks. Those grids initially treat unknown traversal optimistically; our graph admits only verified free links. Repeated A* is retained for implementation transparency. D* Lite is a relevant alternative, not an unmeasured project speedup.
+When observations change, D* Lite reuses search information through locally consistent value updates~\cite{koenig2002}. Its unknown-terrain navigation and mapping experiments reduce operations relative to repeated search. Those grids initially allow unknown traversal optimistically; our graph admits only verified free links. Repeated A* preserves implementation transparency. Incremental replanning remains an alternative whose project performance is unmeasured.
 
 \subsection{Observation, Exploration, and Escape}
-Elfes' occupancy grids accumulate uncertain sensor evidence probabilistically~\cite{elfes1989}. Sonar and stereo demonstrations show the value of additional viewpoints. Our deterministic labels and polygon unions preserve unknown space and accumulation, but omit probabilistic uncertainty and localization drift.
+Constructing links first requires representing sensor knowledge. Elfes accumulates uncertain evidence in probabilistic occupancy grids~\cite{elfes1989}; sonar and stereo demonstrations show the value of additional viewpoints. Our deterministic labels and polygon unions accumulate observations and preserve unknown space, but omit probabilistic uncertainty and localization drift.
 
-Yamauchi identifies free/unknown frontiers and visits accessible targets~\cite{yamauchi1997}. Office-robot experiments address sensor artifacts; idealized coverage reasoning remains conditional on sensing and reachability. Our polygon candidates similarly seek observations but use ancestry and C++ A* routing. Estimated frontier utility does not prove actual information gain, and one graph-unreachable candidate does not exhaust a branch.
+Free/unknown boundaries then suggest exploration targets. Yamauchi visits accessible frontiers~\cite{yamauchi1997}; office-robot experiments address sensor artifacts, while idealized coverage remains conditional on sensing and reachability. Our polygon candidates similarly seek observations, using ancestry for recovery and C++ A* for routing. Estimated utility does not prove information gain, and one unreachable candidate does not exhaust a branch.
 
 TangentBug combines range discontinuities and a local tangent graph with target motion and boundary following~\cite{kamon1996}. Its convergence analysis assumes static finite-perimeter geometry and ideal point motion; selected simulations compare it with VisBug. Our simpler observed-parent policy does not inherit that guarantee. Together these studies explain why local path optimality requires a separate exploration and escape mechanism.
 
@@ -31,4 +31,4 @@ Phan et al.~\cite{phan2026} accumulate sights, rank active open points, construc
 
 Algorithm 2 is explicitly not generally convergent. Section 5 studies a special algorithm with obstacle-diameter and near-goal connectivity assumptions, which do not prove completion of our maze exploration. Section 6 compares local paths with a grid A* baseline and RRT*, and further evaluates RRTX. Dijkstra is background. The source's \source{Graph.BFS_skeleton_path} nevertheless performs cumulative-cost priority-queue search, despite its BFS-oriented name.
 
-Our evaluation therefore holds observations and endpoints fixed while disclosing different graphs, boundary rules, and motion semantics. The implemented application covers restricted limited-sensing exploration and certified observed-parent return; it reproduces neither bundle optimization nor general polygonal BAR detection. The supplementary literature matrix maps all eight supplied PDFs (seven unique studies) to these themes and manuscript citations, without unsupported novelty claims.
+These differences determine the scope of our comparison: observations and endpoints are held fixed, while graph representations, boundary rules, and motion semantics are disclosed. The application addresses exploration with limited sensing and conditionally certified return to observed ancestors. It reproduces neither bundle optimization nor general polygonal BAR detection. The supplementary literature matrix records the relevance of all eight supplied PDFs, representing seven unique studies.

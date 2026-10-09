@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "original_report_commit": "861e1200083a1099c1b50e1c69ad67a34f68df5b",
+  "pages_checked_with_both_extractors": 18,
+  "original_pypdf_invalid_character_codes": [
+    "U+0010",
+    "U+0011",
+    "U+0015",
+    "U+001B",
+    "U+001C",
+    "U+001D",
+    "U+001E",
+    "U+001F"
+  ],
+  "revised_invalid_character_codes": [],
+  "font_resources_with_Unicode_maps": 23,
+  "type3_font_resources": 0,
+  "checked_search_terms": [
+    "Affiliation",
+    "verified",
+    "different",
+    "effort",
+    "configuration",
+    "P\u00e9rez",
+    "\u03b5",
+    "\u2264",
+    "\u2208",
+    "\u2217"
+  ],
+  "unchanged_assets": "metadata, bibliography, official class/style, all figures/tables",
+  "extraction_limit": "Reading-order whitespace and line-wrap hyphens remain extractor-dependent; math is not a structured equation export."
+}
