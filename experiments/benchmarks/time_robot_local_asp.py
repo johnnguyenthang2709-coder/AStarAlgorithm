@@ -18,10 +18,13 @@ OUT = HERE / "robot-local-benchmark"
 
 
 def main():
+    global OUT
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--authors-dir", type=Path,
                         default=HERE.parents[2] / "AStarAlgorithm-authors-benchmark")
+    parser.add_argument("--dataset-dir", type=Path, default=OUT)
     args = parser.parse_args()
+    OUT = args.dataset_dir.resolve()
     source = args.authors_dir.resolve()
     manifest = json.loads((OUT / "robot-local-benchmark-manifest.json").read_text())
     snapshot_bytes = (OUT / manifest["snapshot_file"]).read_bytes()

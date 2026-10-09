@@ -42,3 +42,15 @@ def test_frozen_manifest_has_every_decision_and_fixed_selection():
     assert hashlib.sha256(content).hexdigest() == manifest["snapshot_sha256"]
     assert len(snapshots) == manifest["captured_decisions"] == 43
     assert {item["snapshot_id"] for item in snapshots if len(item["skeleton_path"]) > 2} == set(manifest["eligible_ids"])
+
+
+def test_held_out_selection_retains_all_direct_cases():
+    directory = BENCHMARK / "robot-local-extension"
+    manifest = json.loads((directory / "robot-local-benchmark-manifest.json").read_text())
+    content = (directory / manifest["snapshot_file"]).read_bytes()
+    snapshots = json.loads(content)["snapshots"]
+    assert hashlib.sha256(content).hexdigest() == manifest["snapshot_sha256"]
+    assert len(snapshots) == manifest["captured_decisions"] == 75
+    assert len(manifest["eligible_ids"]) == 1
+    assert manifest["excluded_decisions"] == 74
+    assert {item["source_map"] for item in snapshots} == set(manifest["map_hashes"])

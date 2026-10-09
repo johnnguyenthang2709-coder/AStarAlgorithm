@@ -287,10 +287,13 @@ def timing_distributions(snapshots, authors, astar):
 
 
 def main():
+    global OUT
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--authors-dir", type=Path,
                         default=HERE.parents[2] / "AStarAlgorithm-authors-benchmark")
+    parser.add_argument("--dataset-dir", type=Path, default=OUT)
     args = parser.parse_args()
+    OUT = args.dataset_dir.resolve()
     source = args.authors_dir.resolve()
     manifest = json.loads((OUT / "robot-local-benchmark-manifest.json").read_text())
     content = (OUT / manifest["snapshot_file"]).read_bytes()
@@ -313,8 +316,11 @@ def main():
         not segment_certified(a, b, snap["sights"], snap["sensor_radius"])[0]
         for snap in snapshots for a, b in zip(snap["asp_path"], snap["asp_path"][1:]))
     assert uncertified_asp_segments == 0
-    map_hashes = json.loads((HERE / "benchmark-manifest.json").read_text())["robot"]["worlds"]
-    expected_hashes = {item["file"]: item["sha256"] for item in map_hashes}
+    if "map_hashes" in manifest:
+        expected_hashes = manifest["map_hashes"]
+    else:
+        map_hashes = json.loads((HERE / "benchmark-manifest.json").read_text())["robot"]["worlds"]
+        expected_hashes = {item["file"]: item["sha256"] for item in map_hashes}
     map_polygons = {}
     for filename in {snap["source_map"] for snap in snapshots}:
         path = source / filename
@@ -387,7 +393,8 @@ def main():
         writer.writerows(geometry_rows)
     paired_figures([row for row in pairs if row["asp_found"] and row["astar_found"]])
     timing_distributions(snapshots, authors, astar)
-    for sid in ("_map_deadend-03", "_map_bugtrap-12"):
+    representative_ids = list(dict.fromkeys((pairs[0]["snapshot_id"], pairs[-1]["snapshot_id"])))
+    for sid in representative_ids:
         snap = next(item for item in snapshots if item["snapshot_id"] == sid)
         stem = sid.removeprefix("_map_")
         map_figure(snap, snap["asp_path"], astar[sid]["path"],

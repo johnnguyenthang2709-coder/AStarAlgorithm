@@ -1,5 +1,6 @@
 """Run unchanged C++ visibility A* on links certified by frozen source sights."""
 
+import argparse
 import hashlib
 import json
 import math
@@ -38,6 +39,10 @@ def graph(snapshot):
 
 
 def main():
+    global OUT
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dataset-dir", type=Path, default=OUT)
+    OUT = parser.parse_args().dataset_dir.resolve()
     manifest = json.loads((OUT / "robot-local-benchmark-manifest.json").read_text())
     content = (OUT / manifest["snapshot_file"]).read_bytes()
     assert hashlib.sha256(content).hexdigest() == manifest["snapshot_sha256"]
