@@ -1,5 +1,14 @@
 # Final comprehensive layout and pagination QA
 
+## Latest update: Robot Results float order
+
+The strict-validity sentence originally began on physical page 15 and continued on page 17, separated by Figures 4–5 and Table 3. Table 3 now uses `[!t]`; Figures 4–5 use `[!htb]`, avoiding their earlier figure-only page that displaced the table. Figure 5's source anchor is moved after the clearance/turn-count paragraph. The strict-validity interpretation is protected as one short `samepage` unit. No section page break, section reservation or float barrier was added; no figure resizing or scientific text changes were needed.
+
+Final sequence: the Robot Results opening/paired-length interpretation on page 15; Table 3, Figure 4 and the complete strict-validity paragraph on page 16; normal uninterrupted clearance-paragraph continuation followed by Figures 5–6 on page 17. The clearance discussion crosses the page boundary normally without an intervening float. Computation discussion follows naturally. Pages 15–18 and 20–21 were reinspected during iteration. The conclusion still finishes on page 20 and References alone occupies page 21. Total: 21 physical pages. Build and report validators pass.
+
+A trial fixed-in-place table and an overrestrictive figure trial produced 22 pages and were discarded. The preservation validator now compares ordered prose/equations separately from complete figure blocks, allowing the requested anchor relocation while checking every caption/label/image declaration. It continues to verify original figure PDF bytes, table contents, citations and frozen benchmark hashes. The initial combined normalization check failed on the existing architecture extension; separating full float checks from prose-prefix checks corrected that validator issue without dropping content checks. Built-in editor engine incompatibility remains documented; project pdfLaTeX compilation succeeds.
+
+
 ## Latest update: Section 8 spacing and references-only final page
 
 Section 8 uses run-in `\paragraph` labels, not numbered subsections. Their default article-class pre-heading spacing was 3.25ex. A scoped, checked `\patchcmd` reduces it to 1.5ex only around Section 8; the original heading spacing resumes for Section 9. The final supporting figure (Figure 8) is uniformly reduced by 5%, from full text width to 0.95 text width. All other figure sizes and caption spacing remain unchanged. Trial reductions of multiple figures alone did not move the conclusion tail and were discarded.

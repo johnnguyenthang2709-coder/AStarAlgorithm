@@ -17,7 +17,7 @@ Table~\ref{tab:road} and Fig.~\ref{fig:road-effort} show fewer expansions in eve
 Both local planners find paths for all 21 eligible requests, with correct endpoints and primary interior-only validity in all 21. These are local planning successes, not 21 successful autonomous missions. Of the ten prospective source episodes, nine reach the goal and one reaches its iteration cap; its eligible states remain. Figure~\ref{fig:observed} shows an observed-space request and the two returned paths. No hidden polygons are supplied to either local planner.
 
 \input{tables/robot}
-\begin{figure}[!htbp]
+\begin{figure}[!htb]
 \centering\includegraphics[width=\textwidth]{robot-observed.pdf}
 \caption{Representative frozen dead-end request. Visible blocker fragments and approximate display sight footprints show recorded knowledge; ASP and scan-center A* use the same position and target. Sight footprints are display approximations; benchmark link admission uses analytic whole-segment certification. Hidden obstacles are omitted.}
 \label{fig:observed}
@@ -27,15 +27,20 @@ Both local planners find paths for all 21 eligible requests, with correct endpoi
 Define paired difference as A* length minus ASP length; positive values favor ASP. ASP is shorter in nine requests, A* in ten, and two are equal. The median is zero, mean $+2.981$, and range $[-10.707,+44.266]$ world units. Different representations admit different paths, and neither planner consistently dominates. Cohort composition matters: five of six initial cases favor ASP, nine of fourteen prospective cases favor A*. Figure~\ref{fig:robot-length} retains all pairs; one held-out request cannot establish generalization.
 \par\end{samepage}
 
-\begin{figure}[!htbp]
+
+
+\begin{samepage}
+Boundary conventions explain part of this variation. ASP passes strict validity in 15 of 21 requests and A* in all 21. All six boundary-touching ASP paths are shorter under the permissive convention. A dead-end configuration with the largest difference (\source{P02-_map_deadend-01}) yields 15.734 units for ASP versus 60.000 for A*, with ASP boundary contact. Among 15 jointly strict-valid pairs, ASP is shorter in three, A* in ten, and two tie; median difference is $-2.584$. This secondary criterion cannot replace the primary result. Geometric refinement and strict sparse-center links admit different routes, requiring joint interpretation of length and validity.
+\par\end{samepage}
+
+Radius-0.5 clearance passes only nine ASP and eleven A* paths, precluding disk-safety claims. Significant-turn medians are two and one respectively; paired all-turn delta median is $-2$. Tiny ASP bends can inflate all-turn counts without corresponding physical steering. ASP vertices can lie inside bundles absent from the sparse A* graph, so mixed lengths do not contradict graph-optimal search.
+
+
+\begin{figure}[!htb]
 \centering\includegraphics[width=\textwidth]{robot-length.pdf}
 \caption{All 21 eligible local requests, grouped by frozen cohort. Positive A* minus ASP differences favor ASP. Filled orange markers indicate ASP boundary contact under the strict convention; these paths remain primary interior-valid.}
 \label{fig:robot-length}
 \end{figure}
-
-Boundary conventions explain part of this variation. ASP passes strict validity in 15 of 21 requests and A* in all 21. All six boundary-touching ASP paths are shorter under the permissive convention. A dead-end configuration with the largest difference (\source{P02-_map_deadend-01}) yields 15.734 units for ASP versus 60.000 for A*, with ASP boundary contact. Among 15 jointly strict-valid pairs, ASP is shorter in three, A* in ten, and two tie; median difference is $-2.584$. This secondary criterion cannot replace the primary result. Geometric refinement and strict sparse-center links admit different routes, requiring joint interpretation of length and validity.
-
-Radius-0.5 clearance passes only nine ASP and eleven A* paths, precluding disk-safety claims. Significant-turn medians are two and one respectively; paired all-turn delta median is $-2$. Tiny ASP bends can inflate all-turn counts without corresponding physical steering. ASP vertices can lie inside bundles absent from the sparse A* graph, so mixed lengths do not contradict graph-optimal search.
 
 \begin{figure}[!htbp]
 \centering\includegraphics[width=0.8\textwidth]{robot-validity.pdf}

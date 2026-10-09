@@ -22,16 +22,19 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def canonical(text):
+def canonical(text, keep_floats=False):
     text = text.replace(r"\begingroup\predisplaypenalty=0", "").replace(r"\endgroup", "")
     text = re.sub(r"\\(?:Needspace|needspace)\{[^}]*\}", "", text)
     text = text.replace(r"\FloatBarrier", "")
     text = re.sub(r"width=(?:0\.8|0\.95)\\textwidth", r"width=\\textwidth", text)
     # samepage groups affect pagination only; retain all enclosed science text.
     text = re.sub(r"\\(?:begin|end)\{samepage\}", "", text)
-    text = re.sub(r'\\begin\{(figure|table)\}\[(?:t|H|!?htbp)\]',
+    text = re.sub(r'\\begin\{(figure|table)\}\[(?:!?t|H|!?htbp|!htb)\]',
                   r'\\begin{\1}[htbp]', text)
     text = re.sub(r"\\par(?=\s|$)", "", text)
+    # Float anchors may move; compare prose order and each complete float separately.
+    if not keep_floats:
+        text = re.sub(r"\\begin\{figure\}.*?\\end\{figure\}", "", text, flags=re.DOTALL)
     return ' '.join(text.split())
 
 
@@ -53,6 +56,10 @@ def main():
         original = canonical(source.read_text().split('\n', 1)[1])
         converted = canonical((REPORT / 'sections' / source.name).read_text().split('\n', 1)[1])
         assert converted.startswith(original), source.name
+        pattern = r"\\begin\{figure\}.*?\\end\{figure\}"
+        original_floats = re.findall(pattern, source.read_text(), re.DOTALL)
+        converted_floats = re.findall(pattern, (REPORT / 'sections' / source.name).read_text(), re.DOTALL)
+        assert sorted(canonical(x, keep_floats=True) for x in original_floats) == sorted(canonical(x, keep_floats=True) for x in converted_floats), source.name + ': float content'
         equivalence.append(source.name)
     source_main = (SOURCE / 'main.tex').read_text()
     abstract = source_main.split(r'\begin{abstract}')[1].split(r'\keywords')[0].strip()
