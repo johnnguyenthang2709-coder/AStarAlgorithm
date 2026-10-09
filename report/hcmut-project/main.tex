@@ -71,7 +71,13 @@
 \input{sections/05-implementation}
 \input{sections/06-methodology}
 \input{sections/07-results}
+% Compact the run-in labels only in Section 8; preserve continuous section flow.
+\begingroup
+\makeatletter
+\patchcmd{\paragraph}{3.25ex \@plus 1ex \@minus .2ex}{1.5ex \@plus .5ex \@minus .2ex}{}{\PackageError{hcmut-report}{Paragraph spacing patch failed}{Check article class paragraph definition.}}
+\makeatother
 \input{sections/08-limitations}
+\endgroup
 \input{sections/09-conclusion}
 \FloatBarrier
 \bibliographystyle{splncs04}

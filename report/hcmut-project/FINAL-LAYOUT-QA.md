@@ -1,5 +1,12 @@
 # Final comprehensive layout and pagination QA
 
+## Latest update: Section 8 spacing and references-only final page
+
+Section 8 uses run-in `\paragraph` labels, not numbered subsections. Their default article-class pre-heading spacing was 3.25ex. A scoped, checked `\patchcmd` reduces it to 1.5ex only around Section 8; the original heading spacing resumes for Section 9. The final supporting figure (Figure 8) is uniformly reduced by 5%, from full text width to 0.95 text width. All other figure sizes and caption spacing remain unchanged. Trial reductions of multiple figures alone did not move the conclusion tail and were discarded.
+
+The requested final sentence now ends on physical page 20, and physical page 21 contains only References. The total remains 21 pages. No section page breaks, body font changes, margin changes, line-spacing reductions or scientific text edits were introduced. Pages 19–21 were individually inspected after re-rendering; the final figure labels remain readable, Section 8 labels have clear but smaller separation, and all nine bibliography entries fit intact. Project build and full report validators pass, including all frozen-content checks. The validator recognizes the new figure width as a layout-only difference while independently requiring identical figure PDF bytes. Built-in editor compilation still has its documented pdfTeX/XeTeX Unicode incompatibility.
+
+
 ## Latest update: standard first-line indentation
 
 Added `\usepackage{indentfirst}` and retained `\setlength{\parindent}{1.5em}` in `main.tex`. Normal paragraphs immediately after section/subsection headings now receive the same first-line indent as other normal paragraphs, including the abstract text. Explicit unindented cover labels and the keywords label remain intentional non-body elements. No manuscript content or section-break controls were changed.

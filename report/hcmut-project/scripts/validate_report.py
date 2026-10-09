@@ -26,7 +26,7 @@ def canonical(text):
     text = text.replace(r"\begingroup\predisplaypenalty=0", "").replace(r"\endgroup", "")
     text = re.sub(r"\\(?:Needspace|needspace)\{[^}]*\}", "", text)
     text = text.replace(r"\FloatBarrier", "")
-    text = text.replace(r"width=0.8\textwidth", r"width=\textwidth")
+    text = re.sub(r"width=(?:0\.8|0\.95)\\textwidth", r"width=\\textwidth", text)
     # samepage groups affect pagination only; retain all enclosed science text.
     text = re.sub(r"\\(?:begin|end)\{samepage\}", "", text)
     text = re.sub(r'\\begin\{(figure|table)\}\[(?:t|H|!?htbp)\]',

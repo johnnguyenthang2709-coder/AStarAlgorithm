@@ -62,7 +62,7 @@ Online navigation adds target ordering. Both legacy and radar reach the goal in 
 Caching addresses computation without changing exploration ordering. Full and cached construction preserve playback, recovery, status, and distance in all 20 pairs; median accumulated frontier times are 639.166 and 46.723 ms, respectively. These are episode component totals, not end-to-end timings. Avoiding repeated construction explains the reduction, but equivalence requires invalidation when new free geometry or walls change the mask. Evidence supports the tested indoor and maze configurations, not arbitrary geometric updates.
 
 \begin{figure}[!htbp]
-\centering\includegraphics[width=\textwidth]{supporting.pdf}
+\centering\includegraphics[width=0.95\textwidth]{supporting.pdf}
 \caption{Supporting evidence from our online simulator. Left: paired frontier processing with equivalent playback in 20 cases. Right: four observed indoor branch returns, each certified and marked nonfallback in the frozen trace. These are separate from the local authors-versus-A* comparison.}
 \label{fig:support}
 \end{figure}
