@@ -1,0 +1,66 @@
+\documentclass[a4paper,12pt,oneside]{article}
+\usepackage[T1]{fontenc}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{etoolbox}
+\usepackage{caption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage[hidelinks,unicode]{hyperref}
+\graphicspath{{figures/}{assets/}}
+\setstretch{1.15}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.15em}
+\captionsetup{font=small,labelfont=bf}
+% Keep dedicated float pages compact and aligned to the top, rather than
+% distributing large vertical gaps between a table and a figure.
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{20pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\AtBeginDocument{\typeout{REPORT-FORMAT: font=\f@size pt; textwidth=\the\textwidth; textheight=\the\textheight}}
+\makeatother
+\newcommand{\astar}{A\ensuremath{^*}}
+\newcommand{\source}[1]{\path{#1}}
+\input{metadata}
+\hypersetup{pdftitle={A* Search Algorithm: Road Routing and Partially Observed Robot Navigation},pdfauthor={\ReportAuthor}}
+\begin{document}
+\raggedbottom
+\hypersetup{pageanchor=false}
+\input{sections/00-cover}
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\input{sections/00-abstract}
+\clearpage
+\begingroup
+\setstretch{1}
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+\clearpage
+\pagenumbering{arabic}
+\input{sections/01-introduction}
+\input{sections/02-background}
+\input{sections/03-formulation}
+\input{sections/04-architecture}
+\input{sections/05-implementation}
+\input{sections/06-methodology}
+\input{sections/07-results}
+\input{sections/08-limitations}
+\input{sections/09-conclusion}
+\FloatBarrier
+\bibliographystyle{splncs04}
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\bibliography{references}
+\end{document}

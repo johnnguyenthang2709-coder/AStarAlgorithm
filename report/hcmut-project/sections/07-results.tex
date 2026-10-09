@@ -1,0 +1,64 @@
+\section{Results and Discussion}
+\subsection{Road Cost Agreement and Search Effort}
+All 180 matched road queries return equal costs under A*, Dijkstra, and the frozen offline reference within $10^{-6}$ m. The graph validator reports zero heuristic edge violations and scale 1.0. Separately retained edge cases cover start equals goal, unreachable targets, directionality, and edge-midpoint snapping. These checks support correctness on the tested graph; agreement alone is not a proof for every possible adapter.
+
+\input{tables/road}
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\textwidth]{road-effort.pdf}
+\caption{Matched road search effort and search-call timing. Points below the diagonal favor A*. Each stratum has 60 queries; all 180 costs agree. Timing excludes graph loading, snapping, API, and rendering.}
+\label{fig:road-effort}
+\end{figure}
+
+Table~\ref{tab:road} and Fig.~\ref{fig:road-effort} show fewer expansions in every A* run, with median paired reduction 76.0\%. Geographic guidance directs search toward the destination while preserving the cost objective. A* is faster in 173 cases, Dijkstra in seven; the median paired time ratio is 0.338, range 0.061--1.435, with pair 167 the largest regression. These data support substantial savings on this network, not universal timing dominance. Paired ratios differ from ratios of marginal medians. The shared graph controls representation more tightly than the robot study.
+
+\subsection{Robot Local Geometry and Path Length}
+Both local planners find paths for all 21 eligible requests, with correct endpoints and primary interior-only validity in all 21. These are local planning successes, not 21 successful autonomous missions. Of the ten prospective source episodes, nine reach the goal and one reaches its iteration cap; its eligible states remain. Figure~\ref{fig:observed} shows an observed-space request and the two returned paths. No hidden polygons are supplied to either local planner.
+
+\input{tables/robot}
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\textwidth]{robot-observed.pdf}
+\caption{Representative frozen dead-end request. Visible blocker fragments and approximate display sight footprints show recorded knowledge; ASP and scan-center A* use the same position and target. Sight footprints are display approximations; benchmark link admission uses analytic whole-segment certification. Hidden obstacles are omitted.}
+\label{fig:observed}
+\end{figure}
+
+Define paired difference as A* length minus ASP length; positive values favor ASP. ASP is shorter in nine requests, A* in ten, and two are equal. The median is zero, mean $+2.981$, and range $[-10.707,+44.266]$ world units. Different representations admit different paths, and neither planner consistently dominates. Cohort composition matters: five of six initial cases favor ASP, nine of fourteen prospective cases favor A*. Figure~\ref{fig:robot-length} retains all pairs; one held-out request cannot establish generalization.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\textwidth]{robot-length.pdf}
+\caption{All 21 eligible local requests, grouped by frozen cohort. Positive A* minus ASP differences favor ASP. Filled orange markers indicate ASP boundary contact under the strict convention; these paths remain primary interior-valid.}
+\label{fig:robot-length}
+\end{figure}
+
+Boundary conventions explain part of this variation. ASP passes strict validity in 15 of 21 requests and A* in all 21. All six boundary-touching ASP paths are shorter under the permissive convention. A dead-end configuration with the largest difference (\source{P02-_map_deadend-01}) yields 15.734 units for ASP versus 60.000 for A*, with ASP boundary contact. Among 15 jointly strict-valid pairs, ASP is shorter in three, A* in ten, and two tie; median difference is $-2.584$. This secondary criterion cannot replace the primary result. Geometric refinement and strict sparse-center links admit different routes, requiring joint interpretation of length and validity.
+
+Radius-0.5 clearance passes only nine ASP and eleven A* paths, precluding disk-safety claims. Significant-turn medians are two and one respectively; paired all-turn delta median is $-2$. Tiny ASP bends can inflate all-turn counts without corresponding physical steering. ASP vertices can lie inside bundles absent from the sparse A* graph, so mixed lengths do not contradict graph-optimal search.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\textwidth]{robot-validity.pdf}
+\caption{Validity outcomes for the same 21 requests. Primary point validity allows boundary tangency; strict validity forbids it. Disk clearance is only a post-plan sensitivity check, not a guarantee of executed finite-robot motion.}
+\label{fig:validity}
+\end{figure}
+
+\subsection{Robot Computation Components}
+Figure~\ref{fig:runtime} separates the measured components. Across state medians, ASP core time is 62.655 ms, critical-line construction 0.319 ms, and optimization 62.400 ms. A* link-build time is 42.102 ms, binding/search 0.0263 ms, and the median per-state build-plus-call sum 42.142 ms. The small C++ call is a search on already constructed sparse graphs, while Python geometric certification can dominate its surrounding pipeline.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\textwidth]{robot-runtime.pdf}
+\caption{Per-state median local computation times (three warm-ups, 31 calls). A logarithmic axis exposes component scale. ASP core excludes skeleton generation; A* build includes observed-link certification. Components and languages differ, so isolated search ratios are not algorithm-only speedups.}
+\label{fig:runtime}
+\end{figure}
+
+Construction and certification dominate the small C++ call in these requests. Dividing ASP core time by that call would compare different languages and preparation; even build-plus-call and ASP core omit different upstream work. Thus the evidence locates computational cost without isolating intrinsic algorithm speedup. Stronger timing conclusions require matched pipelines.
+
+\subsection{Supporting Online Behavior and Recovery}
+Online navigation adds target ordering. Both legacy and radar reach the goal in 20 paired episodes; radar travels less in 18 and more in two, with median difference $-95.419$ world units. Its largest regression is $+70.772$ in Complex Irregular Labyrinth at radius 7. Estimated information changes branch ordering, with useful but non-dominating outcomes; low scores cannot justify exhaustion. All twelve sensor episodes reach their goals, but radius-5 and radius-7 distance medians are 92.909 and 113.278 units. Greater range need not shorten travel in this sample because it also changes decisions.
+
+Caching addresses computation without changing exploration ordering. Full and cached construction preserve playback, recovery, status, and distance in all 20 pairs; median accumulated frontier times are 639.166 and 46.723 ms, respectively. These are episode component totals, not end-to-end timings. Avoiding repeated construction explains the reduction, but equivalence requires invalidation when new free geometry or walls change the mask. Evidence supports the tested indoor and maze configurations, not arbitrary geometric updates.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\textwidth]{supporting.pdf}
+\caption{Supporting evidence from our online simulator. Left: paired frontier processing with equivalent playback in 20 cases. Right: four observed indoor branch returns, each certified and marked nonfallback in the frozen trace. These are separate from the local authors-versus-A* comparison.}
+\label{fig:support}
+\end{figure}
+
+The four certified indoor returns in Fig.~\ref{fig:support} are explicitly nonfallback: they demonstrate participation of C++ A* in recovery rather than automatic reversal of entry. Certification checks executed length to the observed ancestor under the assumptions of Eq.~\ref{eq:return}. Successful uncertified exits, unreachable-goal fixtures, and budget termination remain separate outcomes. In particular, a continuous no-frontier status establishes exhaustion of the controller's candidates, not unreachability in the unknown world.

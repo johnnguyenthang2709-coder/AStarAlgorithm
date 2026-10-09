@@ -1,0 +1,9 @@
+# PDF streams must never undergo Windows line-ending conversion.
+*.pdf binary
+*.png binary
+*.tex text eol=lf
+*.bib text eol=lf
+*.bst text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf

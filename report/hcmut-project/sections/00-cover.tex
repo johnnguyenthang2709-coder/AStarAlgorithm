@@ -1,0 +1,42 @@
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \foreach \inset in {1.0,1.15,1.3} {
+    \draw[line width=0.5pt]
+      ([xshift=\inset cm,yshift=-\inset cm]current page.north west)
+      rectangle
+      ([xshift=-\inset cm,yshift=\inset cm]current page.south east);
+  }
+\end{tikzpicture}
+\begin{center}
+{\small\bfseries \ReportUniversitySystem\par}
+\vspace{0.3cm}
+{\large\bfseries \ReportUniversity\par}
+\vspace{0.3cm}
+{\small\bfseries \ReportFaculty\par}
+\vspace{1.4cm}
+\IfFileExists{\ReportLogoPath}{%
+  \includegraphics[width=3.4cm,height=3.4cm,keepaspectratio]{\ReportLogoPath}%
+}{%
+  \fbox{\parbox[c][3.2cm][c]{3.2cm}{\centering\small\color{gray}Official HCMUT logo\\to be supplied}}%
+}
+\vspace{1.4cm}
+\par{\Large\bfseries PROJECT REPORT\par}
+\vspace{0.9cm}
+{\Huge\bfseries A* SEARCH ALGORITHM\par}
+\vspace{0.8cm}
+{\large\bfseries Road Routing and Partially Observed\\Robot Navigation\par}
+\vspace{0.4cm}
+{\large Design, Implementation, and\\Experimental Evaluation\par}
+\vfill
+{\large Author: \textbf{\ReportAuthor}\par}
+\end{center}
+% Blank optional fields print nothing; enter approved values in metadata.tex.
+\newcommand{\OptionalCoverField}[2]{\ifdefempty{#2}{}{\par\noindent #1: #2}}
+\OptionalCoverField{Course}{\ReportCourse}
+\OptionalCoverField{Lecturer}{\ReportLecturer}
+\OptionalCoverField{Student ID}{\ReportStudentID}
+\OptionalCoverField{Class}{\ReportClass}
+\OptionalCoverField{Submission date}{\ReportSubmissionDate}
+\vspace{1cm}
+\end{titlepage}

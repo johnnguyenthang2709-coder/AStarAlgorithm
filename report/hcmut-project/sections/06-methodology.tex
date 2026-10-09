@@ -1,0 +1,36 @@
+\section{Experimental Methodology}
+\subsection{Frozen Inputs and Controlled Road Comparison}
+The experiments distinguish heuristic guidance on a fixed graph, local geometry at shared observed states, and online exploration/recovery. Only the first isolates a search algorithm change; the others require representation and execution qualifications. Inputs and results are frozen at \source{04c4846}, with manifest hashes and an unmodified authors' checkout at \source{8bbbfb8}.
+
+The recorded host is Windows 11, Intel Core 7 240H (16 logical processors), with approximately 15.7 GiB RAM. CMake builds C++17 Release using MSYS2 UCRT64 g++; the binding runs in Python 3.12.10, original ASP in Python 3.14.2. Different environments and uncontrolled frequency/load make timings descriptive, not algorithm-only comparisons.
+
+To examine route-length dependence, selection sampled 6,000 directed candidates with seed 20261009; 5,965 were reachable. Dijkstra ranks define strata at approximately 2,086.98 and 3,273.44 m, retaining 60 queries each for 180 frozen benchmark queries.
+
+Only the heuristic flag changes between methods on the same graph and engine. One untimed call precedes seven alternating-order batches of 20, 10, and 5 calls in the respective strata. Time is the median batch mean per call. Loading, snapping, HTTP, rendering, and traces are excluded; common timed status/cost checks remain.
+
+\subsection{Source Audit and Shared-State Robot Requests}
+Compatible motion semantics are necessary for end-to-end comparison. The source logs an ASP but updates coordinates to its selected open point without ASP interpolation; Algorithm 2 specifies DAP motion. Straight-chord interpretations produce four interior crossings in the dead-end reproduction and one in the bugtrap, while planned ASPs avoid interiors. Coordinate transitions alone do not establish physical trajectories. The 48-configuration matrix therefore remains blocked and unexecuted: its entries are not failures, and chord distances cannot be compared with our executed travel.
+
+A local comparison avoids inferring motion: requests freeze position, target, sights, skeleton, ASP, and provenance. The original routine is replayed unchanged. Our A* uses identical endpoints and sights, with analytic whole-link certification in a scan-center graph. This adapter preserves circular boundaries rather than the application's polygon approximation. Full polygons enter only post-plan validation, never planner decisions.
+
+Eligibility precedes local outcomes and requires more than two skeleton vertices, selecting nontrivial bundle refinement. Cohorts contain 43, 75, and 233 decisions (Table~\ref{tab:eligibility}). Prospective selection preceded ten episodes at radii 10/20/30, capped at 60 iterations; capped outcomes remain. Correlated decisions and overlapping prior held-out bugtrap geometry limit generalization.
+
+\begin{table}[htbp]
+\caption{Frozen robot decision accounting. Direct exclusions do not invoke bundle refinement; they are retained in the raw audit.}\label{tab:eligibility}
+\centering\begin{tabular}{lrrr}\toprule
+Cohort & Captured & Eligible & Excluded\\\midrule
+Initial &43&6&37\\
+Prior held-out &75&1&74\\
+Prospective extension &233&14&219\\\midrule
+Combined &351&21&330\\\bottomrule
+\end{tabular}
+\end{table}
+
+Direct exclusions comprise 176 source-visible and 154 strict-range-boundary cases. Boundary convention explains endpoint predicate differences, with no missing-input or eligibility-checker mismatch. All 21 eligible requests remain, regardless of planner outcome.
+
+\subsection{Validity, Metrics, and Timing Boundaries}
+Primary robot validity requires matching endpoints within $10^{-7}$, full observed-sight segment coverage, and no polygon-interior entry; boundary contact is permitted. Strict point validity rejects boundary contacts as well. Radius-0.5 clearance is a separate offline diagnostic, not the planned collision model. Event-based segment certification uses tolerance $10^{-9}$; sampled predicate comparisons supplement it rather than prove universal sensor equivalence. Across all cohorts, 175,500 membership samples and 111,672 graph-link samples have no unexplained mismatch or uncovered sample. All 865 recorded ASP segments are sight-certified; 1,128 accepted A* graph links avoid polygon interiors and boundaries offline.
+
+Length is a sum of Euclidean polyline segments. An all-turn count uses wrapped heading changes exceeding $10^{-6}$ radians; an interpretable significant-turn count uses changes greater than $15^\circ$. Neither is a motor command count. ASP critical-line counts and A* expansions are not interchangeable operations. Robot component timing uses three warm-ups and 31 measured calls per state, then medians across state medians. ASP core excludes source skeleton generation; A* graph construction includes observed-link certification and is separated from its binding/search call. Medians of components need not sum to a median pipeline time.
+
+Separate online studies retain 20 legacy/radar pairs, 20 full/cached frontier pairs, 12 sensor episodes, and an indoor parent trace. They measure our executed behavior, not local planning against the authors. Statistics are paired by configuration before aggregation, without significance or population-superiority claims. Report scripts leave frozen results unchanged.
