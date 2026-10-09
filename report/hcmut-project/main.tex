@@ -30,10 +30,11 @@
 \renewcommand{\floatpagefraction}{0.8}
 \setcounter{topnumber}{3}
 \setcounter{totalnumber}{4}
-% Prevent isolated paragraph lines without keeping long paragraphs wholesale.
-\widowpenalty=10000
-\clubpenalty=10000
-\displaywidowpenalty=10000
+% Prefer continuous flow; paragraph and display boundaries may break naturally.
+\widowpenalty=3000
+\clubpenalty=3000
+\displaywidowpenalty=3000
+\predisplaypenalty=0
 % Keep dedicated float pages compact and aligned to the top, rather than
 % distributing large vertical gaps between a table and a figure.
 \makeatletter

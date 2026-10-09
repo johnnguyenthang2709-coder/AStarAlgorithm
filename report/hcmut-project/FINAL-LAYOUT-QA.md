@@ -1,5 +1,12 @@
 # Final comprehensive layout and pagination QA
 
+## Latest correction: gap after Section 1
+
+The earlier correction removed explicit section controls but left paragraph/display penalties at 10000, which still prevented Section 2's opening from using the available space. These penalties are now preferences (3000), and the pre-display penalty is 0. This permits normal breaks before a display without changing text, equation structure, fonts, margins or line spacing. Section 2 now starts directly after Section 1 on physical page 4; Section 3 follows the preceding text on physical page 6. No body section break/reservation/barrier was added.
+
+The current PDF has 21 physical pages. All consecutive contact sheets were reviewed, including the Section 1–2 transition at full resolution. Build passes without typesetting warnings. The reference-placement validator was updated to check the correct References heading/page rather than require it at the top: a two-line conclusion continuation now precedes References on physical page 21. Bibliography entries, citations and frozen-content checks are unchanged. Earlier counts/placement observations below are historical and superseded by this note. The built-in XeTeX preview limitation remains; the project pdfLaTeX build is authoritative.
+
+
 ## Superseding correction: continuous section flow
 
 Following the explicit user instruction, all body-section and subsection `\Needspace` reservations and `\FloatBarrier` commands have been removed. Sections 1–9 use normal article flow. No `\newpage`, `\clearpage` or `\pagebreak` occurs between these sections or inside their source files. The front matter and bibliography retain their existing separate handling. Natural TeX page breaks, including headings moving when insufficient space remains, are permitted; sections are not assigned a new page.

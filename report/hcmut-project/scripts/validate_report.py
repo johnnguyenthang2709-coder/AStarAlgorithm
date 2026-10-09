@@ -139,7 +139,8 @@ def main():
         table_center_offset = table_center - float(cover.attrib['width']) / 2
         assert abs(table_center_offset) < 1.0, table_center_offset
     reference_page = int(re.search(r'\\contentsline \{section\}\{References\}\{(\d+)\}', toc)[1])
-    assert texts[intro + reference_page - 1].lstrip().startswith('References')
+    # References may follow a natural conclusion continuation on the same page.
+    assert re.search(r'^References\s*$', texts[intro + reference_page - 1], re.MULTILINE)
     rows = ('Nguyễn Đức Hòa CC06 2652600', 'Phạm Văn Bảo Phong CC06 2652465',
             'Nguyễn Bá Hoàng CC06 2651237', 'Nguyễn Hoàng Thắng CC06 2550216',
             'Nguyễn Hưng Phát CC06 2651590')

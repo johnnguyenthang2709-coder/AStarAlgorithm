@@ -18,9 +18,9 @@
   "tables_content_identical": 3,
   "references_byte_identical": 9,
   "algorithms": 1,
-  "total_pages": 22,
+  "total_pages": 21,
   "cover_table_center_offset_pt": 0.002648,
-  "reference_physical_page": 22,
+  "reference_physical_page": 21,
   "introduction_physical_page": 4,
   "introduction_page_label": "1",
   "toc_section_entries": 11,
@@ -30,7 +30,7 @@
     "pypdf",
     "Poppler"
   ],
-  "mapped_font_instances": 128,
+  "mapped_font_instances": 140,
   "frozen_benchmark_hashes_checked": 56,
   "visual_qa": "See FINAL-LAYOUT-QA.md; automated checks do not replace visual inspection."
 }
