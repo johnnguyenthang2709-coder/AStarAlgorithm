@@ -10,7 +10,6 @@ Figure~\ref{fig:architecture} separates shared search from application knowledge
 
 Reuse requires a common problem contract. \source{include/astar/search.hpp} accepts neighbors, heuristic, goal predicate, and state hashing/equality, maintaining costs, predecessors, counters, and traces without coordinate or equal-cost assumptions. Disabling the heuristic gives Dijkstra in the same core, isolating guidance in the road comparison.
 
-\FloatBarrier
 \subsection{Road Representation and Coordinate Requests}
 The OSM-derived graph contains 2,986 vertices and 7,152 directed edges. Adjacency determines legal travel; polyline metadata supplies geometry (Fig.~\ref{fig:roads}). Snapping a click between intersections to a vertex would shift the endpoint. Queries instead scan segments and project using latitude-scaled coordinates. Cumulative Haversine lengths determine edge fraction $r\in[0,1]$; projection remains a local approximation.
 
@@ -24,8 +23,6 @@ For directed edge $u\rightarrow v$ of weight $w$, a snapped start connects forwa
 \label{fig:roads}
 \end{figure}
 
-\FloatBarrier
-\par\Needspace{7\baselineskip}
 \subsection{Sensing, Exploration, and Observed Ancestry}
 Robot Lab supports four or eight directions (diagonal cost 1.5, without corner cutting), and grid BAR uses four unit-cost directions. Continuous polygon, seeded-maze, and indoor modes admit arbitrary straight-link headings, but require conservative observation geometry.
 

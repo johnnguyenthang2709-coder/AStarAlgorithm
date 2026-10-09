@@ -61,21 +61,14 @@
 \endgroup
 \clearpage
 \pagenumbering{arabic}
+% Sections 1--9 follow normal article flow; no section page reservations.
 \input{sections/01-introduction}
-% Keep the combined section/subsection opening with its introductory argument.
-\par\Needspace{10\baselineskip}
 \input{sections/02-background}
-% Keep the road formulation heading, definitions, and first display together.
-\par\Needspace{10\baselineskip}
 \input{sections/03-formulation}
 \input{sections/04-architecture}
 \input{sections/05-implementation}
-\par\Needspace{10\baselineskip}
 \input{sections/06-methodology}
-\par\Needspace{32\baselineskip}
 \input{sections/07-results}
-% Finish the supporting-results floats before changing to limitations.
-\FloatBarrier
 \input{sections/08-limitations}
 \input{sections/09-conclusion}
 \FloatBarrier

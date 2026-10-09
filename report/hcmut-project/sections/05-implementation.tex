@@ -37,7 +37,6 @@ The subsequent goal test prevents stale entries from terminating search. Reconst
 
 For a finite graph, consistent heuristic, binary heap, and expected constant hashing time, lazy entries give a conservative $O((|V|+|E|)\log(|V|+|E|))$ time and $O(|V|+|E|)$ auxiliary-space bound. Geometry and traces add costs. Inconsistent estimates may reopen states, invalidating a single-expansion bound.
 
-\par\Needspace{8\baselineskip}
 \subsection{Application Heuristics and Trace Semantics}
 Heuristics follow the movement model. For roads, let $d_H$ be Haversine distance in meters. The loader chooses $0\leq\alpha\leq1$ with $\alpha d_H(u,v)\leq w(u,v)$ on every edge and sets $h(u)=\alpha d_H(u,t)$. The spherical triangle inequality gives $h(u)\leq\alpha d_H(u,v)+h(v)\leq w(u,v)+h(v)$, establishing Eq.~\ref{eq:consistency}. The frozen graph retains $\alpha=1$; this bound requires no reverse edges.
 

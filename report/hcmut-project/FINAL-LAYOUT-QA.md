@@ -1,5 +1,12 @@
 # Final comprehensive layout and pagination QA
 
+## Superseding correction: continuous section flow
+
+Following the explicit user instruction, all body-section and subsection `\Needspace` reservations and `\FloatBarrier` commands have been removed. Sections 1–9 use normal article flow. No `\newpage`, `\clearpage` or `\pagebreak` occurs between these sections or inside their source files. The front matter and bibliography retain their existing separate handling. Natural TeX page breaks, including headings moving when insufficient space remains, are permitted; sections are not assigned a new page.
+
+The rebuilt PDF remains 22 physical pages. The pdfLaTeX/BibTeX build and full report validators pass without typesetting warnings. All consecutive contact sheets were reinspected; the approved cover and scientific content remain unchanged. Table 1 now appears on physical page 13; Sections 6, 7, 8 and 9 begin within physical pages 12, 14, 19 and 20 respectively. Sections 2 and 3 still naturally start on physical pages 5 and 7. The earlier page-placement table and retained-control discussion below document the previous revision and are superseded by this correction. Font, margin, spacing, equations, figure data and frozen benchmark preservation checks remain unchanged. Current mapped font-instance count: 128.
+
+
 ## Baseline and scope
 
 Reviewed on `codex/hcmut-project-report`, starting from commit `bba24a3` and the existing local cover revisions. The accessible baseline was the current repository `report.pdf`, with 22 physical pages. A separate `report(7).pdf` was not available. Baseline source/PDF/render copies are preserved locally in `tmp/pdfs/hcmut-layout-before/`; they are not submission artifacts.

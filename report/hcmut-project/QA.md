@@ -56,3 +56,7 @@ The cover now uses the supplied Vietnam National University Ho Chi Minh City / H
 ## Comprehensive final pagination audit
 
 The current review supersedes the preceding placement review: see `FINAL-LAYOUT-QA.md` and `assets/layout-overview.png`. All 22 pages and consecutive transitions were inspected after the final pdfLaTeX build. Scientific content and frozen artifacts pass preservation checks. The approved cover retains PROJECT REPORT CALCULUS 1 and FACULTY OF APPLIED SCIENCE; it is pixel-identical to the pre-audit working-tree cover. The older initial-conversion course/figure-size statements above are historical, not the current specification.
+
+## Continuous section flow correction
+
+All body-section/subsection page reservations and float barriers removed per user instruction. Sections 1–9 follow natural article pagination. Rebuilt PDF: 22 pages; build and preservation validators pass. See the superseding note at the top of `FINAL-LAYOUT-QA.md`.
