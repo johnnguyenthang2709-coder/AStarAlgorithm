@@ -1,0 +1,36 @@
+{
+  "ablation": {
+    "paired_configurations": 20,
+    "baseline_success": 20,
+    "radar_success": 20,
+    "radar_shorter": 18,
+    "radar_longer": 2,
+    "median_radar_minus_baseline_distance": -95.4192075,
+    "largest_radar_regression": [
+      [
+        "lab_complex",
+        "7"
+      ],
+      70.77169099999999
+    ],
+    "baseline_wall_ms_median": 1808.626,
+    "radar_wall_ms_median": 1202.022
+  },
+  "cache": {
+    "paired_configurations": 20,
+    "playback_equivalent": 20,
+    "frontier_full_ms_median": 639.1655000000001,
+    "frontier_cached_ms_median": 46.7225,
+    "frontier_cached_faster": 20,
+    "cached_wall_mask_wkb_bytes_median": 47673.0
+  },
+  "sensor": {
+    "episodes": 12,
+    "success": 12,
+    "statuses": {
+      "goal_reached": 12
+    },
+    "radius_5_median_distance": 92.909018,
+    "radius_7_median_distance": 113.27849850000001
+  }
+}

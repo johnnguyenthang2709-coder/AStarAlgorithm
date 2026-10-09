@@ -22,6 +22,7 @@ from audit_bar_radar_benchmark import ALL_CASES
 
 FIELDS = ("case", "radius", "variant", "status", "success", "executed_distance",
           "astar_calls", "expanded_nodes", "returns", "equivalent_to_full",
+          "eligible_snapshots",
           "full_reconstructions", "incremental_updates", "frontier_calls",
           "score_calls", "score_cache_hits", "mean_eligible_candidates",
           "frontier_total_ms", "frontier_mean_ms", "frontier_p95_ms",
@@ -42,8 +43,9 @@ def run(world_factory, radius, novelty, reference):
     original_extend = module.extend_wall_mask
     original_gain = ContinuousPolicy._frontier_gain
     original_select = ContinuousPolicy.select
+    original_available = ContinuousPolicy.available
     timings = {"frontier": [], "update": [], "full": 0, "score_calls": 0,
-               "score_hits": 0, "eligible": [], "policy": None}
+               "score_hits": 0, "eligible": [], "eligible_trace": [], "policy": None}
 
     def frontier(known_free, border, walls, wall_mask=None):
         mask = None if reference else wall_mask
@@ -72,10 +74,17 @@ def run(world_factory, radius, novelty, reference):
         timings["eligible"].append(policy.last_decision.get("eligible", 0))
         return result
 
+    def available(policy, node, include_uncertain=False):
+        choices = original_available(policy, node, include_uncertain)
+        timings["eligible_trace"].append((node.branch_id, include_uncertain,
+                                           tuple(choices)))
+        return choices
+
     module.possible_frontier = frontier
     module.extend_wall_mask = extend
     ContinuousPolicy._frontier_gain = gain
     ContinuousPolicy.select = select
+    ContinuousPolicy.available = available
     begun = perf_counter()
     try:
         episode = simulate_continuous(world, radius, prefer_novelty=novelty,
@@ -87,6 +96,7 @@ def run(world_factory, radius, novelty, reference):
         module.extend_wall_mask = original_extend
         ContinuousPolicy._frontier_gain = original_gain
         ContinuousPolicy.select = original_select
+        ContinuousPolicy.available = original_available
     policy = timings["policy"]
     metrics = episode["metrics"]
     row = {
@@ -95,6 +105,7 @@ def run(world_factory, radius, novelty, reference):
         "astar_calls": metrics["replanning_count"],
         "expanded_nodes": metrics["astar_expanded_nodes"],
         "returns": len(episode["recoveries"]),
+        "eligible_snapshots": len(timings["eligible_trace"]),
         "full_reconstructions": timings["full"],
         "incremental_updates": len(timings["update"]),
         "frontier_calls": len(timings["frontier"]),
@@ -111,7 +122,7 @@ def run(world_factory, radius, novelty, reference):
         "wall_ms": round(wall_ms, 3),
         "wall_mask_wkb_bytes": len(policy._wall_mask.wkb) if policy._wall_mask is not None else 0,
     }
-    return episode, row
+    return episode, row, timings["eligible_trace"]
 
 
 def main():
@@ -127,11 +138,12 @@ def main():
         for name in args.cases:
             factory, novelty = ALL_CASES[name]
             for radius in args.radii:
-                full, full_row = run(factory, radius, novelty, True)
-                cached, cached_row = run(factory, radius, novelty, False)
+                full, full_row, full_eligible = run(factory, radius, novelty, True)
+                cached, cached_row, cached_eligible = run(factory, radius, novelty, False)
                 equal = (full["status"] == cached["status"] and
                          full["frames"] == cached["frames"] and
                          full["recoveries"] == cached["recoveries"] and
+                         full_eligible == cached_eligible and
                          full["metrics"]["executed_distance"] ==
                          cached["metrics"]["executed_distance"])
                 all_equal &= equal

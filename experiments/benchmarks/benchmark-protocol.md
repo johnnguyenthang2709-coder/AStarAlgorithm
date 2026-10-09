@@ -9,6 +9,11 @@ are copied into this repository. The upstream tree has no LICENSE/COPYING
 file or pinned Python dependency manifest, so redistribution rights are not
 inferred. Our wrapper runs in that external checkout without source patches.
 
+The road/robot manifest was committed as `f0e8a85` before the 180-pair road
+run. A supporting-study addendum at `d682d8d` fixed the six sensor cases,
+radii, and output isolation before supporting runs. It did not alter the 180
+selected road pairs or the 48 prespecified robot configurations.
+
 ## Questions and evidence classes
 
 1. On the same directed road graph and weight objective, do C++ A* and

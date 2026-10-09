@@ -1,0 +1,5 @@
+case,start,goal,found,astar_cost_m,dijkstra_cost_m
+start_equals_goal,0,0,True,0.0,0.0
+one_way_directed_edge,2,1119,True,127.83299861555825,127.83299861555825
+unreachable_pair,1881,2911,False,,
+nearest_edge_midpoint,"(10.7901102, 106.64325025)","(10.7909411, 106.6627844)",True,3928.9825140422936,3928.9825140422936

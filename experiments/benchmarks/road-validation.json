@@ -1,0 +1,81 @@
+{
+  "matrix_pairs": 180,
+  "cost_equal_pairs": 180,
+  "graph_nodes": 2986,
+  "graph_directed_edges": 7152,
+  "haversine_scale": 1.0,
+  "heuristic_edge_violations": 0,
+  "strata": {
+    "short": {
+      "pairs": 60,
+      "median_cost_m": 1420.370755433343,
+      "median_expanded_astar": 101.0,
+      "median_expanded_dijkstra": 505.0,
+      "median_search_us_astar": 44.9475,
+      "median_search_us_dijkstra": 128.085,
+      "astar_fewer_expansions": 60,
+      "astar_faster": 58
+    },
+    "medium": {
+      "pairs": 60,
+      "median_cost_m": 2743.0038862699757,
+      "median_expanded_astar": 301.0,
+      "median_expanded_dijkstra": 1592.0,
+      "median_search_us_astar": 282.94500000000005,
+      "median_search_us_dijkstra": 1117.24,
+      "astar_fewer_expansions": 60,
+      "astar_faster": 60
+    },
+    "long": {
+      "pairs": 60,
+      "median_cost_m": 4279.971528624727,
+      "median_expanded_astar": 714.5,
+      "median_expanded_dijkstra": 2588.5,
+      "median_search_us_astar": 771.46,
+      "median_search_us_dijkstra": 1883.19,
+      "astar_fewer_expansions": 60,
+      "astar_faster": 55
+    }
+  },
+  "edge_cases": [
+    {
+      "case": "start_equals_goal",
+      "start": 0,
+      "goal": 0,
+      "found": true,
+      "astar_cost_m": 0.0,
+      "dijkstra_cost_m": 0.0
+    },
+    {
+      "case": "one_way_directed_edge",
+      "start": 2,
+      "goal": 1119,
+      "found": true,
+      "astar_cost_m": 127.83299861555825,
+      "dijkstra_cost_m": 127.83299861555825
+    },
+    {
+      "case": "unreachable_pair",
+      "start": 1881,
+      "goal": 2911,
+      "found": false,
+      "astar_cost_m": "",
+      "dijkstra_cost_m": ""
+    },
+    {
+      "case": "nearest_edge_midpoint",
+      "start": [
+        10.7901102,
+        106.64325025
+      ],
+      "goal": [
+        10.7909411,
+        106.6627844
+      ],
+      "found": true,
+      "astar_cost_m": 3928.9825140422936,
+      "dijkstra_cost_m": 3928.9825140422936
+    }
+  ],
+  "timing_scope": "C++ search only; 7 batch medians per pair, not end-to-end API time"
+}

@@ -1,0 +1,13 @@
+kind,case,radius,status,success,executed_distance,turn_count,decisions,observations,astar_calls,expanded_nodes,planning_ms,sensing_ms,selection_ms,ranking_ms,wall_ms,returns,certified_returns,fallback_returns,frames,response_bytes
+labyrinth,seed_17,5,goal_reached,True,91.174507,15,21,23,21,42,0.377,185.398,109.248,109.173,356.647,1,1,0,67,162370
+labyrinth,seed_17,7,goal_reached,True,49.369184,8,9,10,9,18,0.145,110.205,27.281,27.241,157.515,0,0,0,29,80505
+labyrinth,seed_23,5,goal_reached,True,79.798013,14,19,22,19,39,0.3,198.805,98.995,98.921,352.304,1,1,0,63,162800
+labyrinth,seed_23,7,goal_reached,True,98.555576,18,18,21,18,37,0.304,291.185,82.374,82.281,437.914,1,1,0,60,176054
+labyrinth,seed_41,5,goal_reached,True,111.527241,19,22,28,22,48,0.454,287.992,218.316,218.214,594.321,2,2,0,78,212696
+labyrinth,seed_41,7,goal_reached,True,117.388675,16,20,23,20,40,0.425,2987.254,1064.578,1064.425,5294.804,2,2,0,66,214346
+indoor,apartment,5,goal_reached,True,78.871642,13,21,24,21,42,0.533,3189.796,2214.576,2214.442,6294.215,2,2,0,89,100350
+indoor,apartment,7,goal_reached,True,201.439076,35,38,48,38,79,1.285,5200.712,3215.551,3215.358,10945.122,7,7,0,179,211995
+indoor,office,5,goal_reached,True,136.135468,25,36,40,36,72,1.383,2107.652,1714.594,1714.438,4240.5,3,3,0,151,162557
+indoor,office,7,goal_reached,True,280.199886,37,51,57,51,102,1.506,274.417,249.063,248.869,762.112,5,5,0,226,246696
+indoor,challenge,5,goal_reached,True,94.643529,12,23,24,23,46,0.425,116.371,104.994,104.914,275.273,0,0,0,93,100195
+indoor,challenge,7,goal_reached,True,109.168322,11,21,22,21,42,30.826,927.676,585.317,585.198,2079.878,0,0,0,85,96200
