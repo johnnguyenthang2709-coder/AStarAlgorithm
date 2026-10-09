@@ -5,13 +5,14 @@ from dataclasses import dataclass, field
 from time import perf_counter
 
 import astar_core
+from shapely.errors import GEOSException
 from shapely.geometry import GeometryCollection, LineString, Point as ShapePoint, box
 from shapely.prepared import prep
 
 from app.services.bar_continuous_geometry import (
     ContinuousWorld, Point, RAY_MARGIN, SensorObservation, as_point, distance, segment_in_region,
 )
-from app.services.bar_information import wall_key, possible_frontier, visible_frontier_gain
+from app.services.bar_information import extend_wall_mask, wall_key, possible_frontier, visible_frontier_gain
 
 
 def path_length(points: list[Point]) -> float:
@@ -56,6 +57,8 @@ class ContinuousPolicy:
         self.deferred: dict[Point, tuple[float, int]] = {}
         self.radar_pending: set[Point] = set()
         self.observed_walls: dict[tuple[Point, Point], tuple[Point, Point]] = {}
+        self._wall_mask = GeometryCollection()
+        self._wall_mask_count = 0
         self._frontier = None
         self._prepared_free = None
         self._frontier_scores: dict[Point, float] = {}
@@ -86,14 +89,22 @@ class ContinuousPolicy:
         before = self.known_free.area
         self.known_free = self.known_free.union(observation.region)
         gained = max(0.0, self.known_free.area - before)
-        new_wall_fragments = 0
+        new_walls: list[tuple[Point, Point]] = []
         if self.radar_informed:
             for a, b in observation.edges:
                 key = wall_key(a, b)
                 if key not in self.observed_walls:
                     self.observed_walls[key] = (a, b)
-                    new_wall_fragments += 1
-            if gained > 1e-9 or new_wall_fragments:
+                    new_walls.append((a, b))
+            if new_walls and self._wall_mask is not None:
+                try:
+                    self._wall_mask = extend_wall_mask(self._wall_mask, new_walls)
+                    if not self._wall_mask.is_valid:
+                        self._wall_mask = None  # use authoritative full reconstruction
+                except GEOSException:
+                    self._wall_mask = None
+            self._wall_mask_count = len(self.observed_walls)
+            if gained > 1e-9 or new_walls:
                 self._frontier = None
                 self._prepared_free = None
                 self._frontier_scores.clear()
@@ -110,7 +121,7 @@ class ContinuousPolicy:
                             "obstacle_edges": [[as_point(a), as_point(b)] for a, b in observation.edges],
                             "new_area": round(gained, 6),
                             **({"branch_id": node.branch_id} if self.trace_hierarchy else {}),
-                            **({"new_wall_fragments": new_wall_fragments,
+                            **({"new_wall_fragments": len(new_walls),
                                 "observed_wall_fragments": len(self.observed_walls),
                                 "decision_index": self.decision_index}
                                if self.trace_decisions else {})})
@@ -129,11 +140,24 @@ class ContinuousPolicy:
         return True
 
     def _frontier_gain(self, candidate: Point) -> float:
+        if self._wall_mask_count != len(self.observed_walls):
+            # An externally restored/edited policy state has no matching mask.
+            self._wall_mask = None
+            self._wall_mask_count = len(self.observed_walls)
+            self._frontier = None
+            self._frontier_scores.clear()
         key = self.candidate_key(candidate)
         if key not in self._frontier_scores:
             if self._frontier is None:
-                self._frontier = possible_frontier(
-                    self.known_free, self.border, list(self.observed_walls.values()))
+                walls = list(self.observed_walls.values())
+                try:
+                    self._frontier = possible_frontier(
+                        self.known_free, self.border, walls, self._wall_mask)
+                except GEOSException:
+                    if self._wall_mask is None:
+                        raise
+                    self._wall_mask = None
+                    self._frontier = possible_frontier(self.known_free, self.border, walls)
             if self._prepared_free is None:
                 self._prepared_free = prep(self.known_free.buffer(2 * RAY_MARGIN))
             self._frontier_scores[key] = visible_frontier_gain(

@@ -17,14 +17,21 @@ def wall_key(a: Point, b: Point) -> tuple[Point, Point]:
     return tuple(sorted(endpoints))
 
 
-def possible_frontier(known_free, border, walls: list[tuple[Point, Point]]):
-    """FREE boundary not matched by observed BLOCKED wall fragments."""
+def extend_wall_mask(mask, new_walls: list[tuple[Point, Point]]):
+    """Union only newly sensed wall buffers; geometrically the full wall mask."""
+    addition = MultiLineString(new_walls).buffer(2 * RAY_MARGIN)
+    return mask.union(addition) if not mask.is_empty else addition
+
+
+def possible_frontier(known_free, border, walls: list[tuple[Point, Point]], wall_mask=None):
+    """FREE boundary minus observed walls; None requests a full reconstruction."""
     if known_free.is_empty:
         return known_free.boundary
     boundary = known_free.boundary
     tolerance = 2 * RAY_MARGIN  # sensor reports points 0.001 inside the wall
     if walls:
-        boundary = boundary.difference(MultiLineString(walls).buffer(tolerance))
+        mask = wall_mask if wall_mask is not None else MultiLineString(walls).buffer(tolerance)
+        boundary = boundary.difference(mask)
     return boundary.difference(border.boundary.buffer(tolerance))
 
 

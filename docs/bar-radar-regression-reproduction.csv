@@ -1,0 +1,3 @@
+case,radius,policy,status,success,executed_distance,local_audit_probes,astar_calls,expanded_nodes,recoveries,certified_returns,fallback_returns,ranking_ms,planning_ms,sensing_ms,wall_ms,frames
+lab_complex,7.0,baseline,goal_reached,True,97.044199,,22,44,3,3,0,,0.485,448.159,553.343,74
+lab_complex,7.0,radar,goal_reached,True,167.81589,,31,64,1,1,0,4819.457,0.657,619.61,5654.945,101
