@@ -1,0 +1,31 @@
+\section{System Architecture and Design}
+\subsection{Shared Engine and Application Boundaries}
+Figure~\ref{fig:architecture} shows React/TypeScript requests through FastAPI and pybind11 to C++17. Road loading and adapters are C++; continuous sensing, map accumulation, targets, ancestry, and execution are Python. The continuous binding validates points/links and assigns Euclidean costs; Python constructs the graph.
+
+\begin{figure}[t]
+\centering\includegraphics[width=\textwidth]{architecture.pdf}
+\caption{Implemented system boundaries. Ground truth enters sensing and motion validation; the continuous planner receives observations and verified links. Traces support frontend playback.}
+\label{fig:architecture}
+\end{figure}
+
+\source{include/astar/search.hpp} defines generic search, counters, and traces. Problems supply neighbors, heuristic, goal predicate, and state hash/equality. Adapters share this contract without coordinate or equal-cost assumptions. Dijkstra disables the heuristic in the same core.
+
+\subsection{Road Representation and Coordinate Requests}
+The OSM-derived graph has 2,986 vertices and 7,152 directed edges, with polyline metadata separate from adjacency (Fig.~\ref{fig:roads}). Coordinate queries scan and project onto road segments using latitude-scaled coordinates. Cumulative Haversine lengths determine fraction $r$; projection is a local approximation.
+
+For directed edge $u\rightarrow v$ of weight $w$, a snapped start connects forward with $(1-r)w$, and a snapped goal connects from $u$ with $rw$. Reverse travel requires a corresponding reversed polyline and uses its own weight and fraction. Two ordered positions on one directed edge obtain a direct connection of $(r_g-r_s)w$ when $r_g\geq r_s$. Endpoints reuse real nodes. Virtual states and partial edges belong only to the request adapter; the base graph is unchanged. Partial route geometry is sliced along the original polyline. The heuristic scale is also reduced if a partial edge requires it. Thus floating-point or geometric approximations do not justify blindly reusing an invalid lower bound.
+
+\begin{figure}[t]
+\centering\includegraphics[width=\textwidth]{roads.pdf}
+\caption{Representative frozen short, medium, and long road queries. Background is the exported graph, not additional routing information; each highlighted route uses the unchanged C++ adapter. Axes use exported geographic coordinates.}
+\label{fig:roads}
+\end{figure}
+
+\subsection{Sensing, Exploration, and Observed Ancestry}
+Robot Lab supports four or eight directions (diagonal cost 1.5, no corner cutting); grid BAR uses four unit-cost directions. Continuous polygon, seeded maze, and indoor modes retain arbitrary straight-link headings.
+
+The sensor uses 72 uniform directions and rays near visible vertices. First-hit range, blocker margins, and checked free triangles conservatively approximate visibility before union into $F_k$. The sensing disk is not the observed region. Policy receives observations, not hidden polygons/topology; grid evaluation gates are read only after navigation.
+
+Each exploration node records its position, history index, branch ID, parent ID, and remaining candidates. A stack represents active ancestry. Rounded target identities prevent immediate repetition; deferred targets can be reconsidered after map or observation changes. Radar-informed ranking estimates visible frontier opportunity from known boundary segments and discounts travel using direct Euclidean distance. This proxy is not a C++ \astar{} path-cost estimate or a guaranteed observation gain. Low gain alone does not exhaust a branch; uncertain occluded candidates remain eligible through a conservative fallback.
+
+Recovery transfers deferred child alternatives, preserves siblings, and locks execution to the anchor. Graph-blocked and exhausted decisions remain distinct. Playback shows sensing, plans, moves, branches, and returns, with graph debugging hidden by default. Search traces expose $g,h,f$ and parents; continuous frames are higher-level events. Interpolation adds no backend motion.

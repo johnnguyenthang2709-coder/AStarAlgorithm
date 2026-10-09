@@ -1,0 +1,24 @@
+\section{Problem Formulation}
+\subsection{Known Directed Road Routing}
+For known $G$, origin $s$, and destination $t$, the objective is
+\begin{equation}
+P^*\in\underset{P:s\leadsto t}{\operatorname{argmin}}\;
+C(P),\quad C(P)=\sum_{(u,v)\in P}w(u,v).
+\end{equation}
+Weights are exported road lengths in meters. One-way topology is represented by directed edges. The objective includes neither traffic nor time-dependent travel costs nor turn restrictions absent from preprocessing. No route is returned when $t$ is unreachable. The principal experiment uses node endpoints. Interactive coordinate queries first project onto a road polyline and introduce temporary partial-edge connections; thus the snapping approximation is a separate part of the application.
+
+\subsection{Partially Observed Robot Navigation}
+Let $W\subset\mathbb{R}^2$ be a bounded workspace and $O$ the static polygon obstacles. The simulator knows $O$ to generate observations and check executed motion. The planner receives accumulated observed free space $F_k$, visible obstacle fragments $B_k$, robot position $x_k$, goal $q$, and candidate observations at decision $k$. The remaining space $U_k=W\setminus(F_k\cup B_k)$ is unknown to the policy; it cannot be treated as traversable. A finite sensing range $R$ limits visibility, and obstacles occlude rays. An overlap with the sensing disk alone is not evidence that a point has been observed.
+
+Target selection chooses an exploration target $z_k$ using observed information and traversal history. Local planning then constructs $G_k=(V_k,E_k)$, with scan centers and common endpoints as vertices and wholly verified straight links as edges. Each link has weight $\|u-v\|_2$ and heuristic $\|u-z_k\|_2$. Motion execution follows selected path segments with collision and observed-free checks. The total executed online length
+\begin{equation}
+L_{\mathrm{online}}=\sum_j\|x_{j+1}-x_j\|_2
+\end{equation}
+includes exploratory and return motion; it is not the cost of one local plan or a full-map shortest path. Here $j$ indexes executed movements, rather than sensing updates or rendered frames.
+
+The continuous simulator uses an idealized point center and reversible motion along straight segments. Heading changes freely at vertices; acceleration, nonholonomic constraints, and disk clearance are absent. The frozen local comparison permits boundary tangency in its primary convention and separately reports strict no-contact validity. Neither convention validates the source's nominal radius-0.5 parameter.
+
+\subsection{Recovery and Evaluation Objectives}
+An observed branch stores an anchor and the executed history since that anchor. When usable local candidates are exhausted, the controller selects a suitable observed ancestor with remaining alternatives. Failed reachability of one target instead defers that target for later changed knowledge; it is not alone an exhaustion certificate. Recovery plans a return to the ancestor, then resumes exploration of retained alternatives.
+
+Road evaluation measures minimum graph cost, valid expansions, and search-call time. Local robot evaluation measures planned Euclidean length, geometric turns, endpoint agreement, observed-space coverage, obstacle validity, and computation components. Supporting online studies measure actual distance, goal status, frontier processing, and executed returns. A successful alley exit is called \emph{certified} only when the stated anchor, reversible trajectory, and executed-length checks hold. Reaching a goal, ending with no eligible frontier, and exhausting a budget are different outcomes; none automatically proves a complete map or global unknown-world optimality.

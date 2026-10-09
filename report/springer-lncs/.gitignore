@@ -1,0 +1,11 @@
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+build-pass*.txt
+build-bibtex.txt
+qa-render/
+__pycache__/

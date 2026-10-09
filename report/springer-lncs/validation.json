@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "baseline": "04c48468c6b6b4f6512be925383614267fa7ca32",
+  "total_pages": 18,
+  "references_start_page": 18,
+  "abstract_words_whitespace": 165,
+  "figures": 8,
+  "tables": 3,
+  "algorithms": 1,
+  "bibliography_entries": 9,
+  "road_pairs": 180,
+  "robot_snapshots": 351,
+  "eligible_robot_pairs": 21,
+  "frozen_benchmark_hashes_checked": 56,
+  "visual_qa": "See LAYOUT-QA.md; automated checks do not substitute for page inspection."
+}

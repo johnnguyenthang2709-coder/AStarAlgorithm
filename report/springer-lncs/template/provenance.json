@@ -1,0 +1,14 @@
+{
+  "class_version": "2.26 (25-Feb-2025)",
+  "class_source": "https://mirrors.ctan.org/macros/latex/contrib/llncs.zip",
+  "sample_source": "https://cms-resources.apps.public.k8s.springernature.io/springer-cms/rest/v1/content/27851904/data/LaTeX2e%20Proceedings%20Template%20ZIP",
+  "sample_bundle_version": "2.25 (03-Sep-2026)",
+  "retrieved": "2026-10-09",
+  "sha256": {
+    "llncs.cls": "e9894c92191fcd195eef3120a36d2f75b52030eadcbdc3ce1463179746526e6a",
+    "splncs04.bst": "f36c3a17e5304a692706359aafa9de709395a085e579eb47c027095aeaa35174",
+    "template/samplepaper.tex": "08142e057525c0edcab3e62a7028084a136cdbd7a66af8eb5157c2e5ae1806a6",
+    "template/UPSTREAM-README.md": "4ddfb992750fabd13aff0ba0b253edddede537ab06029e5e4678715b52735495",
+    "template/llncsdoc.tex": "2b77b747d13460a375e4aab7f94ccbc4c9ec74851b073d5d17550426662124f8"
+  }
+}

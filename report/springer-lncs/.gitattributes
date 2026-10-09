@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+# Keep official downloaded resources byte-for-byte for recorded provenance.
+llncs.cls -text
+splncs04.bst -text
+template/UPSTREAM-README.md -text
+template/llncsdoc.tex -text
+template/samplepaper.tex -text

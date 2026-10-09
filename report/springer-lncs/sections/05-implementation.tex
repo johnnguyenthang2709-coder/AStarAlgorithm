@@ -1,0 +1,52 @@
+\section{A* Algorithm Implementation}
+\subsection{Queue, Records, and Improved Paths}
+An \source{unordered_map} stores best $g$, parent, and last-expanded $g$ per state; a \source{priority_queue} stores state, inserted $g,h,f$, and insertion order. Lexicographic $(f,h,\mathrm{order})$ selects lower $f$, lower $h$, then earlier insertion. Determinism requires deterministic neighbor enumeration.
+
+Algorithm~\ref{alg:core} summarizes the actual implementation. There is no decrease-key operation: an improved path pushes a new entry. An old entry whose stored $g$ exceeds the current record is stale and skipped. An entry no better than the last-expanded value is also skipped. A strictly smaller $g$ is still eligible after prior expansion. This preserves reopening instead of treating CLOSED as a permanent visited flag.
+
+\begin{algorithm}[H]
+\caption{Shared C++ search (trace and counters omitted)}\label{alg:core}
+\begin{algorithmic}[1]
+\Require Problem neighbors, heuristic, goal predicate; start $s$, goal $t$
+\State Initialize records with $g=\infty$, no parent or expanded value
+\State $g[s]\gets0$; push $(s,0,h(s),h(s),\mathrm{order}{+}{+})$
+\While{OPEN is not empty}
+  \State Pop minimum entry $e$ with state $u$
+  \If{$e.g>g[u]$ or ($u$ expanded and $e.g\geq g_{\rm expanded}[u]$)}
+    \State \textbf{continue}
+  \EndIf
+  \State $g_{\rm expanded}[u]\gets e.g$
+  \If{problem goal predicate holds for $u,t$}
+    \State \Return predecessor chain reversed, cost $e.g$
+  \EndIf
+  \For{outgoing $(u,v,w)$}
+    \State Validate finite $w\geq0$; $a\gets e.g+w$
+    \If{$a<g[v]$}
+      \State $g[v]\gets a$; parent$[v]\gets u$
+      \State Validate $h(v)$ and finite sum; push $(v,a,h(v),a+h(v),\mathrm{order}{+}{+})$
+    \EndIf
+  \EndFor
+\EndWhile
+\State \Return not found, empty path, infinite internal cost
+\end{algorithmic}
+\end{algorithm}
+
+The engine checks finite nonnegative weights/estimates and rejects overflow; adapters establish admissibility. Relaxation uses strict improvement, with tolerances only in external validation. Reconstruction reverses predecessors from goal to the parentless start. Start equals goal returns a singleton of zero cost; unreachable search returns an empty path, failure, and internal infinity serialized as nullable cost.
+
+For a finite graph, consistent heuristic, binary heap, and expected constant hashing time, lazy entries give a conservative $O((|V|+|E|)\log(|V|+|E|))$ time and $O(|V|+|E|)$ auxiliary-space bound. Geometry and traces add costs. Inconsistent estimates may reopen states, invalidating a single-expansion bound.
+
+\subsection{Application Heuristics and Trace Semantics}
+For a road edge, define geographic distance $d_H$. The loader chooses a scale $\alpha\leq1$ respecting $\alpha d_H(u,v)\leq w(u,v)$ and uses $h(u)=\alpha d_H(u,t)$. By the spherical-distance triangle inequality, this implies Eq.~\ref{eq:consistency}. The frozen graph validates every directed edge and retains $\alpha=1$. Directionality does not invalidate the geometric lower bound. Four-direction unit grids use Manhattan distance; the educational eight-direction grid uses $\max(dx,dy)+0.5\min(dx,dy)$ for its actual 1.5 diagonal cost. Euclidean weights in the continuous visibility adapter make Euclidean goal distance consistent by the ordinary triangle inequality.
+
+Expanded nodes count valid pops, including goal and re-expansions; generated nodes count all pushes. Unique counts are separate. Examined and relaxed edges count scanned neighbors and improvements. Trace events expose discovery, updates, expansion, closure, and goal scores. Stale entries are skipped; timing disables traces.
+
+\subsection{Executed Return Certificate}
+Let $T=(a=x_0,\ldots,x_m=b)$ be the actual entry trajectory from the selected observed anchor $a$ to current $b$, with length $L_T$. Under static obstacles, sound observed-free checks, and reversible point motion, its reverse is a feasible return of the same length. Recorded waypoints and verified links preserve this candidate. If those links appear in the current planning graph, exact graph-optimal \astar{} gives $L_{A^*}\leq L_T$. The controller additionally checks the proposed route's endpoints, segment coverage, and length before accepting it. If planning fails or the route exceeds the entry bound, it verifies and uses the recorded reverse.
+
+Execution follows the entire accepted return without switching to exploration. The simulator records the executed geometric length $L_R$ and requires
+\begin{equation}
+L_R\leq L_T+\varepsilon,\qquad
+\|x_{\rm end}-a\|_2\leq\varepsilon,
+\label{eq:return}
+\end{equation}
+using the implementation's numerical checks. New sensing during return may add observations, but does not change its destination. Consequently the certificate concerns an observed-anchor episode with reversible verified entry and locked execution. It does not certify arbitrary semantic BAR boundaries, physical disk clearance, universal detection, or complete navigation. A reversed-entry fallback establishes the bound without showing that \astar{} shortened that episode; the trace must distinguish these outcomes.
