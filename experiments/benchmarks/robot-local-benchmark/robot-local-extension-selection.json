@@ -1,0 +1,28 @@
+{
+  "selection_version": 1,
+  "purpose": "Prespecified held-out source episodes after the two-map feasibility run",
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "rule": "Two additional original CSV worlds, block and forest, with the same unmodified source runner, start (0,0), goal (100,100), sight radius 20, robot radius 0.5, and 60-iteration cap; retain every decision and every nontrivial skeleton, including source failures",
+  "episodes": [
+    {
+      "map": "_map_block.csv",
+      "map_sha256": "95e5c8cdd23f12d302200395d809d65dcf21988a057efc2449cece5376e3da0b",
+      "start": [0, 0],
+      "goal": [100, 100],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    },
+    {
+      "map": "_map_forest.csv",
+      "map_sha256": "bff83d4ae1ab370f4d1455970194f0a58d5a3a7139837c9a766d44e35f28dec9",
+      "start": [0, 0],
+      "goal": [100, 100],
+      "sensing_radius": 20,
+      "source_robot_radius": 0.5,
+      "iteration_cap": 60
+    }
+  ],
+  "eligibility_rule": "Every original skeleton path with more than two vertices",
+  "collision_convention": "Same point-robot interior-only primary and strict boundary secondary rules as initial benchmark"
+}
