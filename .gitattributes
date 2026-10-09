@@ -2,3 +2,51 @@
 data/road/** -text
 data/bar/polygon_sources/*.csv -text
 *.png binary
+
+# Frozen benchmark/report hashes require exact Git bytes, including on Windows.
+experiments/benchmarks/** -text
+report/** -text
+
+# Historical frozen hashes that explicitly used CRLF serialization.
+experiments/benchmarks/FINAL-BENCHMARK-REPORT.md text eol=crlf
+experiments/benchmarks/benchmark-final-summary.json text eol=crlf
+experiments/benchmarks/benchmark-manifest.json text eol=crlf
+experiments/benchmarks/exploration-ablation.csv text eol=crlf
+experiments/benchmarks/final-figures/road-cost-agreement.svg text eol=crlf
+experiments/benchmarks/final-figures/road-expanded.svg text eol=crlf
+experiments/benchmarks/final-figures/road-representative-routes.svg text eol=crlf
+experiments/benchmarks/final-figures/road-search-time.svg text eol=crlf
+experiments/benchmarks/final-figures/robot-eligibility.svg text eol=crlf
+experiments/benchmarks/final-figures/robot-paired-lengths.svg text eol=crlf
+experiments/benchmarks/final-figures/robot-paired-turns.svg text eol=crlf
+experiments/benchmarks/final-figures/robot-runtime-components.svg text eol=crlf
+experiments/benchmarks/final-figures/robot-validity.svg text eol=crlf
+experiments/benchmarks/final-figures/support-frontier-cache.svg text eol=crlf
+experiments/benchmarks/final-figures/support-parent-return.svg text eol=crlf
+experiments/benchmarks/final-figures/support-radar.svg text eol=crlf
+experiments/benchmarks/final-figures/support-sensor-radius.svg text eol=crlf
+experiments/benchmarks/frontier-cache.csv text eol=crlf
+experiments/benchmarks/road-astar-dijkstra.csv text eol=crlf
+experiments/benchmarks/road-edge-cases.csv text eol=crlf
+experiments/benchmarks/road-validation.json text eol=crlf
+experiments/benchmarks/robot-authors-vs-astar.csv text eol=crlf
+experiments/benchmarks/robot-local-benchmark/robot-local-asp-vs-astar.csv text eol=crlf
+experiments/benchmarks/robot-local-benchmark/robot-local-snapshots.json text eol=crlf
+experiments/benchmarks/robot-local-extension/robot-local-asp-vs-astar.csv text eol=crlf
+experiments/benchmarks/robot-local-extension/robot-local-benchmark-manifest.json text eol=crlf
+experiments/benchmarks/robot-local-final-extension-selection.json text eol=crlf
+experiments/benchmarks/robot-local-final-extension/astar-plans.json text eol=crlf
+experiments/benchmarks/robot-local-final-extension/authors-asp-timing.json text eol=crlf
+experiments/benchmarks/robot-local-final-extension/robot-local-asp-vs-astar.csv text eol=crlf
+experiments/benchmarks/robot-local-final-extension/robot-local-benchmark-manifest.json text eol=crlf
+experiments/benchmarks/robot-local-final-extension/robot-local-geometry-validation.csv text eol=crlf
+experiments/benchmarks/robot-local-final-extension/robot-local-timing-distributions.csv text eol=crlf
+experiments/benchmarks/robot-local-final-extension/robot-local-validation-summary.json text eol=crlf
+experiments/benchmarks/robot-local-final-paired.csv text eol=crlf
+experiments/benchmarks/robot-snapshot-eligibility-audit.csv text eol=crlf
+experiments/benchmarks/robot-snapshot-eligibility-summary.json text eol=crlf
+experiments/benchmarks/sensor-robustness.csv text eol=crlf
+experiments/benchmarks/supporting-validation.json text eol=crlf
+experiments/benchmarks/tables/road-results.tex text eol=crlf
+experiments/benchmarks/tables/robot-local-results.tex text eol=crlf
+experiments/benchmarks/tables/supporting-results.tex text eol=crlf

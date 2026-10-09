@@ -36,9 +36,10 @@ Date: 2026-10-10 (Asia/Saigon). Approved report baseline: `df8607a`.
 - `README.md`: completed application overview, shared-engine source guide, setup/build/test/start commands, existing diagnostic figure, report links, research attribution, frozen results and comparison limitations. Obsolete standalone demo measurements were removed in favor of the frozen benchmark package.
 - `.gitignore`: preserve local temporary diagnostics and privately supplied papers without publishing them.
 - `frontend/package-lock.json`: only `source-map-js` changed from 1.2.1 to 1.2.2, with its registry URL and integrity hash. Clean installation reported GHSA-68fv-2mgg-jv7q; this patch resolves the indexed-source-map denial-of-service advisory. No direct dependency specification or application source changed.
+- `.gitattributes`: preserve frozen benchmark/report bytes, with explicit CRLF overrides for 42 historical benchmark serializations whose original hashes require CRLF; remaining frozen files keep Git bytes.
 - This integration record.
 
-No production algorithm, experimental measurement, benchmark artifact, LaTeX manuscript or approved PDF was edited. Historical report-directory READMEs retain their conversion-time wording; current PDFs, metadata and final validator outputs are authoritative.
+No production algorithm, experimental measurement, benchmark artifact, LaTeX manuscript or approved PDF content was edited. A post-fast-forward validator caught Windows `core.autocrlf` converting frozen files to CRLF. Files were restored from raw Git blobs, applying LF/CRLF only where the existing manifests prove the original serialization; `.gitattributes` now preserves those exact per-file serializations on future checkouts; validators were rerun before publication. Historical report-directory READMEs retain their conversion-time wording; current PDFs, metadata and final validator outputs are authoritative.
 
 ## Validation commands and actual results
 

@@ -59,6 +59,8 @@ These are **frozen measurements**, not new experiments run during repository int
 
 ASP Python core time and C++ A* search time have different scope and implementation language and must not be presented as an equivalent end-to-end speed comparison. The prespecified **48-case end-to-end authors-versus-our-robot comparison remains blocked** because source waypoint execution and footprint semantics are not reconciled. Planned path lengths, source coordinate transitions, and physically collision-checked executed distances are distinct quantities.
 
+Git attributes preserve the original per-file LF/CRLF serialization used by the frozen hashes on Windows and other platforms. Do not run blanket line-ending conversion on benchmark or report files.
+
 ### Validate the frozen artifacts
 
 From the repository root:
