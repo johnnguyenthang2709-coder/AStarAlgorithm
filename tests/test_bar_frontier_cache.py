@@ -15,7 +15,7 @@ import app.services.bar_continuous as continuous
 from app.services.bar_continuous import ContinuousPolicy, simulate_continuous
 from app.services.bar_continuous_geometry import SensorObservation
 from app.services.bar_continuous_geometry import RAY_MARGIN
-from app.services.bar_indoor import APARTMENT, OFFICE, generate_indoor
+from app.services.bar_indoor import APARTMENT, OFFICE, CHALLENGE, generate_indoor
 from app.services.bar_information import possible_frontier, visible_frontier_gain
 from app.services.bar_labyrinth import BLIND_ALLEY, COMPLEX, EXPLORATION, generate_labyrinth
 
@@ -129,7 +129,10 @@ def run_episode(world, radius, novelty, monkeypatch, reference):
     (lambda: generate_labyrinth(COMPLEX).world, 7, True),
     (lambda: generate_labyrinth(EXPLORATION).world, 5, True),
     (lambda: generate_indoor(APARTMENT).world, 5, False),
+    (lambda: generate_indoor(APARTMENT).world, 7, False),
     (lambda: generate_indoor(OFFICE).world, 5, False),
+    (lambda: generate_indoor(OFFICE).world, 7, False),
+    (lambda: generate_indoor(CHALLENGE).world, 5, False),
 ))
 def test_complete_decisions_match_full_frontier(make_world, radius, novelty, monkeypatch):
     expected, reference_states = run_episode(make_world(), radius, novelty, monkeypatch, True)
@@ -137,6 +140,7 @@ def test_complete_decisions_match_full_frontier(make_world, radius, novelty, mon
     assert actual["status"] == expected["status"] == "goal_reached"
     assert cached_states == reference_states
     assert actual["metrics"]["executed_distance"] == expected["metrics"]["executed_distance"]
+    assert actual["frames"] == expected["frames"]
     for field in ("replanning_count", "astar_expanded_nodes", "turn_count"):
         assert actual["metrics"][field] == expected["metrics"][field]
     assert actual["recoveries"] == expected["recoveries"]

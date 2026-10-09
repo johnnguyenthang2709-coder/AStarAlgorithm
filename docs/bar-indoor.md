@@ -55,14 +55,15 @@ route planning uses only certified known-free segments.
 
 ## Reproduction and results
 
-From the repository root on Windows:
+From the repository root on Windows, reproduce the current indoor API policy:
 
 ```powershell
-.venv\Scripts\python.exe scripts\benchmark_bar_indoor.py --radii 5 7 | Set-Content docs\bar-indoor-results.csv
-.venv\Scripts\python.exe scripts\audit_bar_indoor_trace.py | Set-Content docs\bar-indoor-trace.csv
+.venv\Scripts\python.exe scripts\benchmark_bar_indoor.py --radii 5 7 | Set-Content docs\bar-indoor-radar-results.csv
+.venv\Scripts\python.exe scripts\audit_bar_indoor_trace.py | Set-Content docs\bar-indoor-radar-trace.csv
+.venv\Scripts\python.exe scripts\benchmark_bar_indoor.py --radii 5 7 --seeds 0 1 | Set-Content docs\bar-indoor-radar-heldout.csv
 ```
 
-The [full results](bar-indoor-results.csv) and [parent-return trace](bar-indoor-trace.csv)
+The [current results](bar-indoor-radar-results.csv) and [parent-return trace](bar-indoor-radar-trace.csv)
 record actual executed distance, known free area, observed branches, A* calls,
 expanded nodes, turns, planning time, return lengths, and status. Wall time
 and planning milliseconds vary by machine; the geometric and count results
@@ -70,21 +71,31 @@ are deterministic for the pinned Python/Shapely/C++ environment.
 
 | Preset | Radius | Status | Distance | Returns | A* calls | Expanded |
 | --- | ---: | --- | ---: | ---: | ---: | ---: |
-| Apartment | 5 | goal reached | 189.246 | 11 | 50 | 102 |
-| Apartment | 7 | goal reached | 248.374 | 13 | 50 | 101 |
-| Office | 5 | goal reached | 181.356 | 11 | 51 | 102 |
-| Office | 7 | goal reached | 625.729 | 36 | 117 | 234 |
-| Challenge | 5 | goal reached | 129.957 | 6 | 35 | 70 |
-| Challenge | 7 | goal reached | 137.893 | 3 | 27 | 54 |
+| Apartment | 5 | goal reached | 137.268 | 4 | 35 | 72 |
+| Apartment | 7 | goal reached | 147.859 | 4 | 30 | 64 |
+| Office | 5 | goal reached | 122.018 | 2 | 32 | 64 |
+| Office | 7 | goal reached | 238.537 | 3 | 48 | 96 |
+| Challenge | 5 | goal reached | 94.644 | 0 | 23 | 46 |
+| Challenge | 7 | goal reached | 109.168 | 0 | 21 | 42 |
 
-All 80 recorded returns across these six runs used C++ A*, had no fallback,
-and met their local executed-length bounds. Formal paper BAR certifications
-are zero because no indoor region was classified against the paper's BAR
-definition. In the apartment trace, branch 31
-returns to observed parent 23 over 6.147 units after a 30.323-unit entry;
-branch 32 is then explored. A focused test compares an indoor A* return with
-C++ Dijkstra on the identical graph. The fallback remains covered by the
-existing continuous-controller tests.
+All 13 current-policy returns across these six runs used C++ A*, had no
+fallback, and met their local executed-length bounds. Challenge reaches the
+goal without a return at both radii; it therefore does not demonstrate
+backtracking under the current ranking. Formal paper BAR certifications are
+zero because no indoor region was classified against the paper's BAR
+definition. In the apartment radius-7 run, branch 20 returns to observed
+ancestor 9 over 15.213 units after a 55.003-unit entry; branch 21 is then
+explored. A focused test compares this A* return with C++ Dijkstra on the
+identical graph. The fallback remains covered by the existing
+continuous-controller tests. The [held-out seeds](bar-indoor-radar-heldout.csv)
+record 12 additional layout/seed/radius pairs, all goal reached; they are a
+finite reproducible sample, not a general success guarantee.
+
+The older [indoor results](bar-indoor-results.csv) and
+[trace](bar-indoor-trace.csv) used the pre-radar local ranking. They remain as
+a historical baseline; `--policy legacy` reproduces that ranking with the
+current benchmark script. Do not present those 80 returns as current UI
+behavior.
 
 The larger sensing radius can increase travel, as Office shows: the set and
 ranking of observed candidates changes, and goal-directed online exploration

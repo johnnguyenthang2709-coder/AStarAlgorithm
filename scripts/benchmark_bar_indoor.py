@@ -1,6 +1,8 @@
 """Reproduce indoor continuous runs without filtering failure outcomes.
 
 Example: .venv/Scripts/python.exe scripts/benchmark_bar_indoor.py --radii 5 7
+The default matches the indoor API's radar-informed policy. --policy legacy
+reproduces the historical indoor baseline without radar ranking.
 """
 
 import argparse
@@ -22,12 +24,13 @@ def main() -> None:
     parser.add_argument("--radii", nargs="+", type=float, default=[5., 7.])
     parser.add_argument("--seeds", nargs="*", type=int, default=[])
     parser.add_argument("--limit", type=int, default=250)
+    parser.add_argument("--policy", choices=("radar", "legacy"), default="radar")
     args = parser.parse_args()
     cases = [APARTMENT, OFFICE, CHALLENGE]
     cases.extend(IndoorConfig(layout, seed) for layout in ("apartment", "office", "challenge")
                  for seed in args.seeds)
     writer = csv.writer(sys.stdout, lineterminator="\n")
-    writer.writerow(("layout", "seed", "radius", "rooms", "doors", "furniture", "status", "success",
+    writer.writerow(("layout", "seed", "radius", "policy", "rooms", "doors", "furniture", "status", "success",
                      "executed_distance", "known_free_area", "observed_branches", "parent_returns",
                      "astar_returns", "fallback_returns", "verified_local_bounds", "astar_calls",
                      "formal_bar_certifications", "expanded_nodes", "turns", "planning_ms",
@@ -38,11 +41,12 @@ def main() -> None:
             begun = perf_counter()
             episode = simulate_continuous(layout.world, radius, args.limit,
                                           prefer_novelty=False, complete_frontier_route=True,
-                                          trace_hierarchy=True)
+                                          trace_hierarchy=True,
+                                          radar_informed=args.policy == "radar")
             elapsed = perf_counter() - begun
             metric, returns = episode["metrics"], episode["recoveries"]
             fallback = sum(item["fallback"] for item in returns)
-            writer.writerow((config.layout, config.seed, f"{radius:g}", len(layout.rooms),
+            writer.writerow((config.layout, config.seed, f"{radius:g}", args.policy, len(layout.rooms),
                              len(layout.doors), len(layout.furniture), episode["status"],
                              episode["success"], f"{metric['executed_distance']:.3f}",
                              metric["observed_free_area"], metric["observed_branches"],

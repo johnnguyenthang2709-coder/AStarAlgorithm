@@ -1,0 +1,5 @@
+frame,branch,parent,trigger,entry_length,astar_route_length,executed_return_length,fallback,bound_verified,next_sibling
+49,12,11,exhausted_branch,4.100000,4.100000,4.100000,False,True,13
+63,14,13,exhausted_branch,4.100000,4.100000,4.100000,False,True,15
+89,19,18,exhausted_branch,4.100000,4.100000,4.100000,False,True,20
+111,23,20,occluded_frontier_deferred,7.910052,7.729214,7.729214,False,True,24

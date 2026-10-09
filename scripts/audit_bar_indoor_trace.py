@@ -14,7 +14,7 @@ from app.services.bar_indoor import APARTMENT, generate_indoor
 def main() -> None:
     episode = simulate_continuous(generate_indoor(APARTMENT).world, 5,
                                   prefer_novelty=False, complete_frontier_route=True,
-                                  trace_hierarchy=True)
+                                  trace_hierarchy=True, radar_informed=True)
     frames = episode["frames"]
     writer = csv.writer(sys.stdout, lineterminator="\n")
     writer.writerow(("frame", "branch", "parent", "trigger", "entry_length", "astar_route_length",

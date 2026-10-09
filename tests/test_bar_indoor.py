@@ -1,5 +1,6 @@
 """Indoor layouts are simulator fixtures; navigation sees observations only."""
 
+import json
 import sys
 from pathlib import Path
 
@@ -149,3 +150,70 @@ def test_seed_reproduces_motion_and_changes_floor_plan_geometry():
                 if frame["event"] == "move"]
     assert motion(first) == motion(second)
     assert first["metrics"]["executed_distance"] == second["metrics"]["executed_distance"]
+
+
+@pytest.mark.parametrize("config", (APARTMENT, OFFICE, CHALLENGE))
+@pytest.mark.parametrize("radius", (5., 7.))
+def test_production_radar_indoor_preserves_certified_motion(config, radius):
+    world = generate_indoor(config).world
+    episode = simulate_continuous(world, radius, prefer_novelty=False,
+                                  complete_frontier_route=True, trace_hierarchy=True,
+                                  radar_informed=True, trace_decisions=True)
+    assert episode["status"] == "goal_reached"
+    frames = episode["frames"]
+    assert all(item["invariant_verified"] for item in episode["recoveries"])
+    assert all(world.collision_free((frame["from"]["x"], frame["from"]["y"]),
+                                    (frame["position"]["x"], frame["position"]["y"]))
+               for frame in frames if frame["event"] == "move")
+    targets = [tuple(round(frame["target"][axis], 3) for axis in ("x", "y"))
+               for frame in frames if frame["event"] == "plan" and frame["phase"] == "explore"
+               and frame.get("status") != "unreachable_target"]
+    assert len(targets) == len(set(targets))  # no repeated successful local target
+
+
+def test_radar_indoor_shorter_parent_return_is_astar_optimal_and_sibling_survives():
+    episode = simulate_continuous(generate_indoor(APARTMENT).world, 7,
+                                  prefer_novelty=False, complete_frontier_route=True,
+                                  trace_hierarchy=True, radar_informed=True,
+                                  include_graph=True)
+    frames = episode["frames"]
+    branch_positions = {0: episode["frames"][0]["position"]}
+    branch_positions.update({frame["branch_id"]: frame["position"] for frame in frames
+                             if frame["event"] == "branch" and frame["status"] == "active"})
+    for index, frame in enumerate(frames):
+        if frame["event"] != "recover_start" or frame["fallback"]:
+            continue
+        end = next(i for i in range(index + 1, len(frames)) if frames[i]["event"] == "recover_end")
+        sibling = next((item for item in frames[end + 1:] if item["event"] == "branch"
+                        and item["status"] == "active" and item["parent_id"] == frame["parent_id"]), None)
+        retreat = frames[end]["retreat_length"]
+        if sibling is None or retreat >= frame["entry_length"] - 1e-6:
+            continue
+        assert frame["anchor"] == branch_positions[frame["parent_id"]]
+        points = [(point["x"], point["y"]) for point in frame["graph_points"]]
+        start = (frame["position"]["x"], frame["position"]["y"])
+        anchor = (frame["anchor"]["x"], frame["anchor"]["y"])
+        baseline = astar_core.visibility_search(points, frame["graph_links"],
+                                                points.index(start), points.index(anchor), "dijkstra")
+        assert baseline["found"]
+        assert retreat == pytest.approx(baseline["cost"], abs=1e-6)
+        assert frames[end]["invariant_verified"]
+        assert sibling["branch_id"] != frame["branch_id"]
+        break
+    else:
+        pytest.fail("no radar-informed shorter A* parent return followed by a sibling")
+
+
+def test_indoor_api_matches_radar_policy_playback():
+    response = TestClient(create_app()).post("/api/bar/continuous", json={
+        "scenario": "indoor_apartment", "radius": 5, "debug_exploration": True,
+    })
+    assert response.status_code == 200
+    expected = simulate_continuous(generate_indoor(APARTMENT).world, 5,
+                                   prefer_novelty=False, complete_frontier_route=True,
+                                   trace_hierarchy=True, radar_informed=True,
+                                   trace_decisions=True)
+    body = response.json()
+    assert body["frames"] == json.loads(json.dumps(expected["frames"]))
+    assert body["recoveries"] == json.loads(json.dumps(expected["recoveries"]))
+    assert body["metrics"]["executed_distance"] == expected["metrics"]["executed_distance"]
