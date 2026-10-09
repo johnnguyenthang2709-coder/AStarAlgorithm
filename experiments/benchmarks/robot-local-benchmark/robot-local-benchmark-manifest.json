@@ -1,0 +1,41 @@
+{
+  "protocol_version": 1,
+  "purpose": "Frozen observed-state local planned paths, not online robot navigation",
+  "source_baseline_commit": "0631f6c2d089aec8d6afee834eee5e9db0a89b90",
+  "authors_commit": "8bbbfb81cbe76c9f559f15f5c68f1eb4998915d8",
+  "snapshot_file": "robot-local-snapshots.json",
+  "snapshot_sha256": "1bb3c927348e11bb2b7ccca151548b1da12ee5550284ccb7b60631d45a44aa9b",
+  "scenario_source": "Pinned Robot_run.py, original two diagnostic runs; all decisions retained",
+  "eligibility_rule": "Nonempty original skeleton path with more than two vertices; excludes immediate two-vertex moves that do not invoke bundle optimization",
+  "captured_decisions": 43,
+  "eligible_decisions": 6,
+  "eligible_ids": [
+    "_map_deadend-03",
+    "_map_deadend-05",
+    "_map_deadend-10",
+    "_map_deadend-11",
+    "_map_deadend-12",
+    "_map_bugtrap-12"
+  ],
+  "excluded_decisions": 37,
+  "collision_convention": {
+    "primary": "Point-robot obstacle-interior excluding; obstacle-boundary contact permitted",
+    "strict_secondary": "Obstacle boundary contact invalid",
+    "radius_0_5": "Clearance diagnostic only, not a comparable finite-radius experiment",
+    "world_boundary": "No global planner bound; links must be covered by the union of recorded local sights",
+    "event_tolerance": 1e-9,
+    "endpoint_tolerance": 1e-7
+  },
+  "our_graph_rule": "Current continuous adapter's scan-center vertices plus identical start/target; undirected Euclidean link iff its whole segment is certified by frozen sight union",
+  "source_graph_rule": "Original source skeleton graph and skeleton path are frozen as context; original ASP is recovered unchanged",
+  "timing": {
+    "warmup_calls": 3,
+    "measured_calls": 31,
+    "statistic": "median",
+    "source": "Authors' Python 3.14.2 implementation; separately measure ASP core and wall call",
+    "ours": "C++ visibility_search in Python 3.12.10 binding; separately measure edge certification/build and core call",
+    "caveat": "Different language runtimes and graph representations; timing is descriptive, not an algorithm-only speedup"
+  },
+  "selection_policy": "Every eligible snapshot; include all failures and strict-invalid paths in output",
+  "no_ground_truth_in_planning": true
+}
