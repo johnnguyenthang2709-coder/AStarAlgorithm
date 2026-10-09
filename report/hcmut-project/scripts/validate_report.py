@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unicodedata
+import xml.etree.ElementTree as ET
 
 from pypdf import PdfReader
 
@@ -22,8 +23,12 @@ def sha(data):
 
 
 def canonical(text):
+    text = text.replace(r"\begingroup\predisplaypenalty=0", "").replace(r"\endgroup", "")
+    # samepage groups affect pagination only; retain all enclosed science text.
+    text = re.sub(r"\\(?:begin|end)\{samepage\}", "", text)
     text = re.sub(r'\\begin\{(figure|table)\}\[(?:t|H|!?htbp)\]',
                   r'\\begin{\1}[htbp]', text)
+    text = re.sub(r"\\par(?=\s|$)", "", text)
     return ' '.join(text.split())
 
 
@@ -118,6 +123,25 @@ def main():
         out = Path(tmp) / 'text.txt'
         subprocess.run(['pdftotext', '-enc', 'UTF-8', '-layout', str(REPORT / 'report.pdf'), str(out)], check=True)
         poppler = out.read_text(encoding='utf-8')
+        bbox = Path(tmp) / 'bbox.html'
+        subprocess.run(['pdftotext', '-bbox-layout', str(REPORT / 'report.pdf'), str(bbox)], check=True)
+        ns = {'x': 'http://www.w3.org/1999/xhtml'}
+        cover = ET.parse(bbox).getroot().find('.//x:page', ns)
+        words = cover.findall('.//x:word', ns)
+        header = next(w for w in words if w.text == 'Name')
+        table_words = [w for w in words if float(w.attrib['yMin']) >= float(header.attrib['yMin'])]
+        table_center = (min(float(w.attrib['xMin']) for w in table_words) +
+                        max(float(w.attrib['xMax']) for w in table_words)) / 2
+        table_center_offset = table_center - float(cover.attrib['width']) / 2
+        assert abs(table_center_offset) < 1.0, table_center_offset
+    reference_page = int(re.search(r'\\contentsline \{section\}\{References\}\{(\d+)\}', toc)[1])
+    assert texts[intro + reference_page - 1].startswith('References')
+    rows = ('Nguyễn Đức Hòa CC06 2652600', 'Phạm Văn Bảo Phong CC06 2652465',
+            'Nguyễn Bá Hoàng CC06 2651237', 'Nguyễn Hoàng Thắng CC06 2550216',
+            'Nguyễn Hưng Phát CC06 2651590')
+    compact_cover = ''.join(texts[0].split())
+    for row in rows:
+        assert ''.join(row.split()) in compact_cover, row
     for text in ('\n'.join(texts), poppler):
         assert not any(c == '\ufffd' or (ord(c) < 32 and c not in '\n\r\t\f') for c in text)
         normalized = unicodedata.normalize('NFKC', text)
@@ -127,6 +151,8 @@ def main():
                   frozen_source_files_unchanged=len(tracked), source_sections_preserved=equivalence,
                   abstract_preserved=True, figures_byte_identical=8, tables_content_identical=3,
                   references_byte_identical=9, algorithms=1, total_pages=len(pdf.pages),
+                  cover_table_center_offset_pt=round(table_center_offset, 6),
+                  reference_physical_page=intro + reference_page,
                   introduction_physical_page=intro+1, introduction_page_label='1',
                   toc_section_entries=11, toc_numbered_entries_checked=True,
                   format='A4 article, 12pt, one column, 2.5cm margins, 1.15 line spacing',

@@ -1,10 +1,12 @@
 \section{Problem Formulation}
 \subsection{Known Directed Road Routing}
 Let $G=(V,E,w)$ be a finite directed road graph with finite nonnegative weights $w:E\to\mathbb{R}_{\geq0}$. For origin $s\in V$ and destination $t\in V$, the routing objective is
+\begingroup\predisplaypenalty=0
 \begin{equation}
 P^*\in\underset{P:s\leadsto t}{\operatorname{argmin}}\;
 C(P),\quad C(P)=\sum_{(u,v)\in P}w(u,v).
 \end{equation}
+\endgroup
 Here $C(P)$ sums exported road lengths in meters. Directed edges enforce one-way topology; traffic, time-dependent costs, and turn restrictions absent from preprocessing are excluded. If no path exists, search reports failure. Node endpoints isolate search from coordinate snapping in the principal experiment. Interactive requests instead use projected road positions and temporary partial edges (Section~4).
 
 \subsection{Partially Observed Robot Navigation}

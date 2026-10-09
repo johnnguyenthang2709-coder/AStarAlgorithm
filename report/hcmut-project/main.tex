@@ -13,6 +13,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{placeins}
+\usepackage{needspace}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{url}
@@ -22,6 +23,15 @@
 \setlength{\parindent}{1.5em}
 \setlength{\parskip}{0.15em}
 \captionsetup{font=small,labelfont=bf}
+% Prefer mixed text/float pages; reserve float-only pages for near-full content.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
+\widowpenalty=3000
+\clubpenalty=3000
 % Keep dedicated float pages compact and aligned to the top, rather than
 % distributing large vertical gaps between a table and a figure.
 \makeatletter
@@ -55,11 +65,13 @@
 \input{sections/04-architecture}
 \input{sections/05-implementation}
 \input{sections/06-methodology}
+\par\Needspace{32\baselineskip}
 \input{sections/07-results}
 \input{sections/08-limitations}
 \input{sections/09-conclusion}
 \FloatBarrier
 \bibliographystyle{splncs04}
+\par\Needspace{0.9\textheight}
 \phantomsection
 \addcontentsline{toc}{section}{References}
 \bibliography{references}

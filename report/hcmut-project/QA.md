@@ -13,7 +13,7 @@
 
 ## Format and navigation
 
-The final document has **22 physical A4 pages**: cover (no printed number), abstract (i), contents (ii), and 19 Arabic-numbered body/reference pages. Introduction is physical page 4 with printed page 1. Contents is generated automatically, fits one page, and all numbered section/subsection destinations are checked against extracted page text. References begin on printed page 18 and continue on page 19.
+The final document has **22 physical A4 pages**: cover (no printed number), abstract (i), contents (ii), and 19 Arabic-numbered body/reference pages. Introduction is physical page 4 with printed page 1. Contents is generated automatically, fits one page, and all numbered section/subsection destinations are checked against extracted page text. References now occupy printed page 19 (physical page 22) together.
 
 The format check confirms `article[a4paper,12pt,oneside]`, a 160 mm x 247 mm text area (2.5 cm margins), one column, and 1.15 body line spacing. The contents page uses ordinary single spacing without reducing font size. The three nested cover rectangles are confined to the cover. Institution names, report topic, subtitle, lecturer, and five-student table remain within the frame. The cover uses the author's supplied logo, Faculty of Applied Science, and lecturer Phan Thanh An. The PNG is unchanged and proportionally rendered at 12 cm width, including its original white margins. Border insets and line weights follow the supplied LaTeX template. The five supplied Vietnamese names, class CC06, and student IDs are printed without inferred emails or submission date.
 
@@ -41,6 +41,10 @@ All 22 final pages were rendered at 120 dpi and inspected using labeled contact 
 
 The cover now follows the supplied source LaTeX template, adapted to the A* topic, lecturer Phan Thanh An, Faculty of Applied Science, and verified five-student list. The sample Calculus title, lecturer, email list, group, and date are not reused. The separate LNCS author metadata and affiliation remain unchanged.
 
-## Cover revision validation
+## Previous cover revision validation (commit 597db50)
 
 The cover-only revision is rebuilt using the commands above (the independent HCMUT validator verifies the unchanged LNCS source blobs). Both pypdf and Poppler extraction check all five accented names, class CC06, and student IDs. All 21 pages after the cover have identical extracted text and pixel-identical 120 dpi renders compared with the preceding PDF. The complete rebuilt PDF is rendered for layout checks; cover fonts must be embedded with Unicode maps and no Type 3 glyphs.
+
+## Final layout refinement
+
+See `FINAL-LAYOUT-REVIEW.md` for the final 22-page placement audit. The centered cover, every rendered page, coherent road-results page, unchanged figure sizes, and final single-page bibliography were reviewed. Source and benchmark validators pass. The earlier pixel-identical body-page comparison applies to the previous cover-only revision; the current revision intentionally changes body pagination while preserving scientific text.
